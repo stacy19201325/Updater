@@ -9,11 +9,17 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Xml;
+using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Updater
 {
     public partial class frmMain : Form
     {
+
+        #region Form Movers
+
         //Allow us to move the form
         private const int WMNCHITTEST = 0x84;
         private const int HTCLIENT = 0x1;
@@ -38,6 +44,53 @@ namespace Updater
             base.WndProc(ref m);
         }
 
+        //Allow us to move the form by clicking a control on the form
+        private void picMain_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WMNCLBUTTONDOWN, HTCAPTION, 0);
+            }
+        }
+
+        private void pnlNav_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WMNCLBUTTONDOWN, HTCAPTION, 0);
+            }
+        }
+
+        private void pnlSettings_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WMNCLBUTTONDOWN, HTCAPTION, 0);
+            }
+        }
+
+        private void pnlMain_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WMNCLBUTTONDOWN, HTCAPTION, 0);
+            }
+        }
+
+        private void ftbNews_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WMNCLBUTTONDOWN, HTCAPTION, 0);
+            }
+        }
+        #endregion
+
         private void frmMain_Load(object sender, EventArgs e)
         {
             //Let's set the folder location from Resources
@@ -46,16 +99,45 @@ namespace Updater
             //Let's also set the checkbox options for Client launch
             chkClose.Checked = Properties.Settings.Default.setClosed;
             chkMin.Checked = Properties.Settings.Default.setMinimized;
+
+            //Pull in News
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
+            XmlDocument RSSNews = new XmlDocument();
+            RSSNews.Load("https://tarkin.org/index.php?/forum/4-announcements.xml/");
+
+            XmlNodeList RSSNewsNodes = RSSNews.SelectNodes("rss/channel/item");
+            StringBuilder RSSNewsData = new StringBuilder();
+
+            foreach (XmlNode RSSNode in RSSNewsNodes)
+            {
+                XmlNode RSSSubNode = RSSNode.SelectSingleNode("title");
+                string TitleElement = RSSSubNode != null ? RSSSubNode.InnerText : "";
+
+                RSSSubNode = RSSNode.SelectSingleNode("description");
+                string NewsElement = RSSSubNode != null ? RSSSubNode.InnerText : "";
+
+                //Clean news up.
+                NewsElement = Regex.Replace(NewsElement, "\t", "");
+                TitleElement = Regex.Replace(TitleElement, "\t", "");
+                NewsElement = Regex.Replace(NewsElement, "\n", "");
+                TitleElement = Regex.Replace(TitleElement, "\n", "");
+                NewsElement = Regex.Replace(NewsElement, "<.*?>", String.Empty);
+                TitleElement = Regex.Replace(TitleElement, "<.*?>", String.Empty);
+
+                RSSNewsData.Append(TitleElement + "\n" + NewsElement + "\n\n");
+            }
+
+            //Output News!
+            ftbNews.Text = RSSNewsData.ToString();
+
+            //Check Patch Level and force to update if there is a patch
+
         }
 
         public frmMain()
         {
             InitializeComponent();
-        }
-
-        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-
         }
 
         private void btnMain_Click(object sender, EventArgs e)
@@ -82,15 +164,6 @@ namespace Updater
 
         }
 
-        private void picMain_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                ReleaseCapture();
-                SendMessage(Handle, WMNCLBUTTONDOWN, HTCAPTION, 0);
-            }
-        }
-
         private void lblExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -100,6 +173,11 @@ namespace Updater
         {
             pnlMain.Visible = false;
             pnlSettings.Visible = true;
+        }
+
+        private void lblForums_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://tarkin.org");
         }
 
         private void btnFolder_Click(object sender, EventArgs e)
@@ -165,6 +243,31 @@ namespace Updater
         {
             ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.FromArgb(160, 252, 192, 63), ButtonBorderStyle.Solid);
         }
+
+        private void btnSWG_Click(object sender, EventArgs e)
+        {
+            //Open the SWG Settings.
+            Process procTarkin = new Process();
+
+            procTarkin.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
+            procTarkin.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
+
+            procTarkin.Start();
+        }
+
+        private void ftbNews_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta == 120)
+            {
+                SendKeys.Send("{PGUP}");
+            }
+            else if (e.Delta == -120)
+            {
+                SendKeys.Send("{PGDN}");
+            }
+
+        }
+
     }
 
 }

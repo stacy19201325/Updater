@@ -32,8 +32,11 @@
             this.btnMain = new System.Windows.Forms.Button();
             this.picMain = new System.Windows.Forms.PictureBox();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.ftbNews = new System.Windows.Forms.RichTextBox();
             this.lblNews = new System.Windows.Forms.Label();
             this.pnlSettings = new System.Windows.Forms.Panel();
+            this.lblSettingsTitle = new System.Windows.Forms.Label();
+            this.btnSWG = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.grpClose = new System.Windows.Forms.GroupBox();
             this.chkMin = new System.Windows.Forms.CheckBox();
@@ -42,6 +45,8 @@
             this.btnFolder = new System.Windows.Forms.Button();
             this.lblFolder = new System.Windows.Forms.Label();
             this.pnlNav = new System.Windows.Forms.Panel();
+            this.lblSpacer4 = new System.Windows.Forms.Label();
+            this.lblForums = new System.Windows.Forms.Label();
             this.lblSpacer3 = new System.Windows.Forms.Label();
             this.lblSpacer2 = new System.Windows.Forms.Label();
             this.lblAbout = new System.Windows.Forms.Label();
@@ -81,12 +86,31 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.ftbNews);
             this.pnlMain.Controls.Add(this.lblNews);
             this.pnlMain.Location = new System.Drawing.Point(13, 170);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(532, 368);
             this.pnlMain.TabIndex = 3;
             this.pnlMain.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMain_Paint);
+            this.pnlMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMain_MouseMove);
+            // 
+            // ftbNews
+            // 
+            this.ftbNews.BackColor = System.Drawing.Color.Black;
+            this.ftbNews.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ftbNews.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.ftbNews.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ftbNews.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.ftbNews.Location = new System.Drawing.Point(8, 26);
+            this.ftbNews.Name = "ftbNews";
+            this.ftbNews.ReadOnly = true;
+            this.ftbNews.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.ftbNews.Size = new System.Drawing.Size(521, 339);
+            this.ftbNews.TabIndex = 1;
+            this.ftbNews.Text = "";
+            this.ftbNews.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ftbNews_MouseMove);
+            this.ftbNews.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.ftbNews_MouseWheel);
             // 
             // lblNews
             // 
@@ -101,6 +125,8 @@
             // 
             // pnlSettings
             // 
+            this.pnlSettings.Controls.Add(this.lblSettingsTitle);
+            this.pnlSettings.Controls.Add(this.btnSWG);
             this.pnlSettings.Controls.Add(this.btnOK);
             this.pnlSettings.Controls.Add(this.grpClose);
             this.pnlSettings.Controls.Add(this.txtFolder);
@@ -112,13 +138,38 @@
             this.pnlSettings.TabIndex = 4;
             this.pnlSettings.Visible = false;
             this.pnlSettings.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlSettings_Paint);
+            this.pnlSettings.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlSettings_MouseMove);
+            // 
+            // lblSettingsTitle
+            // 
+            this.lblSettingsTitle.AutoSize = true;
+            this.lblSettingsTitle.Font = new System.Drawing.Font("Castellar", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSettingsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblSettingsTitle.Location = new System.Drawing.Point(3, 4);
+            this.lblSettingsTitle.Name = "lblSettingsTitle";
+            this.lblSettingsTitle.Size = new System.Drawing.Size(95, 19);
+            this.lblSettingsTitle.TabIndex = 9;
+            this.lblSettingsTitle.Text = "SETTINGS:";
+            // 
+            // btnSWG
+            // 
+            this.btnSWG.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.btnSWG.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSWG.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSWG.Location = new System.Drawing.Point(8, 114);
+            this.btnSWG.Name = "btnSWG";
+            this.btnSWG.Size = new System.Drawing.Size(124, 23);
+            this.btnSWG.TabIndex = 8;
+            this.btnSWG.Text = "Client Settings";
+            this.btnSWG.UseVisualStyleBackColor = false;
+            this.btnSWG.Click += new System.EventHandler(this.btnSWG_Click);
             // 
             // btnOK
             // 
             this.btnOK.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOK.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOK.Location = new System.Drawing.Point(8, 87);
+            this.btnOK.Location = new System.Drawing.Point(3, 342);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 7;
@@ -132,7 +183,7 @@
             this.grpClose.Controls.Add(this.chkClose);
             this.grpClose.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.grpClose.Location = new System.Drawing.Point(8, 31);
+            this.grpClose.Location = new System.Drawing.Point(8, 58);
             this.grpClose.Name = "grpClose";
             this.grpClose.Size = new System.Drawing.Size(297, 50);
             this.grpClose.TabIndex = 6;
@@ -163,7 +214,7 @@
             // 
             // txtFolder
             // 
-            this.txtFolder.Location = new System.Drawing.Point(114, 5);
+            this.txtFolder.Location = new System.Drawing.Point(114, 32);
             this.txtFolder.Name = "txtFolder";
             this.txtFolder.Size = new System.Drawing.Size(191, 20);
             this.txtFolder.TabIndex = 5;
@@ -173,7 +224,7 @@
             this.btnFolder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.btnFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFolder.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFolder.Location = new System.Drawing.Point(311, 4);
+            this.btnFolder.Location = new System.Drawing.Point(311, 31);
             this.btnFolder.Name = "btnFolder";
             this.btnFolder.Size = new System.Drawing.Size(75, 23);
             this.btnFolder.TabIndex = 4;
@@ -186,7 +237,7 @@
             this.lblFolder.AutoSize = true;
             this.lblFolder.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFolder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblFolder.Location = new System.Drawing.Point(4, 4);
+            this.lblFolder.Location = new System.Drawing.Point(4, 31);
             this.lblFolder.Name = "lblFolder";
             this.lblFolder.Size = new System.Drawing.Size(104, 19);
             this.lblFolder.TabIndex = 3;
@@ -194,6 +245,8 @@
             // 
             // pnlNav
             // 
+            this.pnlNav.Controls.Add(this.lblSpacer4);
+            this.pnlNav.Controls.Add(this.lblForums);
             this.pnlNav.Controls.Add(this.lblSpacer3);
             this.pnlNav.Controls.Add(this.lblSpacer2);
             this.pnlNav.Controls.Add(this.lblAbout);
@@ -205,12 +258,34 @@
             this.pnlNav.Size = new System.Drawing.Size(150, 470);
             this.pnlNav.TabIndex = 9;
             this.pnlNav.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlNav_Paint);
+            this.pnlNav.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlNav_MouseMove);
+            // 
+            // lblSpacer4
+            // 
+            this.lblSpacer4.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSpacer4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblSpacer4.Location = new System.Drawing.Point(3, 151);
+            this.lblSpacer4.Name = "lblSpacer4";
+            this.lblSpacer4.Size = new System.Drawing.Size(144, 23);
+            this.lblSpacer4.TabIndex = 16;
+            // 
+            // lblForums
+            // 
+            this.lblForums.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblForums.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblForums.Location = new System.Drawing.Point(3, 59);
+            this.lblForums.Name = "lblForums";
+            this.lblForums.Size = new System.Drawing.Size(144, 23);
+            this.lblForums.TabIndex = 15;
+            this.lblForums.Text = "Forums";
+            this.lblForums.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblForums.Click += new System.EventHandler(this.lblForums_Click);
             // 
             // lblSpacer3
             // 
             this.lblSpacer3.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSpacer3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblSpacer3.Location = new System.Drawing.Point(3, 105);
+            this.lblSpacer3.Location = new System.Drawing.Point(3, 128);
             this.lblSpacer3.Name = "lblSpacer3";
             this.lblSpacer3.Size = new System.Drawing.Size(144, 23);
             this.lblSpacer3.TabIndex = 14;
@@ -228,7 +303,7 @@
             // 
             this.lblAbout.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAbout.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblAbout.Location = new System.Drawing.Point(3, 59);
+            this.lblAbout.Location = new System.Drawing.Point(3, 105);
             this.lblAbout.Name = "lblAbout";
             this.lblAbout.Size = new System.Drawing.Size(144, 23);
             this.lblAbout.TabIndex = 12;
@@ -248,7 +323,7 @@
             // 
             this.lblExit.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblExit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblExit.Location = new System.Drawing.Point(3, 128);
+            this.lblExit.Location = new System.Drawing.Point(3, 189);
             this.lblExit.Name = "lblExit";
             this.lblExit.Size = new System.Drawing.Size(144, 23);
             this.lblExit.TabIndex = 10;
@@ -278,14 +353,13 @@
             this.Controls.Add(this.pnlNav);
             this.Controls.Add(this.picMain);
             this.Controls.Add(this.btnMain);
-            this.Controls.Add(this.pnlSettings);
             this.Controls.Add(this.pnlMain);
+            this.Controls.Add(this.pnlSettings);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmMain";
             this.Text = "TarkinII Updater";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Load += new System.EventHandler(this.frmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).EndInit();
             this.pnlMain.ResumeLayout(false);
@@ -319,6 +393,11 @@
         private System.Windows.Forms.Label lblSpacer1;
         private System.Windows.Forms.Label lblExit;
         private System.Windows.Forms.Label lblSettings;
+        private System.Windows.Forms.Label lblSpacer4;
+        private System.Windows.Forms.Label lblForums;
+        private System.Windows.Forms.Button btnSWG;
+        private System.Windows.Forms.Label lblSettingsTitle;
+        private System.Windows.Forms.RichTextBox ftbNews;
     }
 }
 

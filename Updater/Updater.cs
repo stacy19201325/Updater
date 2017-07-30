@@ -343,10 +343,56 @@ namespace Updater
                 lblStatusUptime.Text = "Uptime: " + Uptime;
                 lblStatusLast.Text = "Updated: " + Updated;
             }
-            
+            else
+            {
+                lblStatusEnum.Text = "Status: Down";
+                lblStatusOnline.Text = "";
+                lblStatusMax.Text = "";
+                lblStatusUptime.Text = "";
+                lblStatusLast.Text = "";
+            }
 
         }
 
+        private void lblSettings_MouseHover(object sender, EventArgs e)
+        {
+            lblSettings.ForeColor = Color.FromArgb(160, 255, 255, 255);
+        }
+
+        private void lblSettings_MouseLeave(object sender, EventArgs e)
+        {
+            lblSettings.ForeColor = Color.FromArgb(160, 252, 192, 63);
+        }
+
+        private void lblForums_MouseHover(object sender, EventArgs e)
+        {
+            lblForums.ForeColor = Color.FromArgb(160, 255, 255, 255);
+        }
+
+        private void lblForums_MouseLeave(object sender, EventArgs e)
+        {
+            lblForums.ForeColor = Color.FromArgb(160, 252, 192, 63);
+        }
+
+        private void lblAbout_MouseHover(object sender, EventArgs e)
+        {
+            lblAbout.ForeColor = Color.FromArgb(160, 255, 255, 255);
+        }
+
+        private void lblAbout_MouseLeave(object sender, EventArgs e)
+        {
+            lblAbout.ForeColor = Color.FromArgb(160, 252, 192, 63);
+        }
+
+        private void lblExit_MouseHover(object sender, EventArgs e)
+        {
+            lblExit.ForeColor = Color.FromArgb(160, 255, 255, 255);
+        }
+
+        private void lblExit_MouseLeave(object sender, EventArgs e)
+        {
+            lblExit.ForeColor = Color.FromArgb(160, 252, 192, 63);
+        }
     }
 
 }

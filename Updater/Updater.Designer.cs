@@ -45,6 +45,12 @@
             this.btnFolder = new System.Windows.Forms.Button();
             this.lblFolder = new System.Windows.Forms.Label();
             this.pnlNav = new System.Windows.Forms.Panel();
+            this.lblStatusLast = new System.Windows.Forms.Label();
+            this.lblStatusUptime = new System.Windows.Forms.Label();
+            this.lblStatusMax = new System.Windows.Forms.Label();
+            this.lblStatusOnline = new System.Windows.Forms.Label();
+            this.lblStatusEnum = new System.Windows.Forms.Label();
+            this.lblStatusTitle = new System.Windows.Forms.Label();
             this.lblSpacer4 = new System.Windows.Forms.Label();
             this.lblForums = new System.Windows.Forms.Label();
             this.lblSpacer3 = new System.Windows.Forms.Label();
@@ -53,12 +59,6 @@
             this.lblSpacer1 = new System.Windows.Forms.Label();
             this.lblExit = new System.Windows.Forms.Label();
             this.lblSettings = new System.Windows.Forms.Label();
-            this.lblStatusTitle = new System.Windows.Forms.Label();
-            this.lblStatusEnum = new System.Windows.Forms.Label();
-            this.lblStatusOnline = new System.Windows.Forms.Label();
-            this.lblStatusMax = new System.Windows.Forms.Label();
-            this.lblStatusUptime = new System.Windows.Forms.Label();
-            this.lblStatusLast = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).BeginInit();
             this.pnlMain.SuspendLayout();
             this.pnlSettings.SuspendLayout();
@@ -272,6 +272,67 @@
             this.pnlNav.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlNav_Paint);
             this.pnlNav.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlNav_MouseMove);
             // 
+            // lblStatusLast
+            // 
+            this.lblStatusLast.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusLast.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblStatusLast.Location = new System.Drawing.Point(2, 445);
+            this.lblStatusLast.Name = "lblStatusLast";
+            this.lblStatusLast.Size = new System.Drawing.Size(144, 23);
+            this.lblStatusLast.TabIndex = 22;
+            this.lblStatusLast.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblStatusUptime
+            // 
+            this.lblStatusUptime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusUptime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblStatusUptime.Location = new System.Drawing.Point(3, 422);
+            this.lblStatusUptime.Name = "lblStatusUptime";
+            this.lblStatusUptime.Size = new System.Drawing.Size(144, 23);
+            this.lblStatusUptime.TabIndex = 21;
+            this.lblStatusUptime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblStatusMax
+            // 
+            this.lblStatusMax.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusMax.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblStatusMax.Location = new System.Drawing.Point(2, 399);
+            this.lblStatusMax.Name = "lblStatusMax";
+            this.lblStatusMax.Size = new System.Drawing.Size(144, 23);
+            this.lblStatusMax.TabIndex = 20;
+            this.lblStatusMax.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblStatusOnline
+            // 
+            this.lblStatusOnline.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusOnline.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblStatusOnline.Location = new System.Drawing.Point(2, 376);
+            this.lblStatusOnline.Name = "lblStatusOnline";
+            this.lblStatusOnline.Size = new System.Drawing.Size(144, 23);
+            this.lblStatusOnline.TabIndex = 19;
+            this.lblStatusOnline.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblStatusEnum
+            // 
+            this.lblStatusEnum.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusEnum.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblStatusEnum.Location = new System.Drawing.Point(3, 353);
+            this.lblStatusEnum.Name = "lblStatusEnum";
+            this.lblStatusEnum.Size = new System.Drawing.Size(144, 23);
+            this.lblStatusEnum.TabIndex = 18;
+            this.lblStatusEnum.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblStatusTitle
+            // 
+            this.lblStatusTitle.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblStatusTitle.Location = new System.Drawing.Point(2, 330);
+            this.lblStatusTitle.Name = "lblStatusTitle";
+            this.lblStatusTitle.Size = new System.Drawing.Size(144, 23);
+            this.lblStatusTitle.TabIndex = 17;
+            this.lblStatusTitle.Text = "Server Status";
+            this.lblStatusTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblSpacer4
             // 
             this.lblSpacer4.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -292,6 +353,8 @@
             this.lblForums.Text = "Forums";
             this.lblForums.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblForums.Click += new System.EventHandler(this.lblForums_Click);
+            this.lblForums.MouseLeave += new System.EventHandler(this.lblForums_MouseLeave);
+            this.lblForums.MouseHover += new System.EventHandler(this.lblForums_MouseHover);
             // 
             // lblSpacer3
             // 
@@ -321,6 +384,8 @@
             this.lblAbout.TabIndex = 12;
             this.lblAbout.Text = "About";
             this.lblAbout.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblAbout.MouseLeave += new System.EventHandler(this.lblAbout_MouseLeave);
+            this.lblAbout.MouseHover += new System.EventHandler(this.lblAbout_MouseHover);
             // 
             // lblSpacer1
             // 
@@ -342,6 +407,8 @@
             this.lblExit.Text = "Exit";
             this.lblExit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblExit.Click += new System.EventHandler(this.lblExit_Click);
+            this.lblExit.MouseLeave += new System.EventHandler(this.lblExit_MouseLeave);
+            this.lblExit.MouseHover += new System.EventHandler(this.lblExit_MouseHover);
             // 
             // lblSettings
             // 
@@ -354,67 +421,8 @@
             this.lblSettings.Text = "Settings";
             this.lblSettings.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblSettings.Click += new System.EventHandler(this.lblSettings_Click);
-            // 
-            // lblStatusTitle
-            // 
-            this.lblStatusTitle.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatusTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblStatusTitle.Location = new System.Drawing.Point(2, 330);
-            this.lblStatusTitle.Name = "lblStatusTitle";
-            this.lblStatusTitle.Size = new System.Drawing.Size(144, 23);
-            this.lblStatusTitle.TabIndex = 17;
-            this.lblStatusTitle.Text = "Server Status";
-            this.lblStatusTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblStatusEnum
-            // 
-            this.lblStatusEnum.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatusEnum.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblStatusEnum.Location = new System.Drawing.Point(3, 353);
-            this.lblStatusEnum.Name = "lblStatusEnum";
-            this.lblStatusEnum.Size = new System.Drawing.Size(144, 23);
-            this.lblStatusEnum.TabIndex = 18;
-            this.lblStatusEnum.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblStatusOnline
-            // 
-            this.lblStatusOnline.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatusOnline.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblStatusOnline.Location = new System.Drawing.Point(2, 376);
-            this.lblStatusOnline.Name = "lblStatusOnline";
-            this.lblStatusOnline.Size = new System.Drawing.Size(144, 23);
-            this.lblStatusOnline.TabIndex = 19;
-            this.lblStatusOnline.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblStatusMax
-            // 
-            this.lblStatusMax.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatusMax.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblStatusMax.Location = new System.Drawing.Point(2, 399);
-            this.lblStatusMax.Name = "lblStatusMax";
-            this.lblStatusMax.Size = new System.Drawing.Size(144, 23);
-            this.lblStatusMax.TabIndex = 20;
-            this.lblStatusMax.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblStatusUptime
-            // 
-            this.lblStatusUptime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatusUptime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblStatusUptime.Location = new System.Drawing.Point(3, 422);
-            this.lblStatusUptime.Name = "lblStatusUptime";
-            this.lblStatusUptime.Size = new System.Drawing.Size(144, 23);
-            this.lblStatusUptime.TabIndex = 21;
-            this.lblStatusUptime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblStatusLast
-            // 
-            this.lblStatusLast.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatusLast.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblStatusLast.Location = new System.Drawing.Point(2, 445);
-            this.lblStatusLast.Name = "lblStatusLast";
-            this.lblStatusLast.Size = new System.Drawing.Size(144, 23);
-            this.lblStatusLast.TabIndex = 22;
-            this.lblStatusLast.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblSettings.MouseLeave += new System.EventHandler(this.lblSettings_MouseLeave);
+            this.lblSettings.MouseHover += new System.EventHandler(this.lblSettings_MouseHover);
             // 
             // frmMain
             // 

@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Xml;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Net.Sockets;
 
 namespace Updater
 {
@@ -101,37 +102,13 @@ namespace Updater
             chkMin.Checked = Properties.Settings.Default.setMinimized;
 
             //Pull in News
-            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+            GetNews();
 
-            XmlDocument RSSNews = new XmlDocument();
-            RSSNews.Load("https://tarkin.org/index.php?/forum/4-announcements.xml/");
-
-            XmlNodeList RSSNewsNodes = RSSNews.SelectNodes("rss/channel/item");
-            StringBuilder RSSNewsData = new StringBuilder();
-
-            foreach (XmlNode RSSNode in RSSNewsNodes)
-            {
-                XmlNode RSSSubNode = RSSNode.SelectSingleNode("title");
-                string TitleElement = RSSSubNode != null ? RSSSubNode.InnerText : "";
-
-                RSSSubNode = RSSNode.SelectSingleNode("description");
-                string NewsElement = RSSSubNode != null ? RSSSubNode.InnerText : "";
-
-                //Clean news up.
-                NewsElement = Regex.Replace(NewsElement, "\t", "");
-                TitleElement = Regex.Replace(TitleElement, "\t", "");
-                NewsElement = Regex.Replace(NewsElement, "\n", "");
-                TitleElement = Regex.Replace(TitleElement, "\n", "");
-                NewsElement = Regex.Replace(NewsElement, "<.*?>", String.Empty);
-                TitleElement = Regex.Replace(TitleElement, "<.*?>", String.Empty);
-
-                RSSNewsData.Append(TitleElement + "\n" + NewsElement + "\n\n");
-            }
-
-            //Output News!
-            ftbNews.Text = RSSNewsData.ToString();
+            //Output Server Status
+            ServerStatus();
 
             //Check Patch Level and force to update if there is a patch
+
 
         }
 
@@ -265,6 +242,108 @@ namespace Updater
             {
                 SendKeys.Send("{PGDN}");
             }
+
+        }
+
+        private void GetNews()
+        {
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
+            //Grab data from announcement forums
+            XmlDocument RSSNews = new XmlDocument();
+            RSSNews.Load("https://tarkin.org/index.php?/forum/4-announcements.xml/");
+
+            XmlNodeList RSSNewsNodes = RSSNews.SelectNodes("rss/channel/item");
+            StringBuilder RSSNewsData = new StringBuilder();
+
+            foreach (XmlNode RSSNode in RSSNewsNodes)
+            {
+                XmlNode RSSSubNode = RSSNode.SelectSingleNode("title");
+                string TitleElement = RSSSubNode != null ? RSSSubNode.InnerText : "";
+
+                RSSSubNode = RSSNode.SelectSingleNode("description");
+                string NewsElement = RSSSubNode != null ? RSSSubNode.InnerText : "";
+
+                //Clean news up.
+                NewsElement = Regex.Replace(NewsElement, "\t", "");
+                TitleElement = Regex.Replace(TitleElement, "\t", "");
+                NewsElement = Regex.Replace(NewsElement, "\n", "");
+                TitleElement = Regex.Replace(TitleElement, "\n", "");
+                NewsElement = Regex.Replace(NewsElement, "<.*?>", String.Empty);
+                TitleElement = Regex.Replace(TitleElement, "<.*?>", String.Empty);
+
+                RSSNewsData.Append(TitleElement + "\n" + NewsElement + "\n\n");
+            }
+
+            //Output News!
+            ftbNews.Text = RSSNewsData.ToString();
+        }
+        private void ServerStatus()
+        {
+            // Create a TcpClient.
+            TcpClient stsClient = new TcpClient("23.111.128.52", 44455);
+
+            //This is required to be sent to the server so it will generate a response
+            String stsSend = "\n";
+            // Translate the response into ASCII and store it as a Byte array.
+            Byte[] stsASCII = System.Text.Encoding.ASCII.GetBytes(stsSend);
+
+            // Get a client stream for reading and writing.
+            NetworkStream stsStream = stsClient.GetStream();
+
+            // Send the message to the connected TcpServer. 
+            stsStream.Write(stsASCII, 0, stsASCII.Length);
+
+            // Buffer to store the response bytes.
+            stsASCII = new Byte[512];
+
+            // String to store the response ASCII representation.
+            String stsData = String.Empty;
+
+            // Read the first batch of the TcpServer response bytes.
+            Int32 bytes = stsStream.Read(stsASCII, 0, stsASCII.Length);
+            stsData = System.Text.Encoding.ASCII.GetString(stsASCII, 0, bytes);
+
+            // Close everything.
+            stsStream.Close();
+            stsClient.Close();
+
+            //Unpack the XML in stsData
+            String[] stsDataElements = Regex.Replace(stsData, "<.*?>", String.Empty).Split('\n');
+
+            //Fix Uptime
+            String Uptime = stsDataElements[11];
+            Double uptimeSeconds;
+            Double.TryParse(Uptime,out uptimeSeconds);
+            uptimeSeconds = uptimeSeconds * -1;
+            TimeSpan tsUptime = DateTime.Now - DateTime.Now.AddSeconds(uptimeSeconds);
+
+
+            Uptime = tsUptime.Days.ToString() + " days " + tsUptime.Hours.ToString() + " hours";
+
+            //Fix Updated
+            String Updated = stsDataElements[12];
+            Double updatedSeconds;
+            Double.TryParse(Updated, out updatedSeconds);
+
+            //Convert Milliseconds to Seconds
+            updatedSeconds = updatedSeconds / 1000;
+
+            System.DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            Epoch = Epoch.AddSeconds(updatedSeconds).ToLocalTime();
+
+            Updated = Epoch.ToShortTimeString().ToString();
+
+            //Set Labels
+            if (stsDataElements[3] == "up")
+            {
+                lblStatusEnum.Text = "Status: Up";
+                lblStatusOnline.Text = "Online: " + stsDataElements[5];
+                lblStatusMax.Text = "Max: " + stsDataElements[6];
+                lblStatusUptime.Text = "Uptime: " + Uptime;
+                lblStatusLast.Text = "Updated: " + Updated;
+            }
+            
 
         }
 

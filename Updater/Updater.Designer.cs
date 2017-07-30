@@ -53,6 +53,12 @@
             this.lblSpacer1 = new System.Windows.Forms.Label();
             this.lblExit = new System.Windows.Forms.Label();
             this.lblSettings = new System.Windows.Forms.Label();
+            this.lblStatusTitle = new System.Windows.Forms.Label();
+            this.lblStatusEnum = new System.Windows.Forms.Label();
+            this.lblStatusOnline = new System.Windows.Forms.Label();
+            this.lblStatusMax = new System.Windows.Forms.Label();
+            this.lblStatusUptime = new System.Windows.Forms.Label();
+            this.lblStatusLast = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).BeginInit();
             this.pnlMain.SuspendLayout();
             this.pnlSettings.SuspendLayout();
@@ -245,6 +251,12 @@
             // 
             // pnlNav
             // 
+            this.pnlNav.Controls.Add(this.lblStatusLast);
+            this.pnlNav.Controls.Add(this.lblStatusUptime);
+            this.pnlNav.Controls.Add(this.lblStatusMax);
+            this.pnlNav.Controls.Add(this.lblStatusOnline);
+            this.pnlNav.Controls.Add(this.lblStatusEnum);
+            this.pnlNav.Controls.Add(this.lblStatusTitle);
             this.pnlNav.Controls.Add(this.lblSpacer4);
             this.pnlNav.Controls.Add(this.lblForums);
             this.pnlNav.Controls.Add(this.lblSpacer3);
@@ -343,6 +355,67 @@
             this.lblSettings.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblSettings.Click += new System.EventHandler(this.lblSettings_Click);
             // 
+            // lblStatusTitle
+            // 
+            this.lblStatusTitle.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblStatusTitle.Location = new System.Drawing.Point(3, 332);
+            this.lblStatusTitle.Name = "lblStatusTitle";
+            this.lblStatusTitle.Size = new System.Drawing.Size(144, 23);
+            this.lblStatusTitle.TabIndex = 17;
+            this.lblStatusTitle.Text = "Server Status";
+            this.lblStatusTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblStatusEnum
+            // 
+            this.lblStatusEnum.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusEnum.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblStatusEnum.Location = new System.Drawing.Point(3, 355);
+            this.lblStatusEnum.Name = "lblStatusEnum";
+            this.lblStatusEnum.Size = new System.Drawing.Size(144, 23);
+            this.lblStatusEnum.TabIndex = 18;
+            this.lblStatusEnum.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblStatusOnline
+            // 
+            this.lblStatusOnline.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusOnline.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblStatusOnline.Location = new System.Drawing.Point(3, 378);
+            this.lblStatusOnline.Name = "lblStatusOnline";
+            this.lblStatusOnline.Size = new System.Drawing.Size(144, 23);
+            this.lblStatusOnline.TabIndex = 19;
+            this.lblStatusOnline.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblStatusMax
+            // 
+            this.lblStatusMax.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusMax.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblStatusMax.Location = new System.Drawing.Point(3, 401);
+            this.lblStatusMax.Name = "lblStatusMax";
+            this.lblStatusMax.Size = new System.Drawing.Size(144, 23);
+            this.lblStatusMax.TabIndex = 20;
+            this.lblStatusMax.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblStatusUptime
+            // 
+            this.lblStatusUptime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusUptime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblStatusUptime.Location = new System.Drawing.Point(3, 424);
+            this.lblStatusUptime.Name = "lblStatusUptime";
+            this.lblStatusUptime.Size = new System.Drawing.Size(144, 23);
+            this.lblStatusUptime.TabIndex = 21;
+            this.lblStatusUptime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblStatusLast
+            // 
+            this.lblStatusLast.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusLast.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblStatusLast.Location = new System.Drawing.Point(3, 447);
+            this.lblStatusLast.Name = "lblStatusLast";
+            this.lblStatusLast.Size = new System.Drawing.Size(144, 23);
+            this.lblStatusLast.TabIndex = 22;
+            this.lblStatusLast.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -398,6 +471,12 @@
         private System.Windows.Forms.Button btnSWG;
         private System.Windows.Forms.Label lblSettingsTitle;
         private System.Windows.Forms.RichTextBox ftbNews;
+        private System.Windows.Forms.Label lblStatusTitle;
+        private System.Windows.Forms.Label lblStatusLast;
+        private System.Windows.Forms.Label lblStatusUptime;
+        private System.Windows.Forms.Label lblStatusMax;
+        private System.Windows.Forms.Label lblStatusOnline;
+        private System.Windows.Forms.Label lblStatusEnum;
     }
 }
 

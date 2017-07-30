@@ -31,9 +31,28 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.btnMain = new System.Windows.Forms.Button();
             this.picMain = new System.Windows.Forms.PictureBox();
-            this.lblSettings = new System.Windows.Forms.Label();
+            this.pnlMain = new System.Windows.Forms.Panel();
+            this.lblNews = new System.Windows.Forms.Label();
+            this.pnlSettings = new System.Windows.Forms.Panel();
+            this.btnOK = new System.Windows.Forms.Button();
+            this.grpClose = new System.Windows.Forms.GroupBox();
+            this.chkMin = new System.Windows.Forms.CheckBox();
+            this.chkClose = new System.Windows.Forms.CheckBox();
+            this.txtFolder = new System.Windows.Forms.TextBox();
+            this.btnFolder = new System.Windows.Forms.Button();
+            this.lblFolder = new System.Windows.Forms.Label();
+            this.pnlNav = new System.Windows.Forms.Panel();
+            this.lblSpacer3 = new System.Windows.Forms.Label();
+            this.lblSpacer2 = new System.Windows.Forms.Label();
+            this.lblAbout = new System.Windows.Forms.Label();
+            this.lblSpacer1 = new System.Windows.Forms.Label();
             this.lblExit = new System.Windows.Forms.Label();
+            this.lblSettings = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).BeginInit();
+            this.pnlMain.SuspendLayout();
+            this.pnlSettings.SuspendLayout();
+            this.grpClose.SuspendLayout();
+            this.pnlNav.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnMain
@@ -42,7 +61,7 @@
             this.btnMain.FlatAppearance.BorderSize = 0;
             this.btnMain.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMain.Font = new System.Drawing.Font("Castellar", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnMain.Location = new System.Drawing.Point(551, 169);
+            this.btnMain.Location = new System.Drawing.Point(559, 488);
             this.btnMain.Name = "btnMain";
             this.btnMain.Size = new System.Drawing.Size(150, 50);
             this.btnMain.TabIndex = 1;
@@ -60,57 +79,246 @@
             this.picMain.TabStop = false;
             this.picMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picMain_MouseMove);
             // 
-            // lblSettings
+            // pnlMain
             // 
-            this.lblSettings.AutoSize = true;
-            this.lblSettings.Font = new System.Drawing.Font("Castellar", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblSettings.Location = new System.Drawing.Point(586, 12);
-            this.lblSettings.Name = "lblSettings";
-            this.lblSettings.Size = new System.Drawing.Size(70, 13);
-            this.lblSettings.TabIndex = 0;
-            this.lblSettings.Text = "Settings";
-            this.lblSettings.Click += new System.EventHandler(this.lblSettings_Click);
+            this.pnlMain.Controls.Add(this.lblNews);
+            this.pnlMain.Location = new System.Drawing.Point(13, 170);
+            this.pnlMain.Name = "pnlMain";
+            this.pnlMain.Size = new System.Drawing.Size(532, 368);
+            this.pnlMain.TabIndex = 3;
+            this.pnlMain.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMain_Paint);
+            // 
+            // lblNews
+            // 
+            this.lblNews.AutoSize = true;
+            this.lblNews.Font = new System.Drawing.Font("Castellar", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNews.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblNews.Location = new System.Drawing.Point(4, 4);
+            this.lblNews.Name = "lblNews";
+            this.lblNews.Size = new System.Drawing.Size(62, 19);
+            this.lblNews.TabIndex = 0;
+            this.lblNews.Text = "NEWS:";
+            // 
+            // pnlSettings
+            // 
+            this.pnlSettings.Controls.Add(this.btnOK);
+            this.pnlSettings.Controls.Add(this.grpClose);
+            this.pnlSettings.Controls.Add(this.txtFolder);
+            this.pnlSettings.Controls.Add(this.btnFolder);
+            this.pnlSettings.Controls.Add(this.lblFolder);
+            this.pnlSettings.Location = new System.Drawing.Point(13, 170);
+            this.pnlSettings.Name = "pnlSettings";
+            this.pnlSettings.Size = new System.Drawing.Size(532, 368);
+            this.pnlSettings.TabIndex = 4;
+            this.pnlSettings.Visible = false;
+            this.pnlSettings.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlSettings_Paint);
+            // 
+            // btnOK
+            // 
+            this.btnOK.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOK.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOK.Location = new System.Drawing.Point(8, 87);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(75, 23);
+            this.btnOK.TabIndex = 7;
+            this.btnOK.Text = "Save";
+            this.btnOK.UseVisualStyleBackColor = false;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            // 
+            // grpClose
+            // 
+            this.grpClose.Controls.Add(this.chkMin);
+            this.grpClose.Controls.Add(this.chkClose);
+            this.grpClose.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.grpClose.Location = new System.Drawing.Point(8, 31);
+            this.grpClose.Name = "grpClose";
+            this.grpClose.Size = new System.Drawing.Size(297, 50);
+            this.grpClose.TabIndex = 6;
+            this.grpClose.TabStop = false;
+            this.grpClose.Text = "On Client Launch";
+            // 
+            // chkMin
+            // 
+            this.chkMin.AutoSize = true;
+            this.chkMin.Location = new System.Drawing.Point(137, 20);
+            this.chkMin.Name = "chkMin";
+            this.chkMin.Size = new System.Drawing.Size(136, 23);
+            this.chkMin.TabIndex = 1;
+            this.chkMin.Text = "Minimize Updater";
+            this.chkMin.UseVisualStyleBackColor = true;
+            this.chkMin.CheckStateChanged += new System.EventHandler(this.chkMin_CheckedChanged);
+            // 
+            // chkClose
+            // 
+            this.chkClose.AutoSize = true;
+            this.chkClose.Location = new System.Drawing.Point(7, 20);
+            this.chkClose.Name = "chkClose";
+            this.chkClose.Size = new System.Drawing.Size(117, 23);
+            this.chkClose.TabIndex = 0;
+            this.chkClose.Text = "Close Updater";
+            this.chkClose.UseVisualStyleBackColor = true;
+            this.chkClose.CheckedChanged += new System.EventHandler(this.chkClose_CheckedChanged);
+            // 
+            // txtFolder
+            // 
+            this.txtFolder.Location = new System.Drawing.Point(114, 5);
+            this.txtFolder.Name = "txtFolder";
+            this.txtFolder.Size = new System.Drawing.Size(191, 20);
+            this.txtFolder.TabIndex = 5;
+            // 
+            // btnFolder
+            // 
+            this.btnFolder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.btnFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFolder.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFolder.Location = new System.Drawing.Point(311, 4);
+            this.btnFolder.Name = "btnFolder";
+            this.btnFolder.Size = new System.Drawing.Size(75, 23);
+            this.btnFolder.TabIndex = 4;
+            this.btnFolder.Text = "Browse...";
+            this.btnFolder.UseVisualStyleBackColor = false;
+            this.btnFolder.Click += new System.EventHandler(this.btnFolder_Click);
+            // 
+            // lblFolder
+            // 
+            this.lblFolder.AutoSize = true;
+            this.lblFolder.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFolder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblFolder.Location = new System.Drawing.Point(4, 4);
+            this.lblFolder.Name = "lblFolder";
+            this.lblFolder.Size = new System.Drawing.Size(104, 19);
+            this.lblFolder.TabIndex = 3;
+            this.lblFolder.Text = "TarkinII Folder:";
+            // 
+            // pnlNav
+            // 
+            this.pnlNav.Controls.Add(this.lblSpacer3);
+            this.pnlNav.Controls.Add(this.lblSpacer2);
+            this.pnlNav.Controls.Add(this.lblAbout);
+            this.pnlNav.Controls.Add(this.lblSpacer1);
+            this.pnlNav.Controls.Add(this.lblExit);
+            this.pnlNav.Controls.Add(this.lblSettings);
+            this.pnlNav.Location = new System.Drawing.Point(559, 12);
+            this.pnlNav.Name = "pnlNav";
+            this.pnlNav.Size = new System.Drawing.Size(150, 470);
+            this.pnlNav.TabIndex = 9;
+            this.pnlNav.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlNav_Paint);
+            // 
+            // lblSpacer3
+            // 
+            this.lblSpacer3.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSpacer3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblSpacer3.Location = new System.Drawing.Point(3, 105);
+            this.lblSpacer3.Name = "lblSpacer3";
+            this.lblSpacer3.Size = new System.Drawing.Size(144, 23);
+            this.lblSpacer3.TabIndex = 14;
+            // 
+            // lblSpacer2
+            // 
+            this.lblSpacer2.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSpacer2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblSpacer2.Location = new System.Drawing.Point(3, 82);
+            this.lblSpacer2.Name = "lblSpacer2";
+            this.lblSpacer2.Size = new System.Drawing.Size(144, 23);
+            this.lblSpacer2.TabIndex = 13;
+            // 
+            // lblAbout
+            // 
+            this.lblAbout.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAbout.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblAbout.Location = new System.Drawing.Point(3, 59);
+            this.lblAbout.Name = "lblAbout";
+            this.lblAbout.Size = new System.Drawing.Size(144, 23);
+            this.lblAbout.TabIndex = 12;
+            this.lblAbout.Text = "About";
+            this.lblAbout.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblSpacer1
+            // 
+            this.lblSpacer1.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSpacer1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblSpacer1.Location = new System.Drawing.Point(3, 36);
+            this.lblSpacer1.Name = "lblSpacer1";
+            this.lblSpacer1.Size = new System.Drawing.Size(144, 23);
+            this.lblSpacer1.TabIndex = 11;
             // 
             // lblExit
             // 
-            this.lblExit.AutoSize = true;
-            this.lblExit.Font = new System.Drawing.Font("Castellar", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblExit.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblExit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblExit.Location = new System.Drawing.Point(662, 12);
+            this.lblExit.Location = new System.Drawing.Point(3, 128);
             this.lblExit.Name = "lblExit";
-            this.lblExit.Size = new System.Drawing.Size(39, 13);
-            this.lblExit.TabIndex = 1;
+            this.lblExit.Size = new System.Drawing.Size(144, 23);
+            this.lblExit.TabIndex = 10;
             this.lblExit.Text = "Exit";
+            this.lblExit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblExit.Click += new System.EventHandler(this.lblExit_Click);
+            // 
+            // lblSettings
+            // 
+            this.lblSettings.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblSettings.Location = new System.Drawing.Point(3, 13);
+            this.lblSettings.Name = "lblSettings";
+            this.lblSettings.Size = new System.Drawing.Size(144, 23);
+            this.lblSettings.TabIndex = 9;
+            this.lblSettings.Text = "Settings";
+            this.lblSettings.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblSettings.Click += new System.EventHandler(this.lblSettings_Click);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(721, 233);
+            this.ClientSize = new System.Drawing.Size(721, 550);
             this.ControlBox = false;
-            this.Controls.Add(this.lblExit);
-            this.Controls.Add(this.lblSettings);
+            this.Controls.Add(this.pnlNav);
             this.Controls.Add(this.picMain);
             this.Controls.Add(this.btnMain);
+            this.Controls.Add(this.pnlSettings);
+            this.Controls.Add(this.pnlMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmMain";
             this.Text = "TarkinII Updater";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+            this.Load += new System.EventHandler(this.frmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).EndInit();
+            this.pnlMain.ResumeLayout(false);
+            this.pnlMain.PerformLayout();
+            this.pnlSettings.ResumeLayout(false);
+            this.pnlSettings.PerformLayout();
+            this.grpClose.ResumeLayout(false);
+            this.grpClose.PerformLayout();
+            this.pnlNav.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
         private System.Windows.Forms.Button btnMain;
         private System.Windows.Forms.PictureBox picMain;
-        private System.Windows.Forms.Label lblSettings;
+        private System.Windows.Forms.Panel pnlMain;
+        private System.Windows.Forms.Label lblNews;
+        private System.Windows.Forms.Panel pnlSettings;
+        private System.Windows.Forms.TextBox txtFolder;
+        private System.Windows.Forms.Button btnFolder;
+        private System.Windows.Forms.Label lblFolder;
+        private System.Windows.Forms.GroupBox grpClose;
+        private System.Windows.Forms.CheckBox chkMin;
+        private System.Windows.Forms.CheckBox chkClose;
+        private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Panel pnlNav;
+        private System.Windows.Forms.Label lblSpacer3;
+        private System.Windows.Forms.Label lblSpacer2;
+        private System.Windows.Forms.Label lblAbout;
+        private System.Windows.Forms.Label lblSpacer1;
         private System.Windows.Forms.Label lblExit;
+        private System.Windows.Forms.Label lblSettings;
     }
 }
 

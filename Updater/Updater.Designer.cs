@@ -359,7 +359,7 @@
             // 
             this.lblStatusTitle.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblStatusTitle.Location = new System.Drawing.Point(3, 332);
+            this.lblStatusTitle.Location = new System.Drawing.Point(2, 330);
             this.lblStatusTitle.Name = "lblStatusTitle";
             this.lblStatusTitle.Size = new System.Drawing.Size(144, 23);
             this.lblStatusTitle.TabIndex = 17;
@@ -370,7 +370,7 @@
             // 
             this.lblStatusEnum.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusEnum.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblStatusEnum.Location = new System.Drawing.Point(3, 355);
+            this.lblStatusEnum.Location = new System.Drawing.Point(3, 353);
             this.lblStatusEnum.Name = "lblStatusEnum";
             this.lblStatusEnum.Size = new System.Drawing.Size(144, 23);
             this.lblStatusEnum.TabIndex = 18;
@@ -380,7 +380,7 @@
             // 
             this.lblStatusOnline.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusOnline.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblStatusOnline.Location = new System.Drawing.Point(3, 378);
+            this.lblStatusOnline.Location = new System.Drawing.Point(2, 376);
             this.lblStatusOnline.Name = "lblStatusOnline";
             this.lblStatusOnline.Size = new System.Drawing.Size(144, 23);
             this.lblStatusOnline.TabIndex = 19;
@@ -390,7 +390,7 @@
             // 
             this.lblStatusMax.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusMax.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblStatusMax.Location = new System.Drawing.Point(3, 401);
+            this.lblStatusMax.Location = new System.Drawing.Point(2, 399);
             this.lblStatusMax.Name = "lblStatusMax";
             this.lblStatusMax.Size = new System.Drawing.Size(144, 23);
             this.lblStatusMax.TabIndex = 20;
@@ -400,7 +400,7 @@
             // 
             this.lblStatusUptime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusUptime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblStatusUptime.Location = new System.Drawing.Point(3, 424);
+            this.lblStatusUptime.Location = new System.Drawing.Point(3, 422);
             this.lblStatusUptime.Name = "lblStatusUptime";
             this.lblStatusUptime.Size = new System.Drawing.Size(144, 23);
             this.lblStatusUptime.TabIndex = 21;
@@ -410,7 +410,7 @@
             // 
             this.lblStatusLast.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusLast.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblStatusLast.Location = new System.Drawing.Point(3, 447);
+            this.lblStatusLast.Location = new System.Drawing.Point(2, 445);
             this.lblStatusLast.Name = "lblStatusLast";
             this.lblStatusLast.Size = new System.Drawing.Size(144, 23);
             this.lblStatusLast.TabIndex = 22;

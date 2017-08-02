@@ -112,7 +112,6 @@ namespace Updater
 
             //Set patch level
             lblPatchLevel.Text = "Patch: " + Properties.Settings.Default.patchLevel;
-
         }
 
         private void frmMain_Activated(object sender, EventArgs e)
@@ -307,8 +306,6 @@ namespace Updater
             ftpTarkin.DownloadFile(new Uri("ftp://ftp.ravenwoodgaming.com/Tarkin" + Filename), Properties.Settings.Default.setFolder + Filename.Replace("/", "\\"));
         }
 
-
-
         private void UpdatePatchVersion()
         {
             //Let's take the very first line and set it to our patchLevel setting
@@ -357,7 +354,20 @@ namespace Updater
 
         private void btnForcePatch_Click(object sender, EventArgs e)
         {
+            //Lets make sure to check the patch again in the case the user changed the folder on us
+            CheckPatch();
+
             //User wants to verify file integrity...so let's do that.
+            DownLoadPatch();
+        }
+
+        private void txtFolder_TextChanged(object sender, EventArgs e)
+        {
+            //User changed the folder, reset the patch and check patch
+            lblPatchLevel.Text = "Patch: ";
+            CheckPatch();
+
+            //Now, download run a download patch
             DownLoadPatch();
         }
 

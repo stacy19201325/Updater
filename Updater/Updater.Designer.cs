@@ -264,6 +264,7 @@
             this.txtFolder.Name = "txtFolder";
             this.txtFolder.Size = new System.Drawing.Size(191, 20);
             this.txtFolder.TabIndex = 5;
+            this.txtFolder.TextChanged += new System.EventHandler(this.txtFolder_TextChanged);
             // 
             // btnFolder
             // 
@@ -474,8 +475,8 @@
             this.Controls.Add(this.pnlNav);
             this.Controls.Add(this.picMain);
             this.Controls.Add(this.btnMain);
-            this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlSettings);
+            this.Controls.Add(this.pnlMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;

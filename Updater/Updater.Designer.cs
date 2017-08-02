@@ -264,7 +264,6 @@
             this.txtFolder.Name = "txtFolder";
             this.txtFolder.Size = new System.Drawing.Size(191, 20);
             this.txtFolder.TabIndex = 5;
-            this.txtFolder.TextChanged += new System.EventHandler(this.txtFolder_TextChanged);
             // 
             // btnFolder
             // 

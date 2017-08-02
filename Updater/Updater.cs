@@ -357,17 +357,7 @@ namespace Updater
             //Lets make sure to check the patch again in the case the user changed the folder on us
             CheckPatch();
 
-            //User wants to verify file integrity...so let's do that.
-            DownLoadPatch();
-        }
-
-        private void txtFolder_TextChanged(object sender, EventArgs e)
-        {
-            //User changed the folder, reset the patch and check patch
-            lblPatchLevel.Text = "Patch: ";
-            CheckPatch();
-
-            //Now, download run a download patch
+            //Run the download
             DownLoadPatch();
         }
 
@@ -389,6 +379,9 @@ namespace Updater
 
         private void btnFolder_Click(object sender, EventArgs e)
         {
+            //Lets make a variable to test whether the user changed the folder
+            String previousFolder = txtFolder.Text;
+
             //Allow the user to select a new folder
             FolderBrowserDialog fbdFolder = new FolderBrowserDialog();
 
@@ -400,6 +393,17 @@ namespace Updater
                 Properties.Settings.Default.setFolder = fbdFolder.SelectedPath;
                 Properties.Settings.Default.Save();
             }
+
+            //Check to see if the variable has changed
+            if (previousFolder != Properties.Settings.Default.setFolder)
+            {
+                //User changed the folder
+                CheckPatch();
+
+                //Also, force an update
+                DownLoadPatch();
+            }
+
         }
 
         private void chkClose_CheckedChanged(object sender, EventArgs e)

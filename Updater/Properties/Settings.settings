@@ -11,5 +11,11 @@
     <Setting Name="setMinimized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="patchLevel" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1.0.0.0</Value>
+    </Setting>
+    <Setting Name="serverFileCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">84</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

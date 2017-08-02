@@ -13,6 +13,9 @@ using System.Xml;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Net.Sockets;
+using System.IO;
+using System.Security.Cryptography;
+using System.Threading;
 
 namespace Updater
 {
@@ -107,9 +110,211 @@ namespace Updater
             //Output Server Status
             ServerStatus();
 
+            //Set patch level
+            lblPatchLevel.Text = "Patch: " + Properties.Settings.Default.patchLevel;
+
+        }
+
+        private void frmMain_Activated(object sender, EventArgs e)
+        {
             //Check Patch Level and force to update if there is a patch
+            CheckPatch();
+        }
+
+        private void CheckPatch()
+        {
+            //First thing is first, let's download the patch file to the user's machine
+            DownloadFile("/PatchData.csv");
+
+            //First, let's check the number of lines in server and set to clientFileNumber.
+            Properties.Settings.Default.serverFileCount = File.ReadLines(Properties.Settings.Default.setFolder + "\\PatchData.csv").Count() - 1;
+
+            //Now, let's take the very first line and compare it to our patchLevel setting
+            StreamReader patchCheck = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.csv");
+            
+            String clientPatchLevel = patchCheck.ReadLine();
+            patchCheck.Close();
+
+            //Check patch level
+            if (clientPatchLevel == Properties.Settings.Default.patchLevel)
+            {
+                //Patch level is correct. Allow user to play.
+                btnMain.Text = "PLAY";
+                btnMain.UseWaitCursor = false;
+                btnMain.Enabled = true;
+            }
+            else
+            {
+                //We need to patch before the user can play
+                btnMain.Text = "UPDATE";
+                btnMain.UseWaitCursor = false;
+                btnMain.Enabled = true;
+            }
+        }
+
+        private void DownLoadPatch()
+        {
+            //Set the main button so they will not touch.
+            btnMain.Text = "WAIT";
+            btnMain.UseWaitCursor = true;
+            btnMain.Enabled = false;
+
+            //Force the user to the News panel, resize the news box, unhide the progress bars
+            pnlSettings.Visible = false;
+            pnlMain.Visible = true;
+            ftbNews.Height = 309;
+            pbTotal.Visible = true;
+            pbTotal.Value = 0;
+
+            //Create some vars
+            DirectoryInfo clientDir = new DirectoryInfo(Properties.Settings.Default.setFolder);
+            StreamReader patchReader = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.csv");
+
+            FileInfo[] clientFiles = clientDir.GetFiles("*.*", SearchOption.AllDirectories);
+            List<String> serverFiles = new List<String>();
+
+            //Read past the first line so we ignore the patch info
+            patchReader.ReadLine();
+
+            //Iterate through the PatchData.csv and save off the data in a list
+            while (!patchReader.EndOfStream)
+            {
+                //Set the csv to the serverFiles List.
+                serverFiles.Add(patchReader.ReadLine());
+            }
+
+            //Set Total progressbar maximum to twice serverFileCount
+            pbTotal.Maximum = Properties.Settings.Default.serverFileCount * 2;
+
+            //First, loop through server list and set a value for name and file size.
+            foreach (String serverSearch in serverFiles.ToList())
+            {
+                //Split the data from the CSV by comma.
+                String[] serverData = serverSearch.Split(',');
+                String serverFileName = serverData[0];
+                long serverFileLength = Convert.ToInt64(serverData[1]);
+                String serverHash = serverData[2];
+                bool actionFlag = false;
+
+                //Loop through the client array and try and find a name match, then check the file size
+                foreach (FileInfo clientSearch in clientFiles)
+                {
+                    String clientFileName = clientSearch.FullName.Replace(Properties.Settings.Default.setFolder,"");
+                    long clientFileLength = clientSearch.Length;
+
+                    if (serverFileName == clientFileName)
+                    {
+                        //Match is found, check the file length, ignore if equal
+                        if (serverFileLength == clientFileLength)
+                        {
+                            //File match found with same file size. Keep on directory list to check CRC. Set flag.
+                            actionFlag = true;
+                            break;
+                        }
+                        else
+                        {
+                            //File match with different file size. Download file from server. Remove file from server list. Set flag.
+                            File.Delete(clientSearch.FullName);
+
+                            DownloadFile(serverFileName);
+
+                            serverFiles.Remove(serverSearch);
+                            pbTotal.Increment(1);
+                            actionFlag = true;
+                            break;
+                        }
+                    }
+                }
+                //No match was found. We need to download the server file. Remove file from server list
+                if (actionFlag == false)
+                {
+                    DownloadFile(serverFileName);
+
+                    serverFiles.Remove(serverSearch);
+                    pbTotal.Increment(1);
+                }
+                //Advance the progress bar for total
+                pbTotal.Increment(1);
+            }
+
+            //Now, we have checked filenames and filesizes. Let's check CRCs.
+            foreach (String serverSearch in serverFiles.ToList())
+            {
+                String[] serverData = serverSearch.Split(',');
+                String serverFileName = serverData[0];
+                String serverHash = serverData[2];
+
+                //Loop through clients to find the filename match
+                foreach (FileInfo clientSearch in clientFiles)
+                {
+                    String clientFileHash;
+                    String clientFileName = clientSearch.FullName.Replace(Properties.Settings.Default.setFolder, "");
+
+                    if (serverFileName == clientFileName)
+                    {
+                        //Match found, create CRC from clientfile.
+                        using (var md5 = MD5.Create())
+                        {
+                            using (var stream = File.OpenRead(clientSearch.FullName))
+                            {
+                                clientFileHash = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", String.Empty);
+                            }
+                        }
+
+                        //Compare server and client hash
+                        if (serverHash == clientFileHash)
+                        {
+                            //Match found. Delete server entry.
+                            serverFiles.Remove(serverSearch);
+                            break;
+                        }
+                        else
+                        {
+                            //Match not found. Download file from server.
+                            File.Delete(clientSearch.FullName);
+
+                            DownloadFile(serverFileName);
+
+                            serverFiles.Remove(serverSearch);
+                        }
+
+                    }
+                }
+                //Advance the progress bar for total
+                pbTotal.Increment(1);
+            }
+
+            //Finally, lets call the method to update the patch number
+            UpdatePatchVersion();
+
+            //Patch level is correct. Allow user to play.
+            btnMain.Text = "PLAY";
+            btnMain.UseWaitCursor = false;
+            btnMain.Enabled = true;
+
+            //Hide progress bars and extend news panel
+            ftbNews.Height = 339;
+            pbTotal.Visible = false;
+        }
+
+        private void DownloadFile(string Filename)
+        {
+            //Create FTP Connector
+            WebClient ftpTarkin = new WebClient();
+            ftpTarkin.Credentials = new NetworkCredential("anonymous@ravenwoodgaming.com", "");
+
+            //Download the file
+            ftpTarkin.DownloadFile(new Uri("ftp://ftp.ravenwoodgaming.com/Tarkin" + Filename), Properties.Settings.Default.setFolder + Filename.Replace("/", "\\"));
+        }
 
 
+
+        private void UpdatePatchVersion()
+        {
+            //Let's take the very first line and set it to our patchLevel setting
+            StreamReader patchCheck = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.csv");
+            Properties.Settings.Default.patchLevel = patchCheck.ReadLine();
+            patchCheck.Close();
         }
 
         public frmMain()
@@ -119,26 +324,41 @@ namespace Updater
 
         private void btnMain_Click(object sender, EventArgs e)
         {
-            //Open the Tarkin client.
-            Process procTarkin = new Process();
-
-            procTarkin.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu.exe";
-            procTarkin.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
-
-            procTarkin.Start();
-
-            //Minimize Updater
-            if (Properties.Settings.Default.setMinimized == true)
+            //Decide whether the button is Play or Update
+            if (btnMain.Text == "UPDATE")
             {
-                this.WindowState = FormWindowState.Minimized;
+                //Let's update the client
+                DownLoadPatch();
             }
-
-            //Close Updater
-            if (Properties.Settings.Default.setClosed == true)
+            else if (btnMain.Text == "PLAY")
             {
-                Application.Exit();
-            }
+                //Open the Tarkin client.
+                Process procTarkin = new Process();
 
+                procTarkin.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu.exe";
+                procTarkin.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
+
+                procTarkin.Start();
+
+                //Minimize Updater
+                if (Properties.Settings.Default.setMinimized == true)
+                {
+                    this.WindowState = FormWindowState.Minimized;
+                }
+
+                //Close Updater
+                if (Properties.Settings.Default.setClosed == true)
+                {
+                    Application.Exit();
+                }
+            }
+           
+        }
+
+        private void btnForcePatch_Click(object sender, EventArgs e)
+        {
+            //User wants to verify file integrity...so let's do that.
+            DownLoadPatch();
         }
 
         private void lblExit_Click(object sender, EventArgs e)
@@ -393,6 +613,7 @@ namespace Updater
         {
             lblExit.ForeColor = Color.FromArgb(160, 252, 192, 63);
         }
+
     }
 
 }

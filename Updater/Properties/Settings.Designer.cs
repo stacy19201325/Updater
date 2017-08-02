@@ -58,5 +58,29 @@ namespace Updater.Properties {
                 this["setMinimized"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1.0.0.0")]
+        public string patchLevel {
+            get {
+                return ((string)(this["patchLevel"]));
+            }
+            set {
+                this["patchLevel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("84")]
+        public int serverFileCount {
+            get {
+                return ((int)(this["serverFileCount"]));
+            }
+            set {
+                this["serverFileCount"] = value;
+            }
+        }
     }
 }

@@ -32,9 +32,12 @@
             this.btnMain = new System.Windows.Forms.Button();
             this.picMain = new System.Windows.Forms.PictureBox();
             this.pnlMain = new System.Windows.Forms.Panel();
-            this.ftbNews = new System.Windows.Forms.RichTextBox();
+            this.pbTotal = new System.Windows.Forms.ProgressBar();
             this.lblNews = new System.Windows.Forms.Label();
+            this.ftbNews = new System.Windows.Forms.RichTextBox();
             this.pnlSettings = new System.Windows.Forms.Panel();
+            this.btnForcePatch = new System.Windows.Forms.Button();
+            this.lblPatchLevel = new System.Windows.Forms.Label();
             this.lblSettingsTitle = new System.Windows.Forms.Label();
             this.btnSWG = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
@@ -69,6 +72,7 @@
             // btnMain
             // 
             this.btnMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.btnMain.Enabled = false;
             this.btnMain.FlatAppearance.BorderSize = 0;
             this.btnMain.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMain.Font = new System.Drawing.Font("Castellar", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -76,8 +80,9 @@
             this.btnMain.Name = "btnMain";
             this.btnMain.Size = new System.Drawing.Size(150, 50);
             this.btnMain.TabIndex = 1;
-            this.btnMain.Text = "PLAY";
+            this.btnMain.Text = "WAIT";
             this.btnMain.UseVisualStyleBackColor = false;
+            this.btnMain.UseWaitCursor = true;
             this.btnMain.Click += new System.EventHandler(this.btnMain_Click);
             // 
             // picMain
@@ -92,8 +97,9 @@
             // 
             // pnlMain
             // 
-            this.pnlMain.Controls.Add(this.ftbNews);
+            this.pnlMain.Controls.Add(this.pbTotal);
             this.pnlMain.Controls.Add(this.lblNews);
+            this.pnlMain.Controls.Add(this.ftbNews);
             this.pnlMain.Location = new System.Drawing.Point(13, 170);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(532, 368);
@@ -101,22 +107,13 @@
             this.pnlMain.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMain_Paint);
             this.pnlMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMain_MouseMove);
             // 
-            // ftbNews
+            // pbTotal
             // 
-            this.ftbNews.BackColor = System.Drawing.Color.Black;
-            this.ftbNews.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.ftbNews.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.ftbNews.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ftbNews.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.ftbNews.Location = new System.Drawing.Point(8, 26);
-            this.ftbNews.Name = "ftbNews";
-            this.ftbNews.ReadOnly = true;
-            this.ftbNews.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.ftbNews.Size = new System.Drawing.Size(521, 339);
-            this.ftbNews.TabIndex = 1;
-            this.ftbNews.Text = "";
-            this.ftbNews.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ftbNews_MouseMove);
-            this.ftbNews.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.ftbNews_MouseWheel);
+            this.pbTotal.Location = new System.Drawing.Point(3, 341);
+            this.pbTotal.Name = "pbTotal";
+            this.pbTotal.Size = new System.Drawing.Size(526, 20);
+            this.pbTotal.TabIndex = 3;
+            this.pbTotal.Visible = false;
             // 
             // lblNews
             // 
@@ -129,8 +126,27 @@
             this.lblNews.TabIndex = 0;
             this.lblNews.Text = "NEWS:";
             // 
+            // ftbNews
+            // 
+            this.ftbNews.BackColor = System.Drawing.Color.Black;
+            this.ftbNews.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ftbNews.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.ftbNews.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ftbNews.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.ftbNews.Location = new System.Drawing.Point(8, 26);
+            this.ftbNews.Name = "ftbNews";
+            this.ftbNews.ReadOnly = true;
+            this.ftbNews.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.ftbNews.Size = new System.Drawing.Size(521, 309);
+            this.ftbNews.TabIndex = 1;
+            this.ftbNews.Text = "";
+            this.ftbNews.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ftbNews_MouseMove);
+            this.ftbNews.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.ftbNews_MouseWheel);
+            // 
             // pnlSettings
             // 
+            this.pnlSettings.Controls.Add(this.btnForcePatch);
+            this.pnlSettings.Controls.Add(this.lblPatchLevel);
             this.pnlSettings.Controls.Add(this.lblSettingsTitle);
             this.pnlSettings.Controls.Add(this.btnSWG);
             this.pnlSettings.Controls.Add(this.btnOK);
@@ -145,6 +161,30 @@
             this.pnlSettings.Visible = false;
             this.pnlSettings.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlSettings_Paint);
             this.pnlSettings.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlSettings_MouseMove);
+            // 
+            // btnForcePatch
+            // 
+            this.btnForcePatch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.btnForcePatch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnForcePatch.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnForcePatch.Location = new System.Drawing.Point(405, 307);
+            this.btnForcePatch.Name = "btnForcePatch";
+            this.btnForcePatch.Size = new System.Drawing.Size(125, 30);
+            this.btnForcePatch.TabIndex = 11;
+            this.btnForcePatch.Text = "Verify File Integrity";
+            this.btnForcePatch.UseVisualStyleBackColor = false;
+            this.btnForcePatch.Click += new System.EventHandler(this.btnForcePatch_Click);
+            // 
+            // lblPatchLevel
+            // 
+            this.lblPatchLevel.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPatchLevel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblPatchLevel.Location = new System.Drawing.Point(399, 341);
+            this.lblPatchLevel.Name = "lblPatchLevel";
+            this.lblPatchLevel.Size = new System.Drawing.Size(130, 23);
+            this.lblPatchLevel.TabIndex = 10;
+            this.lblPatchLevel.Text = "Patch: ";
+            this.lblPatchLevel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblSettingsTitle
             // 
@@ -164,7 +204,7 @@
             this.btnSWG.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSWG.Location = new System.Drawing.Point(8, 114);
             this.btnSWG.Name = "btnSWG";
-            this.btnSWG.Size = new System.Drawing.Size(124, 23);
+            this.btnSWG.Size = new System.Drawing.Size(125, 30);
             this.btnSWG.TabIndex = 8;
             this.btnSWG.Text = "Client Settings";
             this.btnSWG.UseVisualStyleBackColor = false;
@@ -441,6 +481,7 @@
             this.MaximizeBox = false;
             this.Name = "frmMain";
             this.Text = "TarkinII Updater";
+            this.Activated += new System.EventHandler(this.frmMain_Activated);
             this.Load += new System.EventHandler(this.frmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).EndInit();
             this.pnlMain.ResumeLayout(false);
@@ -485,6 +526,9 @@
         private System.Windows.Forms.Label lblStatusMax;
         private System.Windows.Forms.Label lblStatusOnline;
         private System.Windows.Forms.Label lblStatusEnum;
+        private System.Windows.Forms.Label lblPatchLevel;
+        private System.Windows.Forms.Button btnForcePatch;
+        private System.Windows.Forms.ProgressBar pbTotal;
     }
 }
 

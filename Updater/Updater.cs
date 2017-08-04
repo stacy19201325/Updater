@@ -22,6 +22,52 @@ namespace Updater
     public partial class frmMain : Form
     {
 
+        #region frmMain
+        public frmMain()
+        {
+            InitializeComponent();
+        }//Done
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            //Let's set the folder location from Resources
+            txtFolder.Text = Properties.Settings.Default.setFolder;
+
+            //Let's also set the checkbox options for Client launch
+            chkClose.Checked = Properties.Settings.Default.setClosed;
+            chkMin.Checked = Properties.Settings.Default.setMinimized;
+
+            //Pull in News
+            GetNews();
+
+            //Output Server Status
+            ServerStatus();
+
+            //Set patch level
+            lblPatchLevel.Text = "Patch: " + Properties.Settings.Default.patchLevel;
+        }//Done
+
+        private void frmMain_Activated(object sender, EventArgs e)
+        {
+            //Initialize the worker
+            this.CheckPatchWorker = new BackgroundWorker();
+            this.CheckPatchWorker.DoWork += new DoWorkEventHandler(CheckPatch);
+            this.CheckPatchWorker.ProgressChanged += new ProgressChangedEventHandler(CheckPatchProgress);
+            this.CheckPatchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CheckPatchDone);
+
+            //Check Patch Level and force to update if there is a patch
+            this.CheckPatchWorker.RunWorkerAsync();
+        }//Done
+        #endregion
+
+        #region Globals
+        //Let's make a background worker for check patch so the main thread does not stop
+        private BackgroundWorker CheckPatchWorker;
+
+        //Let's make a background worker for download patch so the main thread does not stop
+        private BackgroundWorker DownloadPatchWorker;
+        #endregion
+
         #region Form Movers
 
         //Allow us to move the form
@@ -93,44 +139,252 @@ namespace Updater
                 SendMessage(Handle, WMNCLBUTTONDOWN, HTCAPTION, 0);
             }
         }
+
+        private void ftbNews_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta == 120)
+            {
+                SendKeys.Send("{PGUP}");
+            }
+            else if (e.Delta == -120)
+            {
+                SendKeys.Send("{PGDN}");
+            }
+
+        }
+
         #endregion
 
-        private void frmMain_Load(object sender, EventArgs e)
+        #region UI Visual Elements
+
+        private void lblSettings_MouseHover(object sender, EventArgs e)
         {
-            //Let's set the folder location from Resources
-            txtFolder.Text = Properties.Settings.Default.setFolder;
-
-            //Let's also set the checkbox options for Client launch
-            chkClose.Checked = Properties.Settings.Default.setClosed;
-            chkMin.Checked = Properties.Settings.Default.setMinimized;
-
-            //Pull in News
-            GetNews();
-
-            //Output Server Status
-            ServerStatus();
-
-            //Set patch level
-            lblPatchLevel.Text = "Patch: " + Properties.Settings.Default.patchLevel;
+            lblSettings.ForeColor = Color.FromArgb(160, 255, 255, 255);
         }
 
-        private void frmMain_Activated(object sender, EventArgs e)
+        private void lblSettings_MouseLeave(object sender, EventArgs e)
         {
+            lblSettings.ForeColor = Color.FromArgb(160, 252, 192, 63);
+        }
+
+        private void lblForums_MouseHover(object sender, EventArgs e)
+        {
+            lblForums.ForeColor = Color.FromArgb(160, 255, 255, 255);
+        }
+
+        private void lblForums_MouseLeave(object sender, EventArgs e)
+        {
+            lblForums.ForeColor = Color.FromArgb(160, 252, 192, 63);
+        }
+
+        private void lblAbout_MouseHover(object sender, EventArgs e)
+        {
+            lblAbout.ForeColor = Color.FromArgb(160, 255, 255, 255);
+        }
+
+        private void lblAbout_MouseLeave(object sender, EventArgs e)
+        {
+            lblAbout.ForeColor = Color.FromArgb(160, 252, 192, 63);
+        }
+
+        private void lblExit_MouseHover(object sender, EventArgs e)
+        {
+            lblExit.ForeColor = Color.FromArgb(160, 255, 255, 255);
+        }
+
+        private void lblExit_MouseLeave(object sender, EventArgs e)
+        {
+            lblExit.ForeColor = Color.FromArgb(160, 252, 192, 63);
+        }
+
+        private void pnlNav_Paint(object sender, PaintEventArgs e)
+        {
+            ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.FromArgb(160, 252, 192, 63), ButtonBorderStyle.Solid);
+        }
+
+        private void pnlMain_Paint(object sender, PaintEventArgs e)
+        {
+            ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.FromArgb(160, 252, 192, 63), ButtonBorderStyle.Solid);
+        }
+
+        private void pnlSettings_Paint(object sender, PaintEventArgs e)
+        {
+            ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.FromArgb(160, 252, 192, 63), ButtonBorderStyle.Solid);
+        }
+
+        private void chkClose_CheckedChanged(object sender, EventArgs e)
+        {
+            //See if the user checked a box and unselect the other if they did
+            if (chkClose.Checked == true)
+            {
+                chkMin.Checked = false;
+
+                //Also, let's save the Settings
+                Properties.Settings.Default.setClosed = true;
+                Properties.Settings.Default.setMinimized = false;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private void chkMin_CheckedChanged(object sender, EventArgs e)
+        {
+            //See if the user checked a box and unselect the other if they did
+            if (chkMin.Checked == true)
+            {
+                chkClose.Checked = false;
+
+                //Also, let's save the Settings
+                Properties.Settings.Default.setMinimized = true;
+                Properties.Settings.Default.setClosed = false;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        #endregion
+
+        #region Buttons
+
+        private void btnMain_Click(object sender, EventArgs e)
+        {
+            //Decide whether the button is Play or Update
+            if (btnMain.Text == "UPDATE")
+            {
+                //Initialize the worker
+                this.DownloadPatchWorker = new BackgroundWorker();
+                this.DownloadPatchWorker.DoWork += new DoWorkEventHandler(DownloadPatch);
+                this.DownloadPatchWorker.ProgressChanged += new ProgressChangedEventHandler(DownloadPatchProgress);
+                this.DownloadPatchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DownloadPatchDone);
+
+                //Check Patch Level and force to update if there is a patch
+                this.DownloadPatchWorker.RunWorkerAsync();
+            }
+            else if (btnMain.Text == "PLAY")
+            {
+                //Open the Tarkin client.
+                Process procTarkin = new Process();
+
+                procTarkin.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu.exe";
+                procTarkin.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
+
+                procTarkin.Start();
+
+                //Minimize Updater
+                if (Properties.Settings.Default.setMinimized == true)
+                {
+                    this.WindowState = FormWindowState.Minimized;
+                }
+
+                //Close Updater
+                if (Properties.Settings.Default.setClosed == true)
+                {
+                    Application.Exit();
+                }
+            }
+
+        }//Add Logic on error to force download
+
+        private void btnForcePatch_Click(object sender, EventArgs e)
+        {
+            //Initialize the worker
+            this.CheckPatchWorker = new BackgroundWorker();
+            this.CheckPatchWorker.DoWork += new DoWorkEventHandler(CheckPatch);
+            this.CheckPatchWorker.ProgressChanged += new ProgressChangedEventHandler(CheckPatchProgress);
+            this.CheckPatchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CheckPatchDone);
+
             //Check Patch Level and force to update if there is a patch
-            CheckPatch();
-        }
+            this.CheckPatchWorker.RunWorkerAsync();
+        }//Done
 
-        private void CheckPatch()
+        private void btnFolder_Click(object sender, EventArgs e)
         {
+            //Lets make a variable to test whether the user changed the folder
+            String previousFolder = txtFolder.Text;
+
+            //Allow the user to select a new folder
+            FolderBrowserDialog fbdFolder = new FolderBrowserDialog();
+
+            if (fbdFolder.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                txtFolder.Text = fbdFolder.SelectedPath;
+
+                //Let's save the Settings
+                Properties.Settings.Default.setFolder = fbdFolder.SelectedPath;
+                Properties.Settings.Default.Save();
+            }
+
+            //Check to see if the variable has changed
+            if (previousFolder != Properties.Settings.Default.setFolder)
+            {
+                //Initialize the worker
+                this.CheckPatchWorker = new BackgroundWorker();
+                this.CheckPatchWorker.DoWork += new DoWorkEventHandler(CheckPatch);
+                this.CheckPatchWorker.ProgressChanged += new ProgressChangedEventHandler(CheckPatchProgress);
+                this.CheckPatchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CheckPatchDone);
+
+                //Check Patch Level and force to update if there is a patch
+                this.CheckPatchWorker.RunWorkerAsync();
+            }
+
+        }//Done
+
+        private void lblExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }//Done
+
+        private void lblSettings_Click(object sender, EventArgs e)
+        {
+            pnlMain.Visible = false;
+            pnlSettings.Visible = true;
+        }//Done
+
+        private void lblForums_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://tarkin.org");
+        }//Done
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            pnlMain.Visible = true;
+            pnlSettings.Visible = false;
+        }//Done
+
+        private void btnSWG_Click(object sender, EventArgs e)
+        {
+            //Open the SWG Settings.
+            Process procTarkin = new Process();
+
+            procTarkin.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
+            procTarkin.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
+
+            procTarkin.Start();
+        }//Done
+
+        #endregion
+
+        #region Methods
+        private void CheckPatch(object sender, DoWorkEventArgs e)
+        {
+            //Set the main and forcepatch buttons so they will not touch.
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "WAIT"; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.UseWaitCursor = true; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = false; }));
+            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.UseWaitCursor = true; }));
+            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = false; }));
+
+            //Force the user to the News panel and resize the news box
+            pnlSettings.Invoke(new MethodInvoker(delegate { pnlSettings.Visible = false; }));
+            pnlMain.Invoke(new MethodInvoker(delegate { pnlMain.Visible = true; }));
+
             //First thing is first, let's download the patch file to the user's machine
             DownloadFile("/PatchData.csv");
 
-            //First, let's check the number of lines in server and set to clientFileNumber.
+            //First, let's check the number of lines in server and set to serverFileCount.
             Properties.Settings.Default.serverFileCount = File.ReadLines(Properties.Settings.Default.setFolder + "\\PatchData.csv").Count() - 1;
 
             //Now, let's take the very first line and compare it to our patchLevel setting
             StreamReader patchCheck = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.csv");
-            
+
             String clientPatchLevel = patchCheck.ReadLine();
             patchCheck.Close();
 
@@ -138,32 +392,42 @@ namespace Updater
             if (clientPatchLevel == Properties.Settings.Default.patchLevel)
             {
                 //Patch level is correct. Allow user to play.
-                btnMain.Text = "PLAY";
-                btnMain.UseWaitCursor = false;
-                btnMain.Enabled = true;
+                btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "PLAY"; }));
             }
             else
             {
                 //We need to patch before the user can play
-                btnMain.Text = "UPDATE";
-                btnMain.UseWaitCursor = false;
-                btnMain.Enabled = true;
+                btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "UPDATE"; }));
             }
         }
 
-        private void DownLoadPatch()
+        private void CheckPatchProgress(object sender, ProgressChangedEventArgs e)
         {
-            //Set the main button so they will not touch.
-            btnMain.Text = "WAIT";
-            btnMain.UseWaitCursor = true;
-            btnMain.Enabled = false;
 
-            //Force the user to the News panel, resize the news box, unhide the progress bars
-            pnlSettings.Visible = false;
-            pnlMain.Visible = true;
-            ftbNews.Height = 309;
-            pbTotal.Visible = true;
-            pbTotal.Value = 0;
+        }
+
+        private void CheckPatchDone(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //Turn the main button back on
+            btnMain.UseWaitCursor = false;
+            btnMain.Enabled = true;
+        }
+
+        private void DownloadPatch(object sender, DoWorkEventArgs e)
+        {
+            //Set the main and force patch buttons so they will not touch.
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "WAIT"; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.UseWaitCursor = true; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = false; }));
+            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.UseWaitCursor = true; }));
+            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = false; }));
+
+            //Force the user to the News panel and resize the news box
+            pnlSettings.Invoke(new MethodInvoker(delegate { pnlSettings.Visible = false; }));
+            pnlMain.Invoke(new MethodInvoker(delegate { pnlMain.Visible = true; }));
+            ftbNews.Invoke(new MethodInvoker(delegate { ftbNews.Height = 309; }));
+            pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Visible = true; }));
+            pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Value = 0; }));
 
             //Create some vars
             DirectoryInfo clientDir = new DirectoryInfo(Properties.Settings.Default.setFolder);
@@ -183,7 +447,7 @@ namespace Updater
             }
 
             //Set Total progressbar maximum to twice serverFileCount
-            pbTotal.Maximum = Properties.Settings.Default.serverFileCount * 2;
+            pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Maximum = Properties.Settings.Default.serverFileCount * 2; }));
 
             //First, loop through server list and set a value for name and file size.
             foreach (String serverSearch in serverFiles.ToList())
@@ -198,7 +462,7 @@ namespace Updater
                 //Loop through the client array and try and find a name match, then check the file size
                 foreach (FileInfo clientSearch in clientFiles)
                 {
-                    String clientFileName = clientSearch.FullName.Replace(Properties.Settings.Default.setFolder,"");
+                    String clientFileName = clientSearch.FullName.Replace(Properties.Settings.Default.setFolder, "");
                     long clientFileLength = clientSearch.Length;
 
                     if (serverFileName == clientFileName)
@@ -218,7 +482,7 @@ namespace Updater
                             DownloadFile(serverFileName);
 
                             serverFiles.Remove(serverSearch);
-                            pbTotal.Increment(1);
+                            pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Increment(1); }));
                             actionFlag = true;
                             break;
                         }
@@ -230,10 +494,10 @@ namespace Updater
                     DownloadFile(serverFileName);
 
                     serverFiles.Remove(serverSearch);
-                    pbTotal.Increment(1);
+                    pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Increment(1); }));
                 }
                 //Advance the progress bar for total
-                pbTotal.Increment(1);
+                pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Increment(1); }));
             }
 
             //Now, we have checked filenames and filesizes. Let's check CRCs.
@@ -280,20 +544,30 @@ namespace Updater
                     }
                 }
                 //Advance the progress bar for total
-                pbTotal.Increment(1);
+                pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Increment(1); }));
             }
 
             //Finally, lets call the method to update the patch number
             UpdatePatchVersion();
 
             //Patch level is correct. Allow user to play.
-            btnMain.Text = "PLAY";
-            btnMain.UseWaitCursor = false;
-            btnMain.Enabled = true;
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "PLAY"; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.UseWaitCursor = false; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = true; }));
 
             //Hide progress bars and extend news panel
-            ftbNews.Height = 339;
-            pbTotal.Visible = false;
+            ftbNews.Invoke(new MethodInvoker(delegate { ftbNews.Height = 339; }));
+            pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Visible = false; }));
+        }
+
+        private void DownloadPatchProgress(object sender, ProgressChangedEventArgs e)
+        {
+
+        }
+
+        private void DownloadPatchDone(object sender, RunWorkerCompletedEventArgs e)
+        {
+
         }
 
         private void DownloadFile(string Filename)
@@ -312,171 +586,6 @@ namespace Updater
             StreamReader patchCheck = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.csv");
             Properties.Settings.Default.patchLevel = patchCheck.ReadLine();
             patchCheck.Close();
-        }
-
-        public frmMain()
-        {
-            InitializeComponent();
-        }
-
-        private void btnMain_Click(object sender, EventArgs e)
-        {
-            //Decide whether the button is Play or Update
-            if (btnMain.Text == "UPDATE")
-            {
-                //Let's update the client
-                DownLoadPatch();
-            }
-            else if (btnMain.Text == "PLAY")
-            {
-                //Open the Tarkin client.
-                Process procTarkin = new Process();
-
-                procTarkin.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu.exe";
-                procTarkin.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
-
-                procTarkin.Start();
-
-                //Minimize Updater
-                if (Properties.Settings.Default.setMinimized == true)
-                {
-                    this.WindowState = FormWindowState.Minimized;
-                }
-
-                //Close Updater
-                if (Properties.Settings.Default.setClosed == true)
-                {
-                    Application.Exit();
-                }
-            }
-           
-        }
-
-        private void btnForcePatch_Click(object sender, EventArgs e)
-        {
-            //Lets make sure to check the patch again in the case the user changed the folder on us
-            CheckPatch();
-
-            //Run the download
-            DownLoadPatch();
-        }
-
-        private void lblExit_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void lblSettings_Click(object sender, EventArgs e)
-        {
-            pnlMain.Visible = false;
-            pnlSettings.Visible = true;
-        }
-
-        private void lblForums_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://tarkin.org");
-        }
-
-        private void btnFolder_Click(object sender, EventArgs e)
-        {
-            //Lets make a variable to test whether the user changed the folder
-            String previousFolder = txtFolder.Text;
-
-            //Allow the user to select a new folder
-            FolderBrowserDialog fbdFolder = new FolderBrowserDialog();
-
-            if (fbdFolder.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                txtFolder.Text = fbdFolder.SelectedPath;
-
-                //Let's save the Settings
-                Properties.Settings.Default.setFolder = fbdFolder.SelectedPath;
-                Properties.Settings.Default.Save();
-            }
-
-            //Check to see if the variable has changed
-            if (previousFolder != Properties.Settings.Default.setFolder)
-            {
-                //User changed the folder
-                CheckPatch();
-
-                //Also, force an update
-                DownLoadPatch();
-            }
-
-        }
-
-        private void chkClose_CheckedChanged(object sender, EventArgs e)
-        {
-            //See if the user checked a box and unselect the other if they did
-            if (chkClose.Checked == true)
-            {
-                chkMin.Checked = false;
-
-                //Also, let's save the Settings
-                Properties.Settings.Default.setClosed = true;
-                Properties.Settings.Default.setMinimized = false;
-                Properties.Settings.Default.Save();
-            }
-        }
-
-        private void chkMin_CheckedChanged(object sender, EventArgs e)
-        {
-            //See if the user checked a box and unselect the other if they did
-            if (chkMin.Checked == true)
-            {
-                chkClose.Checked = false;
-
-                //Also, let's save the Settings
-                Properties.Settings.Default.setMinimized = true;
-                Properties.Settings.Default.setClosed = false;
-                Properties.Settings.Default.Save();
-            }
-        }
-
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-            pnlMain.Visible = true;
-            pnlSettings.Visible = false;
-        }
-
-        private void pnlNav_Paint(object sender, PaintEventArgs e)
-        {
-            ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.FromArgb(160, 252, 192, 63), ButtonBorderStyle.Solid);
-        }
-
-        private void pnlMain_Paint(object sender, PaintEventArgs e)
-        {
-            ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.FromArgb(160, 252, 192, 63), ButtonBorderStyle.Solid);
-        }
-
-        private void pnlSettings_Paint(object sender, PaintEventArgs e)
-        {
-            ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.FromArgb(160, 252, 192, 63), ButtonBorderStyle.Solid);
-        }
-
-        private void btnSWG_Click(object sender, EventArgs e)
-        {
-            //Open the SWG Settings.
-            Process procTarkin = new Process();
-
-            procTarkin.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
-            procTarkin.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
-
-            procTarkin.Start();
-        }
-
-        private void ftbNews_MouseWheel(object sender, MouseEventArgs e)
-        {
-            if (e.Delta == 120)
-            {
-                SendKeys.Send("{PGUP}");
-            }
-            else if (e.Delta == -120)
-            {
-                SendKeys.Send("{PGDN}");
-            }
-
         }
 
         private void GetNews()
@@ -512,6 +621,7 @@ namespace Updater
             //Output News!
             ftbNews.Text = RSSNewsData.ToString();
         }
+
         private void ServerStatus()
         {
             // Create a TcpClient.
@@ -548,7 +658,7 @@ namespace Updater
             //Fix Uptime
             String Uptime = stsDataElements[11];
             Double uptimeSeconds;
-            Double.TryParse(Uptime,out uptimeSeconds);
+            Double.TryParse(Uptime, out uptimeSeconds);
             uptimeSeconds = uptimeSeconds * -1;
             TimeSpan tsUptime = DateTime.Now - DateTime.Now.AddSeconds(uptimeSeconds);
 
@@ -588,45 +698,7 @@ namespace Updater
 
         }
 
-        private void lblSettings_MouseHover(object sender, EventArgs e)
-        {
-            lblSettings.ForeColor = Color.FromArgb(160, 255, 255, 255);
-        }
-
-        private void lblSettings_MouseLeave(object sender, EventArgs e)
-        {
-            lblSettings.ForeColor = Color.FromArgb(160, 252, 192, 63);
-        }
-
-        private void lblForums_MouseHover(object sender, EventArgs e)
-        {
-            lblForums.ForeColor = Color.FromArgb(160, 255, 255, 255);
-        }
-
-        private void lblForums_MouseLeave(object sender, EventArgs e)
-        {
-            lblForums.ForeColor = Color.FromArgb(160, 252, 192, 63);
-        }
-
-        private void lblAbout_MouseHover(object sender, EventArgs e)
-        {
-            lblAbout.ForeColor = Color.FromArgb(160, 255, 255, 255);
-        }
-
-        private void lblAbout_MouseLeave(object sender, EventArgs e)
-        {
-            lblAbout.ForeColor = Color.FromArgb(160, 252, 192, 63);
-        }
-
-        private void lblExit_MouseHover(object sender, EventArgs e)
-        {
-            lblExit.ForeColor = Color.FromArgb(160, 255, 255, 255);
-        }
-
-        private void lblExit_MouseLeave(object sender, EventArgs e)
-        {
-            lblExit.ForeColor = Color.FromArgb(160, 252, 192, 63);
-        }
+        #endregion
 
     }
 

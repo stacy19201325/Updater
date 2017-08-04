@@ -73,7 +73,7 @@ namespace Updater.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("84")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int serverFileCount {
             get {
                 return ((int)(this["serverFileCount"]));

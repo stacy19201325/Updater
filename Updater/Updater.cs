@@ -45,10 +45,29 @@ namespace Updater
 
             //Set patch level
             lblPatchLevel.Text = "Patch: " + Properties.Settings.Default.patchLevel;
-        }//Done
 
-        private void frmMain_Activated(object sender, EventArgs e)
-        {
+            //Before we start, let's make SURE the user isn't crazy and that a folder ACTUALLY exists
+            if (Properties.Settings.Default.setFolder == "" || !Directory.Exists(Properties.Settings.Default.setFolder))
+            {
+                //Lets make a variable to test whether the user changed the folder
+                String previousFolder = txtFolder.Text;
+
+                //Allow the user to select a new folder
+                FolderBrowserDialog fbdFolder = new FolderBrowserDialog();
+                fbdFolder.Description = "PLEASE SELECT AN INSTALL DIRECTORY";
+
+                if (fbdFolder.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    txtFolder.Text = fbdFolder.SelectedPath;
+
+                    //Let's save the Settings
+                    Properties.Settings.Default.setFolder = fbdFolder.SelectedPath;
+                    Properties.Settings.Default.patchLevel = null;
+                    Properties.Settings.Default.serverFileCount = 0;
+                    Properties.Settings.Default.Save();
+                }
+            }
+
             //Initialize the worker
             this.CheckPatchWorker = new BackgroundWorker();
             this.CheckPatchWorker.DoWork += new DoWorkEventHandler(CheckPatch);
@@ -57,6 +76,12 @@ namespace Updater
 
             //Check Patch Level and force to update if there is a patch
             this.CheckPatchWorker.RunWorkerAsync();
+
+            //Wait for it to complete.
+            while (CheckPatchWorker.IsBusy)
+            {
+                Application.DoEvents();
+            }
         }//Done
         #endregion
 
@@ -266,7 +291,27 @@ namespace Updater
                 procTarkin.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu.exe";
                 procTarkin.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
 
-                procTarkin.Start();
+                //Let's wrap this in a try/catch in case there is a file missing
+                try
+                {
+                    procTarkin.Start();
+                }
+                catch (Exception Error)
+                {
+                    if (Error.Message == "The system cannot find the file specified")
+                    {
+                        //Initialize the worker
+                        this.DownloadPatchWorker = new BackgroundWorker();
+                        this.DownloadPatchWorker.DoWork += new DoWorkEventHandler(DownloadPatch);
+                        this.DownloadPatchWorker.ProgressChanged += new ProgressChangedEventHandler(DownloadPatchProgress);
+                        this.DownloadPatchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DownloadPatchDone);
+
+                        //There was no exe. Run the patch Download.
+                        this.DownloadPatchWorker.RunWorkerAsync();
+                    }                               
+                }
+                
+
 
                 //Minimize Updater
                 if (Properties.Settings.Default.setMinimized == true)
@@ -293,6 +338,27 @@ namespace Updater
 
             //Check Patch Level and force to update if there is a patch
             this.CheckPatchWorker.RunWorkerAsync();
+
+            //Wait for it to complete.
+            while (CheckPatchWorker.IsBusy)
+            {
+                Application.DoEvents();
+            }
+
+            //Initialize the worker
+            this.DownloadPatchWorker = new BackgroundWorker();
+            this.DownloadPatchWorker.DoWork += new DoWorkEventHandler(DownloadPatch);
+            this.DownloadPatchWorker.ProgressChanged += new ProgressChangedEventHandler(DownloadPatchProgress);
+            this.DownloadPatchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DownloadPatchDone);
+
+            //Check Patch Level and force to update if there is a patch
+            this.DownloadPatchWorker.RunWorkerAsync();
+
+            while (DownloadPatchWorker.IsBusy)
+            {
+                Application.DoEvents();
+            }
+
         }//Done
 
         private void btnFolder_Click(object sender, EventArgs e)
@@ -302,6 +368,7 @@ namespace Updater
 
             //Allow the user to select a new folder
             FolderBrowserDialog fbdFolder = new FolderBrowserDialog();
+            fbdFolder.Description = "PLEASE SELECT AN INSTALL DIRECTORY";
 
             if (fbdFolder.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -363,6 +430,7 @@ namespace Updater
         #endregion
 
         #region Methods
+
         private void CheckPatch(object sender, DoWorkEventArgs e)
         {
             //Set the main and forcepatch buttons so they will not touch.
@@ -408,9 +476,11 @@ namespace Updater
 
         private void CheckPatchDone(object sender, RunWorkerCompletedEventArgs e)
         {
-            //Turn the main button back on
-            btnMain.UseWaitCursor = false;
-            btnMain.Enabled = true;
+            //Turn the main and force buttons back on
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.UseWaitCursor = false; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = true; }));
+            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.UseWaitCursor = false; }));
+            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = true; }));
         }
 
         private void DownloadPatch(object sender, DoWorkEventArgs e)
@@ -425,12 +495,13 @@ namespace Updater
             //Force the user to the News panel and resize the news box
             pnlSettings.Invoke(new MethodInvoker(delegate { pnlSettings.Visible = false; }));
             pnlMain.Invoke(new MethodInvoker(delegate { pnlMain.Visible = true; }));
-            ftbNews.Invoke(new MethodInvoker(delegate { ftbNews.Height = 309; }));
+            ftbNews.Invoke(new MethodInvoker(delegate { ftbNews.Height = 310; }));
             pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Visible = true; }));
             pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Value = 0; }));
 
             //Create some vars
             DirectoryInfo clientDir = new DirectoryInfo(Properties.Settings.Default.setFolder);
+
             StreamReader patchReader = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.csv");
 
             FileInfo[] clientFiles = clientDir.GetFiles("*.*", SearchOption.AllDirectories);
@@ -478,7 +549,6 @@ namespace Updater
                         {
                             //File match with different file size. Download file from server. Remove file from server list. Set flag.
                             File.Delete(clientSearch.FullName);
-
                             DownloadFile(serverFileName);
 
                             serverFiles.Remove(serverSearch);
@@ -505,6 +575,7 @@ namespace Updater
             {
                 String[] serverData = serverSearch.Split(',');
                 String serverFileName = serverData[0];
+                long serverFileLength = Convert.ToInt64(serverData[1]);
                 String serverHash = serverData[2];
 
                 //Loop through clients to find the filename match
@@ -535,7 +606,6 @@ namespace Updater
                         {
                             //Match not found. Download file from server.
                             File.Delete(clientSearch.FullName);
-
                             DownloadFile(serverFileName);
 
                             serverFiles.Remove(serverSearch);
@@ -549,25 +619,23 @@ namespace Updater
 
             //Finally, lets call the method to update the patch number
             UpdatePatchVersion();
+        }
+
+        private void DownloadPatchProgress(object sender, ProgressChangedEventArgs e)
+        {
+            
+        }
+
+        private void DownloadPatchDone(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //Show progress bars and extend news panel
+            ftbNews.Invoke(new MethodInvoker(delegate { ftbNews.Height = 339; }));
+            pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Visible = false; }));
 
             //Patch level is correct. Allow user to play.
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "PLAY"; }));
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.UseWaitCursor = false; }));
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = true; }));
-
-            //Hide progress bars and extend news panel
-            ftbNews.Invoke(new MethodInvoker(delegate { ftbNews.Height = 339; }));
-            pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Visible = false; }));
-        }
-
-        private void DownloadPatchProgress(object sender, ProgressChangedEventArgs e)
-        {
-
-        }
-
-        private void DownloadPatchDone(object sender, RunWorkerCompletedEventArgs e)
-        {
-
         }
 
         private void DownloadFile(string Filename)
@@ -577,7 +645,10 @@ namespace Updater
             ftpTarkin.Credentials = new NetworkCredential("anonymous@ravenwoodgaming.com", "");
 
             //Download the file
-            ftpTarkin.DownloadFile(new Uri("ftp://ftp.ravenwoodgaming.com/Tarkin" + Filename), Properties.Settings.Default.setFolder + Filename.Replace("/", "\\"));
+            ftpTarkin.DownloadFile("ftp://ftp.ravenwoodgaming.com/Tarkin" + Filename, Properties.Settings.Default.setFolder + Filename.Replace("/", "\\"));
+
+            //Close the WebClient
+            ftpTarkin.Dispose();
         }
 
         private void UpdatePatchVersion()

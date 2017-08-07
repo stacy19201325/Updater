@@ -109,7 +109,7 @@
             // 
             // pbTotal
             // 
-            this.pbTotal.Location = new System.Drawing.Point(3, 341);
+            this.pbTotal.Location = new System.Drawing.Point(3, 345);
             this.pbTotal.Name = "pbTotal";
             this.pbTotal.Size = new System.Drawing.Size(526, 20);
             this.pbTotal.TabIndex = 3;
@@ -137,7 +137,7 @@
             this.ftbNews.Name = "ftbNews";
             this.ftbNews.ReadOnly = true;
             this.ftbNews.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.ftbNews.Size = new System.Drawing.Size(521, 309);
+            this.ftbNews.Size = new System.Drawing.Size(521, 310);
             this.ftbNews.TabIndex = 1;
             this.ftbNews.Text = "";
             this.ftbNews.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ftbNews_MouseMove);
@@ -474,14 +474,13 @@
             this.Controls.Add(this.pnlNav);
             this.Controls.Add(this.picMain);
             this.Controls.Add(this.btnMain);
-            this.Controls.Add(this.pnlSettings);
             this.Controls.Add(this.pnlMain);
+            this.Controls.Add(this.pnlSettings);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmMain";
             this.Text = "TarkinII Updater";
-            this.Activated += new System.EventHandler(this.frmMain_Activated);
             this.Load += new System.EventHandler(this.frmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).EndInit();
             this.pnlMain.ResumeLayout(false);

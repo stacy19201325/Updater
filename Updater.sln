@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdaterPrep", "UpdaterPrep\UpdaterPrep.csproj", "{7E4FF479-4762-4046-AF51-0E19AE844784}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup\Setup.vdproj", "{139D9773-EB94-4114-85D4-C29E2F97D67E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,8 @@ Global
 		{7E4FF479-4762-4046-AF51-0E19AE844784}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E4FF479-4762-4046-AF51-0E19AE844784}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E4FF479-4762-4046-AF51-0E19AE844784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{139D9773-EB94-4114-85D4-C29E2F97D67E}.Debug|Any CPU.ActiveCfg = Debug
+		{139D9773-EB94-4114-85D4-C29E2F97D67E}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

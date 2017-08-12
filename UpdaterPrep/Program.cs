@@ -27,8 +27,8 @@ namespace UpdaterPrep
 
             foreach (FileInfo patchSearch in patchFiles.ToList())
             {
-                //We need to exclude the UpdaterPrep and the csv if exists
-                if (patchSearch.Name != "UpdaterPrep.exe" && patchSearch.Name != "PatchData.csv" && ! patchSearch.Attributes.HasFlag(FileAttributes.Hidden))
+                //We need to exclude the UpdaterPrep and the csv if exists as well as the ui.log
+                if (patchSearch.Name != "UpdaterPrep.exe" && patchSearch.Name != "PatchData.csv" && patchSearch.Name != "ui.log" && ! patchSearch.Attributes.HasFlag(FileAttributes.Hidden))
                 {
                     //Let's get the MD5 of the current file
                     using (var md5 = MD5.Create())

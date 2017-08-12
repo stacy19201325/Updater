@@ -30,6 +30,8 @@ namespace Updater
 
         private void frmMain_Load(object sender, EventArgs e)
         {
+            //Let's set the previous folder 
+            
             //Let's set the folder location from Resources
             txtFolder.Text = Properties.Settings.Default.setFolder;
 
@@ -507,6 +509,8 @@ namespace Updater
             FileInfo[] clientFiles = clientDir.GetFiles("*.*", SearchOption.AllDirectories);
             List<String> serverFiles = new List<String>();
 
+            String excludeFile = "\\user.cfg,\\options.cfg,\\swgemu_machineoptions.iff";
+
             //Read past the first line so we ignore the patch info
             patchReader.ReadLine();
 
@@ -539,7 +543,7 @@ namespace Updater
                     if (serverFileName == clientFileName)
                     {
                         //Match is found, check the file length, ignore if equal
-                        if (serverFileLength == clientFileLength)
+                        if (serverFileLength == clientFileLength || excludeFile.Contains(clientFileName))
                         {
                             //File match found with same file size. Keep on directory list to check CRC. Set flag.
                             actionFlag = true;
@@ -584,7 +588,8 @@ namespace Updater
                     String clientFileHash;
                     String clientFileName = clientSearch.FullName.Replace(Properties.Settings.Default.setFolder, "");
 
-                    if (serverFileName == clientFileName)
+                    //Fall through IF the client and server name matches EXCEPT for the exclude
+                    if (serverFileName == clientFileName && !excludeFile.Contains(serverFileName))
                     {
                         //Match found, create CRC from clientfile.
                         using (var md5 = MD5.Create())
@@ -616,9 +621,6 @@ namespace Updater
                 //Advance the progress bar for total
                 pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Increment(1); }));
             }
-
-            //Finally, lets call the method to update the patch number
-            UpdatePatchVersion();
         }
 
         private void DownloadPatchProgress(object sender, ProgressChangedEventArgs e)
@@ -636,6 +638,12 @@ namespace Updater
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "PLAY"; }));
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.UseWaitCursor = false; }));
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = true; }));
+            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.UseWaitCursor = false; }));
+            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = true; }));
+
+            //Call the update patch version method
+            UpdatePatchVersion();
+
         }
 
         private void DownloadFile(string Filename)
@@ -656,7 +664,9 @@ namespace Updater
             //Let's take the very first line and set it to our patchLevel setting
             StreamReader patchCheck = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.csv");
             Properties.Settings.Default.patchLevel = patchCheck.ReadLine();
+            Properties.Settings.Default.Save();
             patchCheck.Close();
+            lblPatchLevel.Text = Properties.Settings.Default.patchLevel;
         }
 
         private void GetNews()

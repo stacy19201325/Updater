@@ -437,13 +437,16 @@ namespace Updater
 
         private void btnSWG_Click(object sender, EventArgs e)
         {
-            //Open the SWG Settings.
-            Process procTarkin = new Process();
+            String SettingsFile = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
 
-            procTarkin.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
-            procTarkin.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
-
-            procTarkin.Start();
+            if (File.Exists(@SettingsFile))
+            {
+                //Open the SWG Settings.
+                Process procTarkin = new Process();
+                procTarkin.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
+                procTarkin.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
+                procTarkin.Start();
+            }
         }//Done
 
         #endregion

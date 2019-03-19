@@ -430,6 +430,7 @@ namespace Updater
             this.lblAbout.TabIndex = 12;
             this.lblAbout.Text = "About";
             this.lblAbout.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblAbout.Click += new System.EventHandler(this.lblAbout_Click);
             this.lblAbout.MouseLeave += new System.EventHandler(this.lblAbout_MouseLeave);
             this.lblAbout.MouseHover += new System.EventHandler(this.lblAbout_MouseHover);
             // 

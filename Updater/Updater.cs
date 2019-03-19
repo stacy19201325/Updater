@@ -60,7 +60,7 @@ namespace Updater
             GetNews();
 
             //Output Server Status
-            ServerStatus();
+            //ServerStatus();
 
             //Set patch level
             lblPatchLevel.Text = "Patch: " + Properties.Settings.Default.patchLevel;
@@ -692,10 +692,13 @@ namespace Updater
 
             //Grab data from announcement forums
             XmlDocument RSSNews = new XmlDocument();
-            RSSNews.Load("https://tarkin.org/index.php?/forum/4-announcements.xml/");
+            RSSNews.Load("http://tarkinswg.com/index.php?/discover/all.xml/");
 
             XmlNodeList RSSNewsNodes = RSSNews.SelectNodes("rss/channel/item");
             StringBuilder RSSNewsData = new StringBuilder();
+
+            // Box heading
+            RSSNewsData.Append("NEWS: \n\n");
 
             foreach (XmlNode RSSNode in RSSNewsNodes)
             {
@@ -705,15 +708,27 @@ namespace Updater
                 RSSSubNode = RSSNode.SelectSingleNode("description");
                 string NewsElement = RSSSubNode != null ? RSSSubNode.InnerText : "";
 
+                // Skip this entry if there isn't any data to show
+                if (NewsElement == "")
+                    continue;
+
+                RSSSubNode = RSSNode.SelectSingleNode("pubDate");
+                string PublishDate = RSSSubNode != null ? RSSSubNode.InnerText : "";
+                PublishDate = PublishDate.Substring(0, 17);
+
                 //Clean news up.
                 NewsElement = Regex.Replace(NewsElement, "\t", "");
                 TitleElement = Regex.Replace(TitleElement, "\t", "");
-                NewsElement = Regex.Replace(NewsElement, "\n", "");
+                NewsElement = Regex.Replace(NewsElement, "\n\n\n\n\n", "");
+                NewsElement = Regex.Replace(NewsElement, "\n\n\n\n", "");
+                NewsElement = Regex.Replace(NewsElement, "\n\n\n", "");
+                NewsElement = Regex.Replace(NewsElement, "\n\n", "");
                 TitleElement = Regex.Replace(TitleElement, "\n", "");
                 NewsElement = Regex.Replace(NewsElement, "<.*?>", String.Empty);
                 TitleElement = Regex.Replace(TitleElement, "<.*?>", String.Empty);
 
-                RSSNewsData.Append(TitleElement + "\n" + NewsElement + "\n\n");
+                String TitleUnderline = "\n-------------------------------------\n";
+                RSSNewsData.Append(TitleElement + TitleUnderline + PublishDate + "\n" + NewsElement + "\n\n\n");
             }
 
             //Output News!
@@ -798,6 +813,15 @@ namespace Updater
 
         #endregion
 
+        private void ftbNews_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblNews_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
 }

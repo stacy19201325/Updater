@@ -50,7 +50,6 @@ namespace Updater
             this.picMain = new System.Windows.Forms.PictureBox();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.pbTotal = new System.Windows.Forms.ProgressBar();
-            this.lblNews = new System.Windows.Forms.Label();
             this.ftbNews = new System.Windows.Forms.RichTextBox();
             this.pnlSettings = new System.Windows.Forms.Panel();
             this.btnForcePatch = new System.Windows.Forms.Button();
@@ -92,7 +91,7 @@ namespace Updater
             this.btnMain.Enabled = false;
             this.btnMain.FlatAppearance.BorderSize = 0;
             this.btnMain.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMain.Font = new System.Drawing.Font("Castellar", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMain.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMain.Location = new System.Drawing.Point(559, 488);
             this.btnMain.Name = "btnMain";
             this.btnMain.Size = new System.Drawing.Size(150, 50);
@@ -115,48 +114,38 @@ namespace Updater
             // pnlMain
             // 
             this.pnlMain.Controls.Add(this.pbTotal);
-            this.pnlMain.Controls.Add(this.lblNews);
             this.pnlMain.Controls.Add(this.ftbNews);
             this.pnlMain.Location = new System.Drawing.Point(13, 170);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(532, 368);
+            this.pnlMain.Size = new System.Drawing.Size(538, 368);
             this.pnlMain.TabIndex = 3;
             this.pnlMain.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMain_Paint);
             this.pnlMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMain_MouseMove);
             // 
             // pbTotal
             // 
+            this.pbTotal.BackColor = System.Drawing.Color.Black;
             this.pbTotal.Location = new System.Drawing.Point(3, 345);
             this.pbTotal.Name = "pbTotal";
             this.pbTotal.Size = new System.Drawing.Size(526, 20);
             this.pbTotal.TabIndex = 3;
             this.pbTotal.Visible = false;
             // 
-            // lblNews
-            // 
-            this.lblNews.AutoSize = true;
-            this.lblNews.Font = new System.Drawing.Font("Castellar", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNews.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblNews.Location = new System.Drawing.Point(4, 4);
-            this.lblNews.Name = "lblNews";
-            this.lblNews.Size = new System.Drawing.Size(62, 19);
-            this.lblNews.TabIndex = 0;
-            this.lblNews.Text = "NEWS:";
-            // 
             // ftbNews
             // 
             this.ftbNews.BackColor = System.Drawing.Color.Black;
-            this.ftbNews.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.ftbNews.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.ftbNews.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ftbNews.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.ftbNews.Location = new System.Drawing.Point(8, 26);
+            this.ftbNews.Location = new System.Drawing.Point(8, 6);
             this.ftbNews.Name = "ftbNews";
             this.ftbNews.ReadOnly = true;
-            this.ftbNews.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.ftbNews.Size = new System.Drawing.Size(521, 310);
+            this.ftbNews.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.ftbNews.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.ftbNews.Size = new System.Drawing.Size(521, 330);
             this.ftbNews.TabIndex = 1;
             this.ftbNews.Text = "";
+            this.ftbNews.TextChanged += new System.EventHandler(this.ftbNews_TextChanged);
             this.ftbNews.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ftbNews_MouseMove);
             this.ftbNews.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.ftbNews_MouseWheel);
             // 
@@ -206,11 +195,11 @@ namespace Updater
             // lblSettingsTitle
             // 
             this.lblSettingsTitle.AutoSize = true;
-            this.lblSettingsTitle.Font = new System.Drawing.Font("Castellar", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSettingsTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSettingsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblSettingsTitle.Location = new System.Drawing.Point(3, 4);
             this.lblSettingsTitle.Name = "lblSettingsTitle";
-            this.lblSettingsTitle.Size = new System.Drawing.Size(95, 19);
+            this.lblSettingsTitle.Size = new System.Drawing.Size(93, 20);
             this.lblSettingsTitle.TabIndex = 9;
             this.lblSettingsTitle.Text = "SETTINGS:";
             // 
@@ -392,7 +381,7 @@ namespace Updater
             // 
             // lblSpacer4
             // 
-            this.lblSpacer4.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSpacer4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSpacer4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblSpacer4.Location = new System.Drawing.Point(3, 151);
             this.lblSpacer4.Name = "lblSpacer4";
@@ -401,7 +390,7 @@ namespace Updater
             // 
             // lblForums
             // 
-            this.lblForums.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblForums.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblForums.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblForums.Location = new System.Drawing.Point(3, 59);
             this.lblForums.Name = "lblForums";
@@ -415,7 +404,7 @@ namespace Updater
             // 
             // lblSpacer3
             // 
-            this.lblSpacer3.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSpacer3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSpacer3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblSpacer3.Location = new System.Drawing.Point(3, 128);
             this.lblSpacer3.Name = "lblSpacer3";
@@ -424,7 +413,7 @@ namespace Updater
             // 
             // lblSpacer2
             // 
-            this.lblSpacer2.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSpacer2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSpacer2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblSpacer2.Location = new System.Drawing.Point(3, 82);
             this.lblSpacer2.Name = "lblSpacer2";
@@ -433,7 +422,7 @@ namespace Updater
             // 
             // lblAbout
             // 
-            this.lblAbout.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAbout.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAbout.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblAbout.Location = new System.Drawing.Point(3, 105);
             this.lblAbout.Name = "lblAbout";
@@ -446,7 +435,7 @@ namespace Updater
             // 
             // lblSpacer1
             // 
-            this.lblSpacer1.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSpacer1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSpacer1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblSpacer1.Location = new System.Drawing.Point(3, 36);
             this.lblSpacer1.Name = "lblSpacer1";
@@ -455,7 +444,7 @@ namespace Updater
             // 
             // lblExit
             // 
-            this.lblExit.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblExit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblExit.Location = new System.Drawing.Point(3, 189);
             this.lblExit.Name = "lblExit";
@@ -469,7 +458,7 @@ namespace Updater
             // 
             // lblSettings
             // 
-            this.lblSettings.Font = new System.Drawing.Font("Castellar", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblSettings.Location = new System.Drawing.Point(3, 13);
             this.lblSettings.Name = "lblSettings";
@@ -501,7 +490,6 @@ namespace Updater
             this.Load += new System.EventHandler(this.frmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).EndInit();
             this.pnlMain.ResumeLayout(false);
-            this.pnlMain.PerformLayout();
             this.pnlSettings.ResumeLayout(false);
             this.pnlSettings.PerformLayout();
             this.grpClose.ResumeLayout(false);
@@ -515,7 +503,6 @@ namespace Updater
         private System.Windows.Forms.Button btnMain;
         private System.Windows.Forms.PictureBox picMain;
         private System.Windows.Forms.Panel pnlMain;
-        private System.Windows.Forms.Label lblNews;
         private System.Windows.Forms.Panel pnlSettings;
         private System.Windows.Forms.TextBox txtFolder;
         private System.Windows.Forms.Button btnFolder;

@@ -106,7 +106,7 @@ namespace Updater
             this.picMain.Image = ((System.Drawing.Image)(resources.GetObject("picMain.Image")));
             this.picMain.Location = new System.Drawing.Point(12, 12);
             this.picMain.Name = "picMain";
-            this.picMain.Size = new System.Drawing.Size(533, 151);
+            this.picMain.Size = new System.Drawing.Size(533, 212);
             this.picMain.TabIndex = 2;
             this.picMain.TabStop = false;
             this.picMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picMain_MouseMove);
@@ -115,9 +115,9 @@ namespace Updater
             // 
             this.pnlMain.Controls.Add(this.pbTotal);
             this.pnlMain.Controls.Add(this.ftbNews);
-            this.pnlMain.Location = new System.Drawing.Point(13, 170);
+            this.pnlMain.Location = new System.Drawing.Point(12, 230);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(538, 368);
+            this.pnlMain.Size = new System.Drawing.Size(533, 305);
             this.pnlMain.TabIndex = 3;
             this.pnlMain.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMain_Paint);
             this.pnlMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMain_MouseMove);
@@ -125,7 +125,7 @@ namespace Updater
             // pbTotal
             // 
             this.pbTotal.BackColor = System.Drawing.Color.Black;
-            this.pbTotal.Location = new System.Drawing.Point(3, 345);
+            this.pbTotal.Location = new System.Drawing.Point(4, 275);
             this.pbTotal.Name = "pbTotal";
             this.pbTotal.Size = new System.Drawing.Size(526, 20);
             this.pbTotal.TabIndex = 3;
@@ -142,7 +142,7 @@ namespace Updater
             this.ftbNews.ReadOnly = true;
             this.ftbNews.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.ftbNews.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.ftbNews.Size = new System.Drawing.Size(521, 330);
+            this.ftbNews.Size = new System.Drawing.Size(519, 256);
             this.ftbNews.TabIndex = 1;
             this.ftbNews.Text = "";
             this.ftbNews.TextChanged += new System.EventHandler(this.ftbNews_TextChanged);
@@ -160,9 +160,9 @@ namespace Updater
             this.pnlSettings.Controls.Add(this.txtFolder);
             this.pnlSettings.Controls.Add(this.btnFolder);
             this.pnlSettings.Controls.Add(this.lblFolder);
-            this.pnlSettings.Location = new System.Drawing.Point(13, 170);
+            this.pnlSettings.Location = new System.Drawing.Point(13, 230);
             this.pnlSettings.Name = "pnlSettings";
-            this.pnlSettings.Size = new System.Drawing.Size(532, 368);
+            this.pnlSettings.Size = new System.Drawing.Size(532, 308);
             this.pnlSettings.TabIndex = 4;
             this.pnlSettings.Visible = false;
             this.pnlSettings.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlSettings_Paint);
@@ -173,7 +173,7 @@ namespace Updater
             this.btnForcePatch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.btnForcePatch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnForcePatch.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnForcePatch.Location = new System.Drawing.Point(405, 307);
+            this.btnForcePatch.Location = new System.Drawing.Point(403, 242);
             this.btnForcePatch.Name = "btnForcePatch";
             this.btnForcePatch.Size = new System.Drawing.Size(125, 30);
             this.btnForcePatch.TabIndex = 11;
@@ -185,7 +185,7 @@ namespace Updater
             // 
             this.lblPatchLevel.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPatchLevel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblPatchLevel.Location = new System.Drawing.Point(399, 341);
+            this.lblPatchLevel.Location = new System.Drawing.Point(399, 275);
             this.lblPatchLevel.Name = "lblPatchLevel";
             this.lblPatchLevel.Size = new System.Drawing.Size(130, 23);
             this.lblPatchLevel.TabIndex = 10;
@@ -221,7 +221,7 @@ namespace Updater
             this.btnOK.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOK.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOK.Location = new System.Drawing.Point(3, 342);
+            this.btnOK.Location = new System.Drawing.Point(8, 249);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 7;

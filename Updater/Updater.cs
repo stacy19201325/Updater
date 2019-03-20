@@ -60,7 +60,7 @@ namespace Updater
             GetNews();
 
             //Output Server Status
-            //ServerStatus();
+            ServerStatus();
 
             //Set patch level
             lblPatchLevel.Text = "Patch: " + Properties.Settings.Default.patchLevel;
@@ -740,33 +740,74 @@ namespace Updater
 
         private void ServerStatus()
         {
-            // Create a TcpClient.
-            TcpClient stsClient = new TcpClient("23.111.128.52", 44455);
+            // tarkinlogin.ddns.net
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+            System.Net.ServicePointManager.Expect100Continue = false;
 
-            //This is required to be sent to the server so it will generate a response
-            String stsSend = "\n";
-            // Translate the response into ASCII and store it as a Byte array.
-            Byte[] stsASCII = System.Text.Encoding.ASCII.GetBytes(stsSend);
+            try
+            {
+                using (TcpClient tcpClient = new TcpClient("tarkinlogin.ddns.net", 44455))
+                using (NetworkStream ns = tcpClient.GetStream())
+                using (StreamWriter sw = new StreamWriter(ns))
+                {
+                    sw.AutoFlush = true;
+                    sw.WriteLine("\n");
 
-            // Get a client stream for reading and writing.
-            NetworkStream stsStream = stsClient.GetStream();
+                    Byte[] stsASCII = new Byte[512];
+                    String stsData = String.Empty;
+                    Int32 bytes = ns.Read(stsASCII, 0, stsASCII.Length);
+                    stsData = System.Text.Encoding.ASCII.GetString(stsASCII, 0, bytes);
 
-            // Send the message to the connected TcpServer. 
-            stsStream.Write(stsASCII, 0, stsASCII.Length);
+                    //ftbNews.Text = stsData; // debugging
 
-            // Buffer to store the response bytes.
-            stsASCII = new Byte[512];
+                    sw.Close();
+                    ns.Close();
+                    tcpClient.Close();
 
-            // String to store the response ASCII representation.
-            String stsData = String.Empty;
+                    ParseStatusXML(stsData);
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                lblStatusEnum.Text = "Status: Down";
+            }
+            catch (SocketException e)
+            {
+                lblStatusEnum.Text = "Status: Down";
+            }
+        }
 
-            // Read the first batch of the TcpServer response bytes.
-            Int32 bytes = stsStream.Read(stsASCII, 0, stsASCII.Length);
-            stsData = System.Text.Encoding.ASCII.GetString(stsASCII, 0, bytes);
+        private void ParseStatusXML(String stsData)
+        {
+            
+            // Original code to get data from server
+            //// Create a TcpClient.
+            //TcpClient stsClient = new TcpClient("login.swgemu.com", 44455);
 
-            // Close everything.
-            stsStream.Close();
-            stsClient.Close();
+            ////This is required to be sent to the server so it will generate a response
+            //String stsSend = "\n";
+            //// Translate the response into ASCII and store it as a Byte array.
+            //Byte[] stsASCII = System.Text.Encoding.ASCII.GetBytes(stsSend);
+
+            //// Get a client stream for reading and writing.
+            //NetworkStream stsStream = stsClient.GetStream();
+
+            //// Send the message to the connected TcpServer. 
+            //stsStream.Write(stsASCII, 0, stsASCII.Length);
+
+            //// Buffer to store the response bytes.
+            //stsASCII = new Byte[512];
+
+            //// String to store the response ASCII representation.
+            //String stsData = String.Empty;
+
+            //// Read the first batch of the TcpServer response bytes.
+            //Int32 bytes = stsStream.Read(stsASCII, 0, stsASCII.Length);
+            //stsData = System.Text.Encoding.ASCII.GetString(stsASCII, 0, bytes);
+
+            //// Close everything.
+            //stsStream.Close();
+            //stsClient.Close(); 
 
             //Unpack the XML in stsData
             String[] stsDataElements = Regex.Replace(stsData, "<.*?>", String.Empty).Split('\n');
@@ -811,7 +852,6 @@ namespace Updater
                 lblStatusUptime.Text = "";
                 lblStatusLast.Text = "";
             }
-
         }
 
         #endregion

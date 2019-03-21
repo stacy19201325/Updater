@@ -284,6 +284,24 @@ namespace Updater
             }
         }
 
+        delegate void SetTextCallback(string text);
+
+        private void SetFileStatus(string text)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (this.fileStatus.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetFileStatus);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                this.fileStatus.Text = text;
+            }
+        }
+
         #endregion
 
         #region Buttons
@@ -349,6 +367,9 @@ namespace Updater
 
         private void btnForcePatch_Click(object sender, EventArgs e)
         {
+            // Delete last file so patcher will recheck all files
+            File.Delete(path: Properties.Settings.Default.setFolder + "\\string\\en\\test_motd.stf");
+
             //Initialize the worker
             this.CheckPatchWorker = new BackgroundWorker();
             this.CheckPatchWorker.DoWork += new DoWorkEventHandler(CheckPatch);
@@ -364,7 +385,7 @@ namespace Updater
                 Application.DoEvents();
             }
 
-            //Initialize the worker
+            /*Initialize the worker
             this.DownloadPatchWorker = new BackgroundWorker();
             this.DownloadPatchWorker.DoWork += new DoWorkEventHandler(DownloadPatch);
             this.DownloadPatchWorker.ProgressChanged += new ProgressChangedEventHandler(DownloadPatchProgress);
@@ -377,7 +398,7 @@ namespace Updater
             {
                 Application.DoEvents();
             }
-
+            */
         }//Done
 
         private void btnFolder_Click(object sender, EventArgs e)
@@ -600,14 +621,13 @@ namespace Updater
             string localFileSum = "";
 
             string downloadThis = @"";
-            string compareThis = "";
 
             // Download the files in the list
             for (int i= 0; i < fileNames.Count; i++)
             {
                 // Format file name for download in case we need it
                 downloadThis =  fileNames[i];
-                compareThis = Regex.Replace(fileNames[i], @"|/|", " ");
+                SetFileStatus("Working (" + i + "/" + fileNames.Count + "): " + downloadThis.TrimStart('/'));
 
                 // If fileName exist on client then compare fileName's md5 to sever's md5 for that file
                 if (localFiles.Contains(fileNames[i]) && !exludes.Contains(fileNames[i]))
@@ -636,6 +656,9 @@ namespace Updater
                     // File not found, download it
                     DownloadFile(downloadThis);
                 }
+
+                // Status Text
+                SetFileStatus("Idle. . ." + fileNames[i].ToUpper());
             }
         }
 
@@ -1036,6 +1059,11 @@ namespace Updater
             }
             
             
+        }
+
+        private void lblFileStatus_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

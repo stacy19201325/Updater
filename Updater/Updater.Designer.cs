@@ -49,6 +49,7 @@ namespace Updater
             this.btnMain = new System.Windows.Forms.Button();
             this.picMain = new System.Windows.Forms.PictureBox();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.fileStatus = new System.Windows.Forms.Label();
             this.pbTotal = new System.Windows.Forms.ProgressBar();
             this.ftbNews = new System.Windows.Forms.RichTextBox();
             this.pnlSettings = new System.Windows.Forms.Panel();
@@ -113,6 +114,7 @@ namespace Updater
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.fileStatus);
             this.pnlMain.Controls.Add(this.pbTotal);
             this.pnlMain.Controls.Add(this.ftbNews);
             this.pnlMain.Location = new System.Drawing.Point(12, 230);
@@ -122,12 +124,24 @@ namespace Updater
             this.pnlMain.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMain_Paint);
             this.pnlMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMain_MouseMove);
             // 
+            // fileStatus
+            // 
+            this.fileStatus.Font = new System.Drawing.Font("Times New Roman", 14.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fileStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(193)))), ((int)(((byte)(63)))));
+            this.fileStatus.Location = new System.Drawing.Point(9, 268);
+            this.fileStatus.Name = "fileStatus";
+            this.fileStatus.Size = new System.Drawing.Size(518, 30);
+            this.fileStatus.TabIndex = 4;
+            this.fileStatus.Text = "Idle . . .";
+            this.fileStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.fileStatus.Click += new System.EventHandler(this.lblFileStatus_Click);
+            // 
             // pbTotal
             // 
             this.pbTotal.BackColor = System.Drawing.Color.Black;
-            this.pbTotal.Location = new System.Drawing.Point(4, 275);
+            this.pbTotal.Location = new System.Drawing.Point(313, 268);
             this.pbTotal.Name = "pbTotal";
-            this.pbTotal.Size = new System.Drawing.Size(526, 20);
+            this.pbTotal.Size = new System.Drawing.Size(214, 24);
             this.pbTotal.TabIndex = 3;
             this.pbTotal.Visible = false;
             // 
@@ -184,12 +198,11 @@ namespace Updater
             // lblPatchLevel
             // 
             this.lblPatchLevel.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPatchLevel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.lblPatchLevel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.lblPatchLevel.Location = new System.Drawing.Point(399, 275);
             this.lblPatchLevel.Name = "lblPatchLevel";
             this.lblPatchLevel.Size = new System.Drawing.Size(130, 23);
             this.lblPatchLevel.TabIndex = 10;
-            this.lblPatchLevel.Text = "Patch: ";
             this.lblPatchLevel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblSettingsTitle
@@ -533,6 +546,7 @@ namespace Updater
         private System.Windows.Forms.Label lblPatchLevel;
         private System.Windows.Forms.Button btnForcePatch;
         private System.Windows.Forms.ProgressBar pbTotal;
+        private System.Windows.Forms.Label fileStatus;
     }
 }
 

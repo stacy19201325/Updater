@@ -453,6 +453,18 @@ namespace Updater
 
         #region Methods
 
+        static string CalculateMD5(string filename)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(filename))
+                {
+                    var hash = md5.ComputeHash(stream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                }
+            }
+        }
+
         private void CheckPatch(object sender, DoWorkEventArgs e)
         {
             //Set the main and forcepatch buttons so they will not touch.
@@ -466,20 +478,38 @@ namespace Updater
             pnlSettings.Invoke(new MethodInvoker(delegate { pnlSettings.Visible = false; }));
             pnlMain.Invoke(new MethodInvoker(delegate { pnlMain.Visible = true; }));
 
-            //First thing is first, let's download the patch file to the user's machine
-            DownloadFile("/PatchData.csv");
+            var md5 = MD5.Create();
 
-            //First, let's check the number of lines in server and set to serverFileCount.
-            Properties.Settings.Default.serverFileCount = File.ReadLines(Properties.Settings.Default.setFolder + "\\PatchData.csv").Count() - 1;
+            // First download the MD5 sum of the current server patch file
+            if (File.Exists(path: Properties.Settings.Default.setFolder + "\\PatchData.MD5"))
+            {
+                File.Delete(path: Properties.Settings.Default.setFolder + "\\PatchData.MD5");
+            }
+            DownloadFile("/PatchData.MD5");
 
-            //Now, let's take the very first line and compare it to our patchLevel setting
-            StreamReader patchCheck = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.csv");
+            // Get MD5 sum of PatchData.csv on the server
+            StreamReader patchFileMD5 = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.MD5");
+            String serverFileHash = patchFileMD5.ReadLine();
+            patchFileMD5.Close();
+            serverFileHash = serverFileHash.Trim(); // remove white spaces that prevent pattern matching
 
-            String clientPatchLevel = patchCheck.ReadLine();
-            patchCheck.Close();
+            String clientFileHash = "na";
 
-            //Check patch level
-            if (clientPatchLevel == Properties.Settings.Default.patchLevel)
+            // If player has PatchData.csv, get its MD5 sum
+            if (File.Exists(path: Properties.Settings.Default.setFolder + "\\PatchData.csv"))
+            {
+                clientFileHash = CalculateMD5(Properties.Settings.Default.setFolder + "\\PatchData.csv");
+            }
+
+            // Check for the final file in the download list to confirm they have completed downloading at least once in the past
+            bool hasFinishedDownloadBefore = false;
+            if (File.Exists(path: Properties.Settings.Default.setFolder + "\\string\\en\\test_motd.stf"))
+            {
+                hasFinishedDownloadBefore = true;
+            }
+
+                // Compare client and server patch file hash
+                if (clientFileHash == serverFileHash && hasFinishedDownloadBefore == true)
             {
                 //Patch level is correct. Allow user to play.
                 btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "PLAY"; }));
@@ -487,6 +517,9 @@ namespace Updater
             else
             {
                 //We need to patch before the user can play
+                File.Delete(path: Properties.Settings.Default.setFolder + "\\PatchData.csv");
+                DownloadFile("/PatchData.csv");
+
                 btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "UPDATE"; }));
             }
         }
@@ -506,6 +539,108 @@ namespace Updater
         }
 
         private void DownloadPatch(object sender, DoWorkEventArgs e)
+        {
+            // Create sub directories if they are missing
+            Directory.CreateDirectory(path: Properties.Settings.Default.setFolder + "\\miles");
+            Directory.CreateDirectory(path: Properties.Settings.Default.setFolder + "\\string\\en");
+
+            //Set the main and force patch buttons so they will not touch.
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "WAIT"; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.UseWaitCursor = true; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = false; }));
+            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.UseWaitCursor = true; }));
+            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = false; }));
+
+            //Force the user to the News panel
+            pnlSettings.Invoke(new MethodInvoker(delegate { pnlSettings.Visible = false; }));
+            pnlMain.Invoke(new MethodInvoker(delegate { pnlMain.Visible = true; }));
+
+            //Create some vars
+            DirectoryInfo clientDir = new DirectoryInfo(Properties.Settings.Default.setFolder);
+
+            // Read the file
+            string sPatchData = File.ReadAllText(path: Properties.Settings.Default.setFolder + "\\PatchData.csv");
+            sPatchData.Trim();
+            string sCleaned = Regex.Replace(sPatchData, @"\t|\n|\r", "");
+            sPatchData = sCleaned;
+
+            // Put string into array
+            string[] patchDataArray = sPatchData.Split(',');
+
+            // Make the array into 1 list per item
+            List<string> fileNames = new List<string>();
+            List<string> fileSums = new List<string>();
+
+            for (int i = 0; i < patchDataArray.Length; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    fileNames.Add(patchDataArray[i]);
+                }
+                else
+                {
+                    fileSums.Add(patchDataArray[i]);
+                }
+            }
+
+            // Make an array of files names from the client directory
+            FileInfo[] tmpFI = clientDir.GetFiles("*.*", SearchOption.AllDirectories);
+            string[] localFiles = tmpFI.Select(f => f.Name).ToArray();
+
+            // debug
+            for (int i = 0; i < localFiles.Count(); i++)
+            {
+                localFiles[i] = "/" + localFiles[i];
+                Console.WriteLine("File Array: " + localFiles[i]);
+            }
+
+            // Some files to exclude if they already exist
+            string exludes = "feet";
+
+            string localFileSum = "";
+
+            string downloadThis = @"";
+            string compareThis = "";
+
+            // Download the files in the list
+            for (int i= 0; i < fileNames.Count; i++)
+            {
+                // Format file name for download in case we need it
+                downloadThis =  fileNames[i];
+                compareThis = Regex.Replace(fileNames[i], @"|/|", " ");
+
+                // If fileName exist on client then compare fileName's md5 to sever's md5 for that file
+                if (localFiles.Contains(fileNames[i]) && !exludes.Contains(fileNames[i]))
+                {
+                    // Get the MD5 for the local file
+                    using (var md5 = MD5.Create())
+                    {
+                        using (var stream = File.OpenRead(path: Properties.Settings.Default.setFolder + "\\" + fileNames[i]))
+                        {
+                            localFileSum = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", String.Empty);
+                        }
+                    }
+
+                    // debug
+                    Console.WriteLine("MD5 Comp: " + fileNames[i].ToUpper() + " L: " + localFileSum + " S: " + fileSums[i].ToUpper());
+
+                    // If the MD5 sums don't match, redownload the file
+                    if (localFileSum.ToUpper() != fileSums[i].ToUpper())
+                    {
+                        File.Delete(path: Properties.Settings.Default.setFolder + "\\" + fileNames[i]);
+                        DownloadFile(downloadThis);
+                    }
+                }
+                else
+                {
+                    // File not found, download it
+                    DownloadFile(downloadThis);
+                }
+            }
+        }
+
+        /*
+        private void DownloadPatchOLD(object sender, DoWorkEventArgs e)
         {
             //Set the main and force patch buttons so they will not touch.
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "WAIT"; }));
@@ -642,6 +777,7 @@ namespace Updater
                 pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Increment(1); }));
             }
         }
+        */
 
         private void DownloadPatchProgress(object sender, ProgressChangedEventArgs e)
         {
@@ -650,8 +786,7 @@ namespace Updater
 
         private void DownloadPatchDone(object sender, RunWorkerCompletedEventArgs e)
         {
-            //Show progress bars and extend news panel
-            ftbNews.Invoke(new MethodInvoker(delegate { ftbNews.Height = 339; }));
+            //Show progress bars 
             pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Visible = false; }));
 
             //Patch level is correct. Allow user to play.
@@ -668,12 +803,19 @@ namespace Updater
 
         private void DownloadFile(string Filename)
         {
+            if (Filename == "")
+                return;
+
             //Create FTP Connector
             WebClient ftpTarkin = new WebClient();
-            ftpTarkin.Credentials = new NetworkCredential("anonymous@ravenwoodgaming.com", "");
+            ftpTarkin.Credentials = new NetworkCredential("anonymous", "");
+
+            string savedFileName = Properties.Settings.Default.setFolder + Filename.Replace("/", "\\");
+
+            Console.WriteLine("Now Downloading: " + savedFileName);
 
             //Download the file
-            ftpTarkin.DownloadFile("ftp://ftp.ravenwoodgaming.com/Tarkin" + Filename, Properties.Settings.Default.setFolder + Filename.Replace("/", "\\"));
+            ftpTarkin.DownloadFile(@"ftp://192.168.0.55" + Filename, savedFileName);
 
             //Close the WebClient
             ftpTarkin.Dispose();

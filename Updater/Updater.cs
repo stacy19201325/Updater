@@ -1,4 +1,5 @@
 ﻿//Copyright 2017 Steven Helm
+// Redesigned and upgraded by R. Bassett Jr. (Tatwi) 2019
 
 //This file is part of Updater.
 
@@ -33,22 +34,32 @@ using System.Net.Sockets;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
+using System.Configuration;
 
 namespace Updater
 {
     public partial class frmMain : Form
     {
-
         #region frmMain
         public frmMain()
         {
             InitializeComponent();
+
+            // Disable mouse over highlight on main button, because it makes a white background on the rounded image.
+            btnMain.FlatAppearance.MouseOverBackColor = btnMain.BackColor;
+            btnMain.FlatAppearance.MouseDownBackColor = pnlMain.BackColor;
+            btnMain.BackColorChanged += (s, e) => {
+                btnMain.FlatAppearance.MouseOverBackColor = btnMain.BackColor;
+            };
+
         }//Done
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            //Let's set the previous folder 
-            
+            // Show patch server address in settings menu
+            ftpInput.Text = Properties.Settings.Default.patchServerURL;
+
+            //Let's set the previous folder
             //Let's set the folder location from Resources
             txtFolder.Text = Properties.Settings.Default.setFolder;
 
@@ -81,8 +92,30 @@ namespace Updater
 
                     //Let's save the Settings
                     Properties.Settings.Default.setFolder = fbdFolder.SelectedPath;
-                    Properties.Settings.Default.patchLevel = null;
-                    Properties.Settings.Default.serverFileCount = 0;
+
+                    // Try getting most recent ftp server
+                    string ftpAddress = getWebString(Properties.Settings.Default.ftpUpdateURL);
+
+                    if (ftpAddress.Contains("No Data found"))
+                    {
+                        Properties.Settings.Default.ftpUpdateURL = ftpAddress;
+                    }
+
+                    // Save defaults to file that user can over-ride later by editing the text file
+                    // File located in C:\Users\%USERNAME%\AppData\Local\Microsoft\TarkinII_Launcher.exe_Url_<file_hash>\
+                    Properties.Settings.Default.patchServerURL = Properties.Settings.Default.patchServerURL;
+                    Properties.Settings.Default.ftpUser = Properties.Settings.Default.ftpUser;
+                    Properties.Settings.Default.newsURL = Properties.Settings.Default.newsURL;
+                    Properties.Settings.Default.forumURL = Properties.Settings.Default.forumURL;
+                    Properties.Settings.Default.aboutURL = Properties.Settings.Default.aboutURL;
+                    Properties.Settings.Default.statusURL = Properties.Settings.Default.statusURL;
+                    Properties.Settings.Default.statusPort = Properties.Settings.Default.statusPort;
+                    Properties.Settings.Default.ftpUpdateURL = Properties.Settings.Default.ftpUpdateURL;
+
+                    // Old version settings
+                    //Properties.Settings.Default.patchLevel = null;
+                    //Properties.Settings.Default.serverFileCount = 0;
+
                     Properties.Settings.Default.Save();
                 }
             }
@@ -110,6 +143,7 @@ namespace Updater
 
         //Let's make a background worker for download patch so the main thread does not stop
         private BackgroundWorker DownloadPatchWorker;
+
         #endregion
 
         #region Form Movers
@@ -284,6 +318,24 @@ namespace Updater
             }
         }
 
+        delegate void SetTextCallback(string text);
+
+        private void SetFileStatus(string text)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (this.fileStatus.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetFileStatus);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                this.fileStatus.Text = text;
+            }
+        }
+
         #endregion
 
         #region Buttons
@@ -291,7 +343,7 @@ namespace Updater
         private void btnMain_Click(object sender, EventArgs e)
         {
             //Decide whether the button is Play or Update
-            if (btnMain.Text == "UPDATE")
+            if (btnMain.Text == "Update")
             {
                 //Initialize the worker
                 this.DownloadPatchWorker = new BackgroundWorker();
@@ -302,7 +354,7 @@ namespace Updater
                 //Check Patch Level and force to update if there is a patch
                 this.DownloadPatchWorker.RunWorkerAsync();
             }
-            else if (btnMain.Text == "PLAY")
+            else if (btnMain.Text == "Play")
             {
                 //Open the Tarkin client.
                 Process procTarkin = new Process();
@@ -317,20 +369,11 @@ namespace Updater
                 }
                 catch (Exception Error)
                 {
-                    if (Error.Message == "The system cannot find the file specified")
-                    {
-                        //Initialize the worker
-                        this.DownloadPatchWorker = new BackgroundWorker();
-                        this.DownloadPatchWorker.DoWork += new DoWorkEventHandler(DownloadPatch);
-                        this.DownloadPatchWorker.ProgressChanged += new ProgressChangedEventHandler(DownloadPatchProgress);
-                        this.DownloadPatchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DownloadPatchDone);
+                    MessageBox.Show("SWGEmu.exe was not found. Please go to Settings, press the Verifiy File Integrity button, and then click the Update button to download any missing or corrupt files.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                        //There was no exe. Run the patch Download.
-                        this.DownloadPatchWorker.RunWorkerAsync();
-                    }                               
+                    return;
                 }
-                
-
 
                 //Minimize Updater
                 if (Properties.Settings.Default.setMinimized == true)
@@ -344,11 +387,15 @@ namespace Updater
                     Application.Exit();
                 }
             }
-
-        }//Add Logic on error to force download
+        }
 
         private void btnForcePatch_Click(object sender, EventArgs e)
         {
+            // Delete last file so patcher will recheck all files
+            string lastFile = Properties.Settings.Default.setFolder + "\\string\\en\\test_motd.stf";
+            if (File.Exists(lastFile))
+                File.Delete(lastFile);
+
             //Initialize the worker
             this.CheckPatchWorker = new BackgroundWorker();
             this.CheckPatchWorker.DoWork += new DoWorkEventHandler(CheckPatch);
@@ -371,13 +418,13 @@ namespace Updater
             this.DownloadPatchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DownloadPatchDone);
 
             //Check Patch Level and force to update if there is a patch
-            this.DownloadPatchWorker.RunWorkerAsync();
+            //this.DownloadPatchWorker.RunWorkerAsync();
 
             while (DownloadPatchWorker.IsBusy)
             {
                 Application.DoEvents();
             }
-
+            
         }//Done
 
         private void btnFolder_Click(object sender, EventArgs e)
@@ -426,7 +473,7 @@ namespace Updater
 
         private void lblForums_Click(object sender, EventArgs e)
         {
-            Process.Start("https://tarkin.org");
+            Process.Start(Properties.Settings.Default.forumURL);
         }//Done
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -437,54 +484,114 @@ namespace Updater
 
         private void btnSWG_Click(object sender, EventArgs e)
         {
-            //Open the SWG Settings.
-            Process procTarkin = new Process();
+            String SettingsFile = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
 
-            procTarkin.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
-            procTarkin.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
-
-            procTarkin.Start();
+            if (File.Exists(@SettingsFile))
+            {
+                //Open the SWG Settings.
+                Process procTarkin = new Process();
+                procTarkin.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
+                procTarkin.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
+                procTarkin.Start();
+            }
         }//Done
 
         #endregion
 
         #region Methods
 
+        static string CalculateMD5(string filename)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(filename))
+                {
+                    var hash = md5.ComputeHash(stream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                }
+            }
+        }
+        static string getWebString(string url)
+        {
+            WebClient webpage = new WebClient();
+            webpage = new WebClient();
+
+            string content = "No data found.";
+
+            try
+            {
+                content = webpage.DownloadString(url);
+            }
+            catch (Exception)
+            {
+                // Prevents error message for end user
+            }
+
+            return content;
+        }
+
         private void CheckPatch(object sender, DoWorkEventArgs e)
         {
             //Set the main and forcepatch buttons so they will not touch.
-            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "WAIT"; }));
-            btnMain.Invoke(new MethodInvoker(delegate { btnMain.UseWaitCursor = true; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Busy..."; }));
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = false; }));
-            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.UseWaitCursor = true; }));
             btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = false; }));
 
             //Force the user to the News panel and resize the news box
             pnlSettings.Invoke(new MethodInvoker(delegate { pnlSettings.Visible = false; }));
             pnlMain.Invoke(new MethodInvoker(delegate { pnlMain.Visible = true; }));
 
-            //First thing is first, let's download the patch file to the user's machine
-            DownloadFile("/PatchData.csv");
+            var md5 = MD5.Create();
 
-            //First, let's check the number of lines in server and set to serverFileCount.
-            Properties.Settings.Default.serverFileCount = File.ReadLines(Properties.Settings.Default.setFolder + "\\PatchData.csv").Count() - 1;
-
-            //Now, let's take the very first line and compare it to our patchLevel setting
-            StreamReader patchCheck = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.csv");
-
-            String clientPatchLevel = patchCheck.ReadLine();
-            patchCheck.Close();
-
-            //Check patch level
-            if (clientPatchLevel == Properties.Settings.Default.patchLevel)
+            // First download the MD5 sum of the current server patch file
+            if (File.Exists(path: Properties.Settings.Default.setFolder + "\\PatchData.MD5"))
             {
-                //Patch level is correct. Allow user to play.
-                btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "PLAY"; }));
+                File.Delete(path: Properties.Settings.Default.setFolder + "\\PatchData.MD5");
             }
-            else
+            DownloadFile("/PatchData.MD5");
+
+            // Get MD5 sum of PatchData.csv on the server
+            try
             {
-                //We need to patch before the user can play
-                btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "UPDATE"; }));
+                StreamReader patchFileMD5 = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.MD5");
+                String serverFileHash = patchFileMD5.ReadLine();
+                patchFileMD5.Close();
+                serverFileHash = serverFileHash.Trim(); // remove white spaces that prevent pattern matching
+
+                String clientFileHash = "na";
+
+                // If player has PatchData.csv, get its MD5 sum
+                if (File.Exists(path: Properties.Settings.Default.setFolder + "\\PatchData.csv"))
+                {
+                    clientFileHash = CalculateMD5(Properties.Settings.Default.setFolder + "\\PatchData.csv");
+                }
+
+                // Check for the final file in the download list to confirm they have completed downloading at least once in the past
+                bool hasFinishedDownloadBefore = false;
+                if (File.Exists(path: Properties.Settings.Default.setFolder + "\\string\\en\\test_motd.stf"))
+                {
+                    hasFinishedDownloadBefore = true;
+                }
+
+                // Compare client and server patch file hash
+                if (clientFileHash == serverFileHash && hasFinishedDownloadBefore == true)
+                {
+                    // Allow user to play.
+                    btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Play"; }));
+                }
+                else
+                {
+                    //We need to patch before the user can play
+                    File.Delete(path: Properties.Settings.Default.setFolder + "\\PatchData.csv");
+                    DownloadFile("/PatchData.csv");
+
+                    btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Update"; }));
+                }
+            }
+            catch (Exception)
+            {
+                // Connection must have failed before downloading the patch info files
+                return;
             }
         }
 
@@ -496,13 +603,113 @@ namespace Updater
         private void CheckPatchDone(object sender, RunWorkerCompletedEventArgs e)
         {
             //Turn the main and force buttons back on
-            btnMain.Invoke(new MethodInvoker(delegate { btnMain.UseWaitCursor = false; }));
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = true; }));
-            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.UseWaitCursor = false; }));
             btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = true; }));
         }
 
         private void DownloadPatch(object sender, DoWorkEventArgs e)
+        {
+            // Create sub directories if they are missing
+            Directory.CreateDirectory(path: Properties.Settings.Default.setFolder + "\\miles");
+            Directory.CreateDirectory(path: Properties.Settings.Default.setFolder + "\\string\\en");
+
+            //Set the main and force patch buttons so they will not touch.
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Updating..."; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = false; }));
+            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = false; }));
+
+            //Force the user to the News panel
+            pnlSettings.Invoke(new MethodInvoker(delegate { pnlSettings.Visible = false; }));
+            pnlMain.Invoke(new MethodInvoker(delegate { pnlMain.Visible = true; }));
+
+            //Create some vars
+            DirectoryInfo clientDir = new DirectoryInfo(Properties.Settings.Default.setFolder);
+
+            // Read the file
+            string sPatchData = File.ReadAllText(path: Properties.Settings.Default.setFolder + "\\PatchData.csv");
+            sPatchData.Trim();
+            string sCleaned = Regex.Replace(sPatchData, @"\t|\n|\r", "");
+            sPatchData = sCleaned;
+
+            // Put string into array
+            string[] patchDataArray = sPatchData.Split(',');
+
+            // Make the array into 1 list per item
+            List<string> fileNames = new List<string>();
+            List<string> fileSums = new List<string>();
+
+            for (int i = 0; i < patchDataArray.Length; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    fileNames.Add(patchDataArray[i]);
+                }
+                else
+                {
+                    fileSums.Add(patchDataArray[i]);
+                }
+            }
+
+            // Make an array of files names from the client directory
+            FileInfo[] tmpFI = clientDir.GetFiles("*.*", SearchOption.AllDirectories);
+            string[] localFiles = tmpFI.Select(f => f.Name).ToArray();
+
+            // debug
+            for (int i = 0; i < localFiles.Count(); i++)
+            {
+                localFiles[i] = "/" + localFiles[i];
+                Console.WriteLine("File Array: " + localFiles[i]);
+            }
+
+            // Some files to exclude if they already exist
+            string exludes = "feet";
+
+            string localFileSum = "";
+
+            string downloadThis = @"";
+
+            // Download the files in the list
+            for (int i= 0; i < fileNames.Count; i++)
+            {
+                // Format file name for download in case we need it
+                downloadThis =  fileNames[i];
+                SetFileStatus("Working (" + i + "/" + fileNames.Count + "): " + downloadThis.TrimStart('/'));
+
+                // If fileName exist on client then compare fileName's md5 to sever's md5 for that file
+                if (localFiles.Contains(fileNames[i]) && !exludes.Contains(fileNames[i]))
+                {
+                    // Get the MD5 for the local file
+                    using (var md5 = MD5.Create())
+                    {
+                        using (var stream = File.OpenRead(path: Properties.Settings.Default.setFolder + "\\" + fileNames[i]))
+                        {
+                            localFileSum = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", String.Empty);
+                        }
+                    }
+
+                    // debug
+                    Console.WriteLine("MD5 Comp: " + fileNames[i].ToUpper() + " L: " + localFileSum + " S: " + fileSums[i].ToUpper());
+
+                    // If the MD5 sums don't match, redownload the file
+                    if (localFileSum.ToUpper() != fileSums[i].ToUpper())
+                    {
+                        File.Delete(path: Properties.Settings.Default.setFolder + "\\" + fileNames[i]);
+                        DownloadFile(downloadThis);
+                    }
+                }
+                else
+                {
+                    // File not found, download it
+                    DownloadFile(downloadThis);
+                }
+
+                // Status Text
+                SetFileStatus("Idle. . ." + fileNames[i].ToUpper());
+            }
+        }
+
+        /*
+        private void DownloadPatchOLD(object sender, DoWorkEventArgs e)
         {
             //Set the main and force patch buttons so they will not touch.
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "WAIT"; }));
@@ -639,6 +846,7 @@ namespace Updater
                 pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Increment(1); }));
             }
         }
+        */
 
         private void DownloadPatchProgress(object sender, ProgressChangedEventArgs e)
         {
@@ -647,15 +855,12 @@ namespace Updater
 
         private void DownloadPatchDone(object sender, RunWorkerCompletedEventArgs e)
         {
-            //Show progress bars and extend news panel
-            ftbNews.Invoke(new MethodInvoker(delegate { ftbNews.Height = 339; }));
+            //Show progress bars 
             pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Visible = false; }));
 
             //Patch level is correct. Allow user to play.
-            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "PLAY"; }));
-            btnMain.Invoke(new MethodInvoker(delegate { btnMain.UseWaitCursor = false; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Play"; }));
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = true; }));
-            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.UseWaitCursor = false; }));
             btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = true; }));
 
             //Call the update patch version method
@@ -665,21 +870,40 @@ namespace Updater
 
         private void DownloadFile(string Filename)
         {
-            //Create FTP Connector
-            WebClient ftpTarkin = new WebClient();
-            ftpTarkin.Credentials = new NetworkCredential("anonymous@ravenwoodgaming.com", "");
+            if (Filename == "")
+                return;
+
+            // Format file name
+            string savedFileName = Properties.Settings.Default.setFolder + Filename.Replace("/", "\\");
+
+            //Create Web Connector
+            WebClient Client = new WebClient();
+
+            // Use ftp credentials if needed
+            if (Properties.Settings.Default.patchServerURL.Contains("ftp:")) 
+                Client.Credentials = new NetworkCredential("anonymous", "");
 
             //Download the file
-            ftpTarkin.DownloadFile("ftp://ftp.ravenwoodgaming.com/Tarkin" + Filename, Properties.Settings.Default.setFolder + Filename.Replace("/", "\\"));
+            try
+            {
+                Client.DownloadFile(Properties.Settings.Default.patchServerURL + Filename, savedFileName);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Unable to reach the patch server. Try updating or manually changing it in the Settings menu.", "Connection Error",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
             //Close the WebClient
-            ftpTarkin.Dispose();
+            Client.Dispose();
+
+            Console.WriteLine("Now Downloading: " + savedFileName);
         }
 
         private void UpdatePatchVersion()
         {
             //Let's take the very first line and set it to our patchLevel setting
-            StreamReader patchCheck = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.csv");
+            StreamReader patchCheck = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.MD5");
             Properties.Settings.Default.patchLevel = patchCheck.ReadLine();
             Properties.Settings.Default.Save();
             patchCheck.Close();
@@ -692,10 +916,13 @@ namespace Updater
 
             //Grab data from announcement forums
             XmlDocument RSSNews = new XmlDocument();
-            RSSNews.Load("https://tarkin.org/index.php?/forum/4-announcements.xml/");
+            RSSNews.Load(Properties.Settings.Default.newsURL);
 
             XmlNodeList RSSNewsNodes = RSSNews.SelectNodes("rss/channel/item");
             StringBuilder RSSNewsData = new StringBuilder();
+
+            // Box heading
+            RSSNewsData.Append("NEWS: \n\n");
 
             foreach (XmlNode RSSNode in RSSNewsNodes)
             {
@@ -705,15 +932,27 @@ namespace Updater
                 RSSSubNode = RSSNode.SelectSingleNode("description");
                 string NewsElement = RSSSubNode != null ? RSSSubNode.InnerText : "";
 
+                // Skip this entry if there isn't any data to show
+                if (NewsElement == "")
+                    continue;
+
+                RSSSubNode = RSSNode.SelectSingleNode("pubDate");
+                string PublishDate = RSSSubNode != null ? RSSSubNode.InnerText : "";
+                PublishDate = PublishDate.Substring(0, 17);
+
                 //Clean news up.
                 NewsElement = Regex.Replace(NewsElement, "\t", "");
                 TitleElement = Regex.Replace(TitleElement, "\t", "");
-                NewsElement = Regex.Replace(NewsElement, "\n", "");
+                NewsElement = Regex.Replace(NewsElement, "\n\n\n\n\n", "");
+                NewsElement = Regex.Replace(NewsElement, "\n\n\n\n", "");
+                NewsElement = Regex.Replace(NewsElement, "\n\n\n", "");
+                NewsElement = Regex.Replace(NewsElement, "\n\n", "");
                 TitleElement = Regex.Replace(TitleElement, "\n", "");
                 NewsElement = Regex.Replace(NewsElement, "<.*?>", String.Empty);
                 TitleElement = Regex.Replace(TitleElement, "<.*?>", String.Empty);
 
-                RSSNewsData.Append(TitleElement + "\n" + NewsElement + "\n\n");
+                String TitleUnderline = "\n-------------------------------------\n";
+                RSSNewsData.Append(TitleElement + TitleUnderline + PublishDate + "\n" + NewsElement + "\n\n\n");
             }
 
             //Output News!
@@ -722,34 +961,45 @@ namespace Updater
 
         private void ServerStatus()
         {
-            // Create a TcpClient.
-            TcpClient stsClient = new TcpClient("23.111.128.52", 44455);
+            // tarkinlogin.ddns.net
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+            System.Net.ServicePointManager.Expect100Continue = false;
 
-            //This is required to be sent to the server so it will generate a response
-            String stsSend = "\n";
-            // Translate the response into ASCII and store it as a Byte array.
-            Byte[] stsASCII = System.Text.Encoding.ASCII.GetBytes(stsSend);
+            try
+            {
+                using (TcpClient tcpClient = new TcpClient(Properties.Settings.Default.statusURL, Int32.Parse(Properties.Settings.Default.statusPort)))
+                using (NetworkStream ns = tcpClient.GetStream())
+                using (StreamWriter sw = new StreamWriter(ns))
+                {
+                    sw.AutoFlush = true;
+                    sw.WriteLine("\n");
 
-            // Get a client stream for reading and writing.
-            NetworkStream stsStream = stsClient.GetStream();
+                    Byte[] stsASCII = new Byte[512];
+                    String stsData = String.Empty;
+                    Int32 bytes = ns.Read(stsASCII, 0, stsASCII.Length);
+                    stsData = System.Text.Encoding.ASCII.GetString(stsASCII, 0, bytes);
 
-            // Send the message to the connected TcpServer. 
-            stsStream.Write(stsASCII, 0, stsASCII.Length);
+                    //ftbNews.Text = stsData; // debugging
 
-            // Buffer to store the response bytes.
-            stsASCII = new Byte[512];
+                    sw.Close();
+                    ns.Close();
+                    tcpClient.Close();
 
-            // String to store the response ASCII representation.
-            String stsData = String.Empty;
+                    ParseStatusXML(stsData);
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                lblStatusEnum.Text = "Status: Down";
+            }
+            catch (SocketException e)
+            {
+                lblStatusEnum.Text = "Status: Down";
+            }
+        }
 
-            // Read the first batch of the TcpServer response bytes.
-            Int32 bytes = stsStream.Read(stsASCII, 0, stsASCII.Length);
-            stsData = System.Text.Encoding.ASCII.GetString(stsASCII, 0, bytes);
-
-            // Close everything.
-            stsStream.Close();
-            stsClient.Close();
-
+        private void ParseStatusXML(String stsData)
+        {
             //Unpack the XML in stsData
             String[] stsDataElements = Regex.Replace(stsData, "<.*?>", String.Empty).Split('\n');
 
@@ -759,7 +1009,6 @@ namespace Updater
             Double.TryParse(Uptime, out uptimeSeconds);
             uptimeSeconds = uptimeSeconds * -1;
             TimeSpan tsUptime = DateTime.Now - DateTime.Now.AddSeconds(uptimeSeconds);
-
 
             Uptime = tsUptime.Days.ToString() + " days " + tsUptime.Hours.ToString() + " hours";
 
@@ -793,11 +1042,128 @@ namespace Updater
                 lblStatusUptime.Text = "";
                 lblStatusLast.Text = "";
             }
-
         }
 
         #endregion
 
-    }
+        private void ftbNews_TextChanged(object sender, EventArgs e)
+        {
 
+        }
+
+        private void lblNews_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblAbout_Click(object sender, EventArgs e)
+        {
+            if (lblAbout.Text == "News")
+            {
+                lblAbout.Text = "About";
+                GetNews();
+            }
+            else
+            {
+                lblAbout.Text = "News";
+
+                // Get current about info
+                string aboutMessage = getWebString(Properties.Settings.Default.ftpUpdateURL);
+
+                if (aboutMessage.Contains("No data found"))
+                {
+                    ftbNews.Text = "TARKIN'S REVENGE: \n\nA Star Wars Galaxies server, based upon SWGEmu's Core3 / Engine3. Roleplay-friendly, with a focus on quality of life, we are not your average glowbat zone.\n\n" +
+                       "Credits Current and Former Staff:\n--------------------------------" +
+                       "\nKinshi\n First and foremost, founder of the original SWGCanon / Tarkin, for the foundation upon which we have built Tarkin's Revenge (especially NPC Player Cities, but so many more contributions, far too numerous to list them all - including most of the vision and principles by which we operate. We would not exist without Kinshi's vision), along with Skolten, our web dev, as well as Wol, Gurgi, and Zetlaux, who served as staff and code contributors on dugeons and screenplays during Tarkin's original run." +
+                       "\n\nLiakhara(Github: stacy19201325)\n For merging original tarkin_scripts and TarkinII / Core3 with current SWGEmu code, craftable factional armors, craftable CU / NGE weapons, vast amounts of client asset implementation, many dungeon revamps, SUI menu to choose combat mission levels, Jedi and faction trophies, custom DNA naming, many camp changes, world snapshot changes, recycler changes, Star Tours Adventure Service, custom color palettes, most other Post - Tarkin II contributions so far." +
+                       "\n\nParadymShift(Github: Spartan5150)\n For networking, hardware, and forum management, as well as world snapshot editing, and community relations." +
+                       "\n\nTatwi\n For the contributions he made through the various iterations of Tarkin: / tarkin command, houseplop, medical services terminals, skill training NPCs, hunting mission revamp, mission terminal renaming, new player email, CA / AA to drop with one stat only, pitch / roll / yaw, and various other quality of life improvements." +
+                       "\n\nDevereux(Github: Trakaa)\n For fixes correcting decrimenting of manufacturing schematics, making mind heal work on stims, recoloring armor with multiple palettes, making current resource list export in a format compatible with swgcraft, on Tarkin II." +
+                       "\n\nTaylaria\n For some work on mobile templates on Tarkin II." +
+                       "\n\nSealGunma\n For our knee-jerk hatred of Fixer, thanks to crashing our server repeatedly due to a screenplay bug on Tarkin II." +
+                       "\n\n\nSources and inspiration from other servers:" +
+                       "\nBorrie\n For Wall Pack and Windmill." +
+                       "\n\nHalyn\n For his comments in ModtheGalaxy chat for slicing locked briefcases." +
+                       "\n\nToxic\n For contributions of galaxy - wide invites, unstick command, and changes to / move on Tarkin II as well as inspiration to make a SUI window upon character creation to describe the server." +
+                       "\n\nMost likely Red as orginator for CA / AA being named after the stat - modified and contributed by Tatwi, modified again by Liakhara as it exists in its current state on Tarkin's Revenge." +
+                       "\n\nUnsure: Serverwide announcements of important events like pvp kills, new server joins, etc.We encountered this playing on Remastered and used this idea here on Tarkin's Revenge, but I don't believe the idea originated there.Let us know if you know for certain where this idea originated.";
+
+                }
+                else
+                {
+                    ftbNews.Text = aboutMessage;
+                }
+            }
+            
+            
+        }
+
+        private void lblFileStatus_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // Settings file path
+            var settingsPath = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+
+            Process.Start("notepad.exe", settingsPath);
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        // Save user input address to local settings file
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.patchServerURL = ftpInput.Text;
+            Properties.Settings.Default.Save();
+        }
+
+        // Set default address in local settings file
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.patchServerURL = "https://tarkinswg.com/tre/patch";
+            ftpInput.Text = Properties.Settings.Default.patchServerURL;
+            Properties.Settings.Default.Save();
+        }
+
+        // Grab the latest patch server address 
+        private void btnFtpGetURL_Click(object sender, EventArgs e)
+        {
+            ftpInput.Text = getWebString(Properties.Settings.Default.ftpUpdateURL);
+        }
+
+        // Enable copying of text in the news window
+        private void ftbNews_MouseUp(object sender, MouseEventArgs e)
+        {
+            Console.WriteLine("News box clicked!");
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            { 
+                
+                ContextMenu contextMenu = new System.Windows.Forms.ContextMenu();
+                MenuItem menuItem = new MenuItem("Copy");
+                menuItem.Click += new EventHandler(CopyAction);
+                contextMenu.MenuItems.Add(menuItem);
+                ftbNews.ContextMenu = contextMenu;
+
+                Console.WriteLine("Right click up!");
+            }
+        }
+
+        void CopyAction(object sender, EventArgs e)
+        {
+            Clipboard.SetText(ftbNews.SelectedText);
+        }
+
+    }
 }

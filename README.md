@@ -7,7 +7,7 @@ This program is designed to keep the client files for the Tarkin's Revenge serve
 
 - Download the updater from the [current_release](./current_release) directory in this repo.
 - Make a new folder on your computer, such as C:\TarkinII and put the Tarkin updater into the folder.
-- Double click the updater and point it to the folder you made above.
+- Double click the updater (Tarkin's Revenge Launcher.exe )and point it to the folder you made above. Windows 10 may give you a warning in a big window with the only button might be Don't Run. Should this occur, there is a link in the lower right of the box that will present you with a "Run Anyway" button when you click it. You'll only see this message the first time you run the program.
 - The updater will begin downloading your files when you press the Update button.
 - Wait until the download is complete and then press the Play button to play the game.
 - Right click the updater and choose "Pin to Start Menu" or create a link to it where you happen to find convenient.

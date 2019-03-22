@@ -35,6 +35,8 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Configuration;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Updater
 {
@@ -111,10 +113,6 @@ namespace Updater
                     Properties.Settings.Default.statusURL = Properties.Settings.Default.statusURL;
                     Properties.Settings.Default.statusPort = Properties.Settings.Default.statusPort;
                     Properties.Settings.Default.ftpUpdateURL = Properties.Settings.Default.ftpUpdateURL;
-
-                    // Old version settings
-                    //Properties.Settings.Default.patchLevel = null;
-                    //Properties.Settings.Default.serverFileCount = 0;
 
                     Properties.Settings.Default.Save();
                 }
@@ -513,19 +511,27 @@ namespace Updater
         }
         static string getWebString(string url)
         {
-            WebClient webpage = new WebClient();
-            webpage = new WebClient();
+            Console.WriteLine("Fetching sting data from: " + url);
+
+            //Create Web Connector
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
+            WebClient Client = new WebClient();
+            Client.Headers.Add("User-Agent: Other");
 
             string content = "No data found.";
 
             try
             {
-                content = webpage.DownloadString(url);
+                content = Client.DownloadString(url);
             }
             catch (Exception)
             {
                 // Prevents error message for end user
+                Console.WriteLine("Failed to fetch data from: " + url);
             }
+
+            //Close the WebClient
+            Client.Dispose();
 
             return content;
         }
@@ -708,146 +714,6 @@ namespace Updater
             }
         }
 
-        /*
-        private void DownloadPatchOLD(object sender, DoWorkEventArgs e)
-        {
-            //Set the main and force patch buttons so they will not touch.
-            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "WAIT"; }));
-            btnMain.Invoke(new MethodInvoker(delegate { btnMain.UseWaitCursor = true; }));
-            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = false; }));
-            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.UseWaitCursor = true; }));
-            btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = false; }));
-
-            //Force the user to the News panel and resize the news box
-            pnlSettings.Invoke(new MethodInvoker(delegate { pnlSettings.Visible = false; }));
-            pnlMain.Invoke(new MethodInvoker(delegate { pnlMain.Visible = true; }));
-            ftbNews.Invoke(new MethodInvoker(delegate { ftbNews.Height = 310; }));
-            pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Visible = true; }));
-            pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Value = 0; }));
-
-            //Create some vars
-            DirectoryInfo clientDir = new DirectoryInfo(Properties.Settings.Default.setFolder);
-
-            StreamReader patchReader = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.csv");
-
-            FileInfo[] clientFiles = clientDir.GetFiles("*.*", SearchOption.AllDirectories);
-            List<String> serverFiles = new List<String>();
-
-            String excludeFile = "\\user.cfg,\\options.cfg,\\swgemu_machineoptions.iff";
-
-            //Read past the first line so we ignore the patch info
-            patchReader.ReadLine();
-
-            //Iterate through the PatchData.csv and save off the data in a list
-            while (!patchReader.EndOfStream)
-            {
-                //Set the csv to the serverFiles List.
-                serverFiles.Add(patchReader.ReadLine());
-            }
-
-            //Set Total progressbar maximum to twice serverFileCount
-            pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Maximum = Properties.Settings.Default.serverFileCount * 2; }));
-
-            //First, loop through server list and set a value for name and file size.
-            foreach (String serverSearch in serverFiles.ToList())
-            {
-                //Split the data from the CSV by comma.
-                String[] serverData = serverSearch.Split(',');
-                String serverFileName = serverData[0];
-                long serverFileLength = Convert.ToInt64(serverData[1]);
-                String serverHash = serverData[2];
-                bool actionFlag = false;
-
-                //Loop through the client array and try and find a name match, then check the file size
-                foreach (FileInfo clientSearch in clientFiles)
-                {
-                    String clientFileName = clientSearch.FullName.Replace(Properties.Settings.Default.setFolder, "");
-                    long clientFileLength = clientSearch.Length;
-
-                    if (serverFileName == clientFileName)
-                    {
-                        //Match is found, check the file length, ignore if equal
-                        if (serverFileLength == clientFileLength || excludeFile.Contains(clientFileName))
-                        {
-                            //File match found with same file size. Keep on directory list to check CRC. Set flag.
-                            actionFlag = true;
-                            break;
-                        }
-                        else
-                        {
-                            //File match with different file size. Download file from server. Remove file from server list. Set flag.
-                            File.Delete(clientSearch.FullName);
-                            DownloadFile(serverFileName);
-
-                            serverFiles.Remove(serverSearch);
-                            pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Increment(1); }));
-                            actionFlag = true;
-                            break;
-                        }
-                    }
-                }
-                //No match was found. We need to download the server file. Remove file from server list
-                if (actionFlag == false)
-                {
-                    DownloadFile(serverFileName);
-
-                    serverFiles.Remove(serverSearch);
-                    pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Increment(1); }));
-                }
-                //Advance the progress bar for total
-                pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Increment(1); }));
-            }
-
-            //Now, we have checked filenames and filesizes. Let's check CRCs.
-            foreach (String serverSearch in serverFiles.ToList())
-            {
-                String[] serverData = serverSearch.Split(',');
-                String serverFileName = serverData[0];
-                long serverFileLength = Convert.ToInt64(serverData[1]);
-                String serverHash = serverData[2];
-
-                //Loop through clients to find the filename match
-                foreach (FileInfo clientSearch in clientFiles)
-                {
-                    String clientFileHash;
-                    String clientFileName = clientSearch.FullName.Replace(Properties.Settings.Default.setFolder, "");
-
-                    //Fall through IF the client and server name matches EXCEPT for the exclude
-                    if (serverFileName == clientFileName && !excludeFile.Contains(serverFileName))
-                    {
-                        //Match found, create CRC from clientfile.
-                        using (var md5 = MD5.Create())
-                        {
-                            using (var stream = File.OpenRead(clientSearch.FullName))
-                            {
-                                clientFileHash = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", String.Empty);
-                            }
-                        }
-
-                        //Compare server and client hash
-                        if (serverHash == clientFileHash)
-                        {
-                            //Match found. Delete server entry.
-                            serverFiles.Remove(serverSearch);
-                            break;
-                        }
-                        else
-                        {
-                            //Match not found. Download file from server.
-                            File.Delete(clientSearch.FullName);
-                            DownloadFile(serverFileName);
-
-                            serverFiles.Remove(serverSearch);
-                        }
-
-                    }
-                }
-                //Advance the progress bar for total
-                pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Increment(1); }));
-            }
-        }
-        */
-
         private void DownloadPatchProgress(object sender, ProgressChangedEventArgs e)
         {
             
@@ -877,7 +743,9 @@ namespace Updater
             string savedFileName = Properties.Settings.Default.setFolder + Filename.Replace("/", "\\");
 
             //Create Web Connector
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
             WebClient Client = new WebClient();
+            Client.Headers.Add("User-Agent: Other");
 
             // Use ftp credentials if needed
             if (Properties.Settings.Default.patchServerURL.Contains("ftp:")) 
@@ -888,10 +756,13 @@ namespace Updater
             {
                 Client.DownloadFile(Properties.Settings.Default.patchServerURL + Filename, savedFileName);
             }
-            catch (Exception)
+            catch (WebException e)
             {
-                MessageBox.Show("Unable to reach the patch server. Try updating or manually changing it in the Settings menu.", "Connection Error",
+                MessageBox.Show("Unable to reach the patch server. Try updating or manually changing it in the Settings menu.\n\nError:\n" + e + "\nwhen attempting to download " + Filename, "Connection Error",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                Console.WriteLine("Unable to download: " + Filename);
+                throw e;
             }
 
             //Close the WebClient
@@ -1068,7 +939,7 @@ namespace Updater
                 lblAbout.Text = "News";
 
                 // Get current about info
-                string aboutMessage = getWebString(Properties.Settings.Default.ftpUpdateURL);
+                string aboutMessage = getWebString(Properties.Settings.Default.aboutURL);
 
                 if (aboutMessage.Contains("No data found"))
                 {

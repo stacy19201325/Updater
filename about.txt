@@ -1,0 +1,65 @@
+TARKIN'S REVENGE 
+
+A Star Wars Galaxies server, based upon SWGEmu's Core3 / Engine3. Roleplay-friendly, with a focus on quality of life, we are not your average glowbat zone.
+
+Tarkin has always been a special place for Lia and I, we met in 2013 in the small corner of the internet that housed SWGCanon (later renamed to Tarkin), and grew to love each other. Now we are engaged and will be married this year. Tarkin provided us with a place to explore a world with which we were both familiar, but which had been shaped in such a way to provide a new challenge for experienced solo players and small groups. We decided last fall that we were going to make this project work again, and here we are.
+
+This project has been a labor of love, and without the following people none of this would have been possible.
+
+After making you all wait so long, we finally have the incredible pleasure to announce that Friday, March 29th at 6:30PM CST we will be opening the server for play. Registration is open now at https://register.tarkinswg.com/login.php
+
+I have the pleasure of speaking for all of us on the team in saying that we all look forward to seeing everyone explore our slice of a galaxy far far away and see it with the same awe and eyes that we all had when we first started exploring it.
+
+-Paradym
+
+ 
+Credits for Current and Former Staff:
+-------------------------------------- 
+
+Kinshi
+ First and foremost, founder of the original SWGCanon / Tarkin, for the foundation upon which we have built Tarkin's Revenge (especially NPC Player Cities, but so many more contributions, far too numerous to list them all - including most of the vision and principles by which we operate. We would not exist without Kinshi's vision), along with Skolten, our web dev, as well as Wol, Gurgi, and Zetlaux, who served as staff and code contributors on dugeons and screenplays during Tarkin's original run. 
+
+
+Liakhara(Github: stacy19201325)
+ For merging original tarkin_scripts and TarkinII / Core3 with current SWGEmu code, craftable factional armors, craftable CU / NGE weapons, vast amounts of client asset implementation, many dungeon revamps, SUI menu to choose combat mission levels, Jedi and faction trophies, custom DNA naming, many camp changes, world snapshot changes, recycler changes, Star Tours Adventure Service, custom color palettes, most other Post - Tarkin II contributions so far. 
+
+
+ParadymShift(Github: Spartan5150)
+ For networking, hardware, and forum management, as well as world snapshot editing, and community relations. 
+
+
+Tatwi
+ For the contributions he made through the various iterations of Tarkin: / tarkin command, houseplop, medical services terminals, skill training NPCs, hunting mission revamp, mission terminal renaming, new player email, CA / AA to drop with one stat only, pitch / roll / yaw, and various other quality of life improvements. 
+
+
+Devereux(Github: Trakaa)
+ For fixes correcting decrimenting of manufacturing schematics, making mind heal work on stims, recoloring armor with multiple palettes, making current resource list export in a format compatible with swgcraft, on Tarkin II. 
+
+
+Taylaria
+ For some work on mobile templates on Tarkin II. 
+
+
+SealGunma
+ For our knee-jerk hatred of Fixer, thanks to crashing our server repeatedly due to a screenplay bug on Tarkin II. 
+
+
+
+Sources and inspiration from other servers: 
+
+Borrie
+ For Wall Pack and Windmill. 
+
+
+Halyn
+ For his comments in ModtheGalaxy chat for slicing locked briefcases. 
+
+
+Toxic
+ For contributions of galaxy - wide invites, unstick command, and changes to / move on Tarkin II as well as inspiration to make a SUI window upon character creation to describe the server. 
+
+
+Most likely Red as orginator for CA / AA being named after the stat - modified and contributed by Tatwi, modified again by Liakhara as it exists in its current state on Tarkin's Revenge. 
+
+
+Unsure: Serverwide announcements of important events like pvp kills, new server joins, etc.We encountered this playing on Remastered and used this idea here on Tarkin's Revenge, but I don't believe the idea originated there.Let us know if you know for certain where this idea originated.

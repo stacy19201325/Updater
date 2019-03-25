@@ -387,7 +387,12 @@ namespace Updater
             }
             else if (btnMain.Text == "Settings") {
                 openSettings();
-                MessageBox.Show("Before running the game, please set your screen resolution on the Graphics tab of the settings program.\n\nThanks!", "Settings Help",
+
+                int screenW = SystemInformation.VirtualScreen.Width;
+                int screenH = SystemInformation.VirtualScreen.Height;
+
+
+                MessageBox.Show("Before running the game, please set your screen resolution on the Graphics tab of the settings program.\n\nThanks!\n\nYour desktop resolution is: " + screenW + " x " + screenH, "Settings Help",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
                 // Wait for the user to close the game settings program before allowing them to play
                 while (!procSettings.HasExited)
@@ -579,7 +584,7 @@ namespace Updater
         private void CheckPatch(object sender, DoWorkEventArgs e)
         {
             //Set the main and forcepatch buttons so they will not touch.
-            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Busy..."; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = ". . . ."; }));
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = false; }));
             btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = false; }));
 
@@ -802,10 +807,11 @@ namespace Updater
             }
             catch (WebException e)
             {
-                MessageBox.Show("Unable to reach the patch server. Try updating or manually changing it in the Settings menu.\n\nError:\n" + e + "\nwhen attempting to download " + Filename, "Connection Error",
+                MessageBox.Show("Unable to reach the patch server. Try updating or manually changing it in the Settings menu and then pressing the Force Update button.\n\nError:\n\n" + e + "\n\nwhen attempting to download " + Filename, "Connection Error",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 Console.WriteLine("Unable to download: " + Filename);
+                btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Error";}));
                 throw e;
             }
 
@@ -973,6 +979,9 @@ namespace Updater
 
         private void lblAbout_Click(object sender, EventArgs e)
         {
+            if (pnlMain.Visible == false)
+                return;
+
             if (lblAbout.Text == "News")
             {
                 lblAbout.Text = "About";
@@ -1113,6 +1122,11 @@ namespace Updater
         {
             Properties.Settings.Default.ignoreList = ignoreInput.Text;
             Properties.Settings.Default.Save();
+        }
+
+        private void picMain_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

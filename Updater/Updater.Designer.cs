@@ -45,6 +45,7 @@ namespace Updater
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.btnMain = new System.Windows.Forms.Button();
             this.picMain = new System.Windows.Forms.PictureBox();
@@ -53,6 +54,10 @@ namespace Updater
             this.pbTotal = new System.Windows.Forms.ProgressBar();
             this.ftbNews = new System.Windows.Forms.RichTextBox();
             this.pnlSettings = new System.Windows.Forms.Panel();
+            this.btnIgnoreReset = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.ignoreInput = new System.Windows.Forms.TextBox();
+            this.btnIgnoreSave = new System.Windows.Forms.Button();
             this.btnFtpGetURL = new System.Windows.Forms.Button();
             this.btnFtpReset = new System.Windows.Forms.Button();
             this.ftpInput = new System.Windows.Forms.TextBox();
@@ -85,10 +90,7 @@ namespace Updater
             this.lblSpacer1 = new System.Windows.Forms.Label();
             this.lblExit = new System.Windows.Forms.Label();
             this.lblSettings = new System.Windows.Forms.Label();
-            this.ignoreInput = new System.Windows.Forms.TextBox();
-            this.btnIgnoreSave = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.btnIgnoreReset = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).BeginInit();
             this.pnlMain.SuspendLayout();
             this.pnlSettings.SuspendLayout();
@@ -124,6 +126,7 @@ namespace Updater
             this.picMain.Size = new System.Drawing.Size(533, 212);
             this.picMain.TabIndex = 2;
             this.picMain.TabStop = false;
+            this.picMain.Click += new System.EventHandler(this.picMain_Click);
             this.picMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picMain_MouseMove);
             // 
             // pnlMain
@@ -148,6 +151,7 @@ namespace Updater
             this.fileStatus.TabIndex = 4;
             this.fileStatus.Text = "Idle . . .";
             this.fileStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.toolTip1.SetToolTip(this.fileStatus, "Launcher status. Working indicates that the file is being checked or downloaded.");
             this.fileStatus.Click += new System.EventHandler(this.lblFileStatus_Click);
             // 
             // pbTotal
@@ -208,6 +212,58 @@ namespace Updater
             this.pnlSettings.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlSettings_Paint);
             this.pnlSettings.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlSettings_MouseMove);
             // 
+            // btnIgnoreReset
+            // 
+            this.btnIgnoreReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.btnIgnoreReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnIgnoreReset.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnIgnoreReset.Location = new System.Drawing.Point(311, 222);
+            this.btnIgnoreReset.Name = "btnIgnoreReset";
+            this.btnIgnoreReset.Size = new System.Drawing.Size(110, 27);
+            this.btnIgnoreReset.TabIndex = 21;
+            this.btnIgnoreReset.Tag = "CV";
+            this.btnIgnoreReset.Text = "Reset Default";
+            this.toolTip1.SetToolTip(this.btnIgnoreReset, "Reset the file ignore list to default.");
+            this.btnIgnoreReset.UseVisualStyleBackColor = false;
+            this.btnIgnoreReset.Click += new System.EventHandler(this.btnIgnoreReset_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.label2.Location = new System.Drawing.Point(8, 205);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(122, 18);
+            this.label2.TabIndex = 20;
+            this.label2.Text = "File Ignore List:";
+            this.toolTip1.SetToolTip(this.label2, resources.GetString("label2.ToolTip"));
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // ignoreInput
+            // 
+            this.ignoreInput.Location = new System.Drawing.Point(9, 226);
+            this.ignoreInput.Name = "ignoreInput";
+            this.ignoreInput.Size = new System.Drawing.Size(229, 20);
+            this.ignoreInput.TabIndex = 19;
+            this.toolTip1.SetToolTip(this.ignoreInput, resources.GetString("ignoreInput.ToolTip"));
+            this.ignoreInput.TextChanged += new System.EventHandler(this.ignoreInput_TextChanged);
+            // 
+            // btnIgnoreSave
+            // 
+            this.btnIgnoreSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.btnIgnoreSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnIgnoreSave.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnIgnoreSave.Location = new System.Drawing.Point(244, 223);
+            this.btnIgnoreSave.Name = "btnIgnoreSave";
+            this.btnIgnoreSave.Size = new System.Drawing.Size(61, 26);
+            this.btnIgnoreSave.TabIndex = 18;
+            this.btnIgnoreSave.Text = "Save";
+            this.btnIgnoreSave.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.toolTip1.SetToolTip(this.btnIgnoreSave, "Save the changes you\'ve made to the file ignore list.");
+            this.btnIgnoreSave.UseVisualStyleBackColor = false;
+            this.btnIgnoreSave.Click += new System.EventHandler(this.btnIgnoreSave_Click);
+            // 
             // btnFtpGetURL
             // 
             this.btnFtpGetURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
@@ -218,6 +274,7 @@ namespace Updater
             this.btnFtpGetURL.Size = new System.Drawing.Size(73, 27);
             this.btnFtpGetURL.TabIndex = 17;
             this.btnFtpGetURL.Text = "Update";
+            this.toolTip1.SetToolTip(this.btnFtpGetURL, "Grab the latest patch server address from the Tarkin\'s Revenge website.");
             this.btnFtpGetURL.UseVisualStyleBackColor = false;
             this.btnFtpGetURL.Click += new System.EventHandler(this.btnFtpGetURL_Click);
             // 
@@ -232,6 +289,7 @@ namespace Updater
             this.btnFtpReset.TabIndex = 16;
             this.btnFtpReset.Tag = "CV";
             this.btnFtpReset.Text = "Reset Default";
+            this.toolTip1.SetToolTip(this.btnFtpReset, "Reset the server address to the one that\'s build into the Launcher program.");
             this.btnFtpReset.UseVisualStyleBackColor = false;
             this.btnFtpReset.Click += new System.EventHandler(this.button1_Click_2);
             // 
@@ -241,6 +299,9 @@ namespace Updater
             this.ftpInput.Name = "ftpInput";
             this.ftpInput.Size = new System.Drawing.Size(229, 20);
             this.ftpInput.TabIndex = 15;
+            this.toolTip1.SetToolTip(this.ftpInput, "This is the location on the internet where the Launcher will download updates fro" +
+        "m.\nIf required, you may may type a different address in here and save it using t" +
+        "he Save button.");
             this.ftpInput.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // btnFtpInput
@@ -254,6 +315,7 @@ namespace Updater
             this.btnFtpInput.TabIndex = 14;
             this.btnFtpInput.Text = "Save";
             this.btnFtpInput.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.toolTip1.SetToolTip(this.btnFtpInput, "Save the address to your Launcher settings file.");
             this.btnFtpInput.UseVisualStyleBackColor = false;
             this.btnFtpInput.Click += new System.EventHandler(this.button1_Click_1);
             // 
@@ -267,6 +329,9 @@ namespace Updater
             this.label1.Size = new System.Drawing.Size(110, 18);
             this.label1.TabIndex = 13;
             this.label1.Text = "Patch Server:";
+            this.toolTip1.SetToolTip(this.label1, "This is the location on the internet where the Launcher will download updates fro" +
+        "m.\nIf required, you may may type a different address in here and save it using t" +
+        "he Save button.");
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // btnLauncherSettings
@@ -279,6 +344,7 @@ namespace Updater
             this.btnLauncherSettings.Size = new System.Drawing.Size(134, 30);
             this.btnLauncherSettings.TabIndex = 12;
             this.btnLauncherSettings.Text = "Launcher Settings";
+            this.toolTip1.SetToolTip(this.btnLauncherSettings, "Open the settings file for the Tarkin\'s Revenge Launcher.");
             this.btnLauncherSettings.UseVisualStyleBackColor = false;
             this.btnLauncherSettings.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -291,7 +357,10 @@ namespace Updater
             this.btnForcePatch.Name = "btnForcePatch";
             this.btnForcePatch.Size = new System.Drawing.Size(109, 28);
             this.btnForcePatch.TabIndex = 11;
+            this.btnForcePatch.Tag = "";
             this.btnForcePatch.Text = "Force Update";
+            this.toolTip1.SetToolTip(this.btnForcePatch, "Pressing this button will cause the launcher to check your game folder\nand downlo" +
+        "ad any new, broken, or missing files.");
             this.btnForcePatch.UseVisualStyleBackColor = false;
             this.btnForcePatch.Click += new System.EventHandler(this.btnForcePatch_Click);
             // 
@@ -326,6 +395,7 @@ namespace Updater
             this.btnSWG.Size = new System.Drawing.Size(125, 30);
             this.btnSWG.TabIndex = 8;
             this.btnSWG.Text = "Game Settings";
+            this.toolTip1.SetToolTip(this.btnSWG, "Open the game settings program.");
             this.btnSWG.UseVisualStyleBackColor = false;
             this.btnSWG.Click += new System.EventHandler(this.btnSWG_Click);
             // 
@@ -339,6 +409,7 @@ namespace Updater
             this.btnOK.Size = new System.Drawing.Size(75, 28);
             this.btnOK.TabIndex = 7;
             this.btnOK.Text = "Close";
+            this.toolTip1.SetToolTip(this.btnOK, "Close the settings window.");
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
@@ -383,6 +454,7 @@ namespace Updater
             this.txtFolder.Name = "txtFolder";
             this.txtFolder.Size = new System.Drawing.Size(191, 20);
             this.txtFolder.TabIndex = 5;
+            this.toolTip1.SetToolTip(this.txtFolder, "Location on the computer where the game is installed.");
             // 
             // btnFolder
             // 
@@ -394,6 +466,7 @@ namespace Updater
             this.btnFolder.Size = new System.Drawing.Size(75, 23);
             this.btnFolder.TabIndex = 4;
             this.btnFolder.Text = "Browse...";
+            this.toolTip1.SetToolTip(this.btnFolder, "Press this button to choose set the where the game is installed.");
             this.btnFolder.UseVisualStyleBackColor = false;
             this.btnFolder.Click += new System.EventHandler(this.btnFolder_Click);
             // 
@@ -585,54 +658,6 @@ namespace Updater
             this.lblSettings.MouseLeave += new System.EventHandler(this.lblSettings_MouseLeave);
             this.lblSettings.MouseHover += new System.EventHandler(this.lblSettings_MouseHover);
             // 
-            // ignoreInput
-            // 
-            this.ignoreInput.Location = new System.Drawing.Point(9, 226);
-            this.ignoreInput.Name = "ignoreInput";
-            this.ignoreInput.Size = new System.Drawing.Size(229, 20);
-            this.ignoreInput.TabIndex = 19;
-            this.ignoreInput.TextChanged += new System.EventHandler(this.ignoreInput_TextChanged);
-            // 
-            // btnIgnoreSave
-            // 
-            this.btnIgnoreSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.btnIgnoreSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnIgnoreSave.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnIgnoreSave.Location = new System.Drawing.Point(244, 223);
-            this.btnIgnoreSave.Name = "btnIgnoreSave";
-            this.btnIgnoreSave.Size = new System.Drawing.Size(61, 26);
-            this.btnIgnoreSave.TabIndex = 18;
-            this.btnIgnoreSave.Text = "Save";
-            this.btnIgnoreSave.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnIgnoreSave.UseVisualStyleBackColor = false;
-            this.btnIgnoreSave.Click += new System.EventHandler(this.btnIgnoreSave_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.label2.Location = new System.Drawing.Point(8, 205);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(122, 18);
-            this.label2.TabIndex = 20;
-            this.label2.Text = "File Ignore List:";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
-            // 
-            // btnIgnoreReset
-            // 
-            this.btnIgnoreReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.btnIgnoreReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnIgnoreReset.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnIgnoreReset.Location = new System.Drawing.Point(311, 222);
-            this.btnIgnoreReset.Name = "btnIgnoreReset";
-            this.btnIgnoreReset.Size = new System.Drawing.Size(110, 27);
-            this.btnIgnoreReset.TabIndex = 21;
-            this.btnIgnoreReset.Tag = "CV";
-            this.btnIgnoreReset.Text = "Reset Default";
-            this.btnIgnoreReset.UseVisualStyleBackColor = false;
-            this.btnIgnoreReset.Click += new System.EventHandler(this.btnIgnoreReset_Click);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -649,7 +674,7 @@ namespace Updater
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmMain";
-            this.Text = "Tarkin's Revenge Launcher";
+            this.Text = "Tarkin\'s Revenge Launcher";
             this.Load += new System.EventHandler(this.frmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).EndInit();
             this.pnlMain.ResumeLayout(false);
@@ -706,6 +731,7 @@ namespace Updater
         private System.Windows.Forms.TextBox ignoreInput;
         private System.Windows.Forms.Button btnIgnoreSave;
         private System.Windows.Forms.Button btnIgnoreReset;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

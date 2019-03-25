@@ -85,6 +85,10 @@ namespace Updater
             this.lblSpacer1 = new System.Windows.Forms.Label();
             this.lblExit = new System.Windows.Forms.Label();
             this.lblSettings = new System.Windows.Forms.Label();
+            this.ignoreInput = new System.Windows.Forms.TextBox();
+            this.btnIgnoreSave = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.btnIgnoreReset = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).BeginInit();
             this.pnlMain.SuspendLayout();
             this.pnlSettings.SuspendLayout();
@@ -136,7 +140,7 @@ namespace Updater
             // 
             // fileStatus
             // 
-            this.fileStatus.Font = new System.Drawing.Font("Times New Roman", 14.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fileStatus.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fileStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(193)))), ((int)(((byte)(63)))));
             this.fileStatus.Location = new System.Drawing.Point(9, 268);
             this.fileStatus.Name = "fileStatus";
@@ -163,7 +167,7 @@ namespace Updater
             this.ftbNews.BackColor = System.Drawing.Color.Black;
             this.ftbNews.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.ftbNews.DetectUrls = false;
-            this.ftbNews.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ftbNews.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ftbNews.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.ftbNews.Location = new System.Drawing.Point(8, 6);
             this.ftbNews.Name = "ftbNews";
@@ -177,6 +181,10 @@ namespace Updater
             // 
             // pnlSettings
             // 
+            this.pnlSettings.Controls.Add(this.btnIgnoreReset);
+            this.pnlSettings.Controls.Add(this.label2);
+            this.pnlSettings.Controls.Add(this.ignoreInput);
+            this.pnlSettings.Controls.Add(this.btnIgnoreSave);
             this.pnlSettings.Controls.Add(this.btnFtpGetURL);
             this.pnlSettings.Controls.Add(this.btnFtpReset);
             this.pnlSettings.Controls.Add(this.ftpInput);
@@ -204,8 +212,8 @@ namespace Updater
             // 
             this.btnFtpGetURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.btnFtpGetURL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFtpGetURL.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFtpGetURL.Location = new System.Drawing.Point(392, 178);
+            this.btnFtpGetURL.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFtpGetURL.Location = new System.Drawing.Point(427, 178);
             this.btnFtpGetURL.Name = "btnFtpGetURL";
             this.btnFtpGetURL.Size = new System.Drawing.Size(73, 27);
             this.btnFtpGetURL.TabIndex = 17;
@@ -217,11 +225,12 @@ namespace Updater
             // 
             this.btnFtpReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.btnFtpReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFtpReset.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFtpReset.Location = new System.Drawing.Point(300, 178);
+            this.btnFtpReset.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFtpReset.Location = new System.Drawing.Point(312, 178);
             this.btnFtpReset.Name = "btnFtpReset";
-            this.btnFtpReset.Size = new System.Drawing.Size(86, 27);
+            this.btnFtpReset.Size = new System.Drawing.Size(110, 27);
             this.btnFtpReset.TabIndex = 16;
+            this.btnFtpReset.Tag = "CV";
             this.btnFtpReset.Text = "Reset Default";
             this.btnFtpReset.UseVisualStyleBackColor = false;
             this.btnFtpReset.Click += new System.EventHandler(this.button1_Click_2);
@@ -238,10 +247,10 @@ namespace Updater
             // 
             this.btnFtpInput.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.btnFtpInput.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFtpInput.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFtpInput.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFtpInput.Location = new System.Drawing.Point(244, 178);
             this.btnFtpInput.Name = "btnFtpInput";
-            this.btnFtpInput.Size = new System.Drawing.Size(50, 26);
+            this.btnFtpInput.Size = new System.Drawing.Size(61, 26);
             this.btnFtpInput.TabIndex = 14;
             this.btnFtpInput.Text = "Save";
             this.btnFtpInput.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -251,11 +260,11 @@ namespace Updater
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.label1.Location = new System.Drawing.Point(5, 158);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 19);
+            this.label1.Size = new System.Drawing.Size(110, 18);
             this.label1.TabIndex = 13;
             this.label1.Text = "Patch Server:";
             this.label1.Click += new System.EventHandler(this.label1_Click);
@@ -264,10 +273,10 @@ namespace Updater
             // 
             this.btnLauncherSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.btnLauncherSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLauncherSettings.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLauncherSettings.Location = new System.Drawing.Point(180, 114);
+            this.btnLauncherSettings.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLauncherSettings.Location = new System.Drawing.Point(171, 114);
             this.btnLauncherSettings.Name = "btnLauncherSettings";
-            this.btnLauncherSettings.Size = new System.Drawing.Size(125, 30);
+            this.btnLauncherSettings.Size = new System.Drawing.Size(134, 30);
             this.btnLauncherSettings.TabIndex = 12;
             this.btnLauncherSettings.Text = "Launcher Settings";
             this.btnLauncherSettings.UseVisualStyleBackColor = false;
@@ -277,12 +286,12 @@ namespace Updater
             // 
             this.btnForcePatch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.btnForcePatch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnForcePatch.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnForcePatch.Location = new System.Drawing.Point(401, 262);
+            this.btnForcePatch.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnForcePatch.Location = new System.Drawing.Point(417, 272);
             this.btnForcePatch.Name = "btnForcePatch";
-            this.btnForcePatch.Size = new System.Drawing.Size(125, 30);
+            this.btnForcePatch.Size = new System.Drawing.Size(109, 28);
             this.btnForcePatch.TabIndex = 11;
-            this.btnForcePatch.Text = "Verify File Integrity";
+            this.btnForcePatch.Text = "Force Update";
             this.btnForcePatch.UseVisualStyleBackColor = false;
             this.btnForcePatch.Click += new System.EventHandler(this.btnForcePatch_Click);
             // 
@@ -299,11 +308,11 @@ namespace Updater
             // lblSettingsTitle
             // 
             this.lblSettingsTitle.AutoSize = true;
-            this.lblSettingsTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSettingsTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSettingsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblSettingsTitle.Location = new System.Drawing.Point(3, 4);
             this.lblSettingsTitle.Name = "lblSettingsTitle";
-            this.lblSettingsTitle.Size = new System.Drawing.Size(93, 20);
+            this.lblSettingsTitle.Size = new System.Drawing.Size(105, 18);
             this.lblSettingsTitle.TabIndex = 9;
             this.lblSettingsTitle.Text = "SETTINGS:";
             // 
@@ -311,7 +320,7 @@ namespace Updater
             // 
             this.btnSWG.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.btnSWG.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSWG.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSWG.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSWG.Location = new System.Drawing.Point(8, 114);
             this.btnSWG.Name = "btnSWG";
             this.btnSWG.Size = new System.Drawing.Size(125, 30);
@@ -324,10 +333,10 @@ namespace Updater
             // 
             this.btnOK.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOK.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOK.Location = new System.Drawing.Point(12, 266);
+            this.btnOK.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOK.Location = new System.Drawing.Point(11, 268);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
+            this.btnOK.Size = new System.Drawing.Size(75, 28);
             this.btnOK.TabIndex = 7;
             this.btnOK.Text = "Close";
             this.btnOK.UseVisualStyleBackColor = false;
@@ -337,7 +346,7 @@ namespace Updater
             // 
             this.grpClose.Controls.Add(this.chkMin);
             this.grpClose.Controls.Add(this.chkClose);
-            this.grpClose.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpClose.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.grpClose.Location = new System.Drawing.Point(8, 58);
             this.grpClose.Name = "grpClose";
@@ -351,7 +360,7 @@ namespace Updater
             this.chkMin.AutoSize = true;
             this.chkMin.Location = new System.Drawing.Point(137, 20);
             this.chkMin.Name = "chkMin";
-            this.chkMin.Size = new System.Drawing.Size(136, 23);
+            this.chkMin.Size = new System.Drawing.Size(134, 18);
             this.chkMin.TabIndex = 1;
             this.chkMin.Text = "Minimize Updater";
             this.chkMin.UseVisualStyleBackColor = true;
@@ -362,7 +371,7 @@ namespace Updater
             this.chkClose.AutoSize = true;
             this.chkClose.Location = new System.Drawing.Point(7, 20);
             this.chkClose.Name = "chkClose";
-            this.chkClose.Size = new System.Drawing.Size(117, 23);
+            this.chkClose.Size = new System.Drawing.Size(116, 18);
             this.chkClose.TabIndex = 0;
             this.chkClose.Text = "Close Updater";
             this.chkClose.UseVisualStyleBackColor = true;
@@ -379,7 +388,7 @@ namespace Updater
             // 
             this.btnFolder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.btnFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFolder.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFolder.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFolder.Location = new System.Drawing.Point(311, 31);
             this.btnFolder.Name = "btnFolder";
             this.btnFolder.Size = new System.Drawing.Size(75, 23);
@@ -391,13 +400,14 @@ namespace Updater
             // lblFolder
             // 
             this.lblFolder.AutoSize = true;
-            this.lblFolder.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFolder.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFolder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
-            this.lblFolder.Location = new System.Drawing.Point(4, 31);
+            this.lblFolder.Location = new System.Drawing.Point(2, 32);
             this.lblFolder.Name = "lblFolder";
-            this.lblFolder.Size = new System.Drawing.Size(104, 19);
+            this.lblFolder.Size = new System.Drawing.Size(111, 18);
             this.lblFolder.TabIndex = 3;
-            this.lblFolder.Text = "TarkinII Folder:";
+            this.lblFolder.Text = "Game Folder:";
+            this.lblFolder.Click += new System.EventHandler(this.lblFolder_Click);
             // 
             // pnlNav
             // 
@@ -424,7 +434,7 @@ namespace Updater
             // 
             // lblStatusLast
             // 
-            this.lblStatusLast.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusLast.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusLast.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblStatusLast.Location = new System.Drawing.Point(2, 435);
             this.lblStatusLast.Name = "lblStatusLast";
@@ -434,7 +444,7 @@ namespace Updater
             // 
             // lblStatusUptime
             // 
-            this.lblStatusUptime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusUptime.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusUptime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblStatusUptime.Location = new System.Drawing.Point(3, 412);
             this.lblStatusUptime.Name = "lblStatusUptime";
@@ -444,7 +454,7 @@ namespace Updater
             // 
             // lblStatusMax
             // 
-            this.lblStatusMax.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusMax.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusMax.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblStatusMax.Location = new System.Drawing.Point(2, 382);
             this.lblStatusMax.Name = "lblStatusMax";
@@ -454,7 +464,7 @@ namespace Updater
             // 
             // lblStatusOnline
             // 
-            this.lblStatusOnline.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusOnline.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusOnline.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblStatusOnline.Location = new System.Drawing.Point(2, 349);
             this.lblStatusOnline.Name = "lblStatusOnline";
@@ -464,7 +474,7 @@ namespace Updater
             // 
             // lblStatusEnum
             // 
-            this.lblStatusEnum.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusEnum.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusEnum.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblStatusEnum.Location = new System.Drawing.Point(3, 326);
             this.lblStatusEnum.Name = "lblStatusEnum";
@@ -474,7 +484,7 @@ namespace Updater
             // 
             // lblStatusTitle
             // 
-            this.lblStatusTitle.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusTitle.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblStatusTitle.Location = new System.Drawing.Point(2, 303);
             this.lblStatusTitle.Name = "lblStatusTitle";
@@ -494,7 +504,7 @@ namespace Updater
             // 
             // lblForums
             // 
-            this.lblForums.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblForums.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblForums.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblForums.Location = new System.Drawing.Point(3, 59);
             this.lblForums.Name = "lblForums";
@@ -526,7 +536,7 @@ namespace Updater
             // 
             // lblAbout
             // 
-            this.lblAbout.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAbout.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAbout.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblAbout.Location = new System.Drawing.Point(3, 105);
             this.lblAbout.Name = "lblAbout";
@@ -549,7 +559,7 @@ namespace Updater
             // 
             // lblExit
             // 
-            this.lblExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblExit.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblExit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblExit.Location = new System.Drawing.Point(3, 189);
             this.lblExit.Name = "lblExit";
@@ -563,7 +573,7 @@ namespace Updater
             // 
             // lblSettings
             // 
-            this.lblSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSettings.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
             this.lblSettings.Location = new System.Drawing.Point(3, 13);
             this.lblSettings.Name = "lblSettings";
@@ -575,6 +585,54 @@ namespace Updater
             this.lblSettings.MouseLeave += new System.EventHandler(this.lblSettings_MouseLeave);
             this.lblSettings.MouseHover += new System.EventHandler(this.lblSettings_MouseHover);
             // 
+            // ignoreInput
+            // 
+            this.ignoreInput.Location = new System.Drawing.Point(9, 226);
+            this.ignoreInput.Name = "ignoreInput";
+            this.ignoreInput.Size = new System.Drawing.Size(229, 20);
+            this.ignoreInput.TabIndex = 19;
+            this.ignoreInput.TextChanged += new System.EventHandler(this.ignoreInput_TextChanged);
+            // 
+            // btnIgnoreSave
+            // 
+            this.btnIgnoreSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.btnIgnoreSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnIgnoreSave.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnIgnoreSave.Location = new System.Drawing.Point(244, 223);
+            this.btnIgnoreSave.Name = "btnIgnoreSave";
+            this.btnIgnoreSave.Size = new System.Drawing.Size(61, 26);
+            this.btnIgnoreSave.TabIndex = 18;
+            this.btnIgnoreSave.Text = "Save";
+            this.btnIgnoreSave.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnIgnoreSave.UseVisualStyleBackColor = false;
+            this.btnIgnoreSave.Click += new System.EventHandler(this.btnIgnoreSave_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.label2.Location = new System.Drawing.Point(8, 205);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(122, 18);
+            this.label2.TabIndex = 20;
+            this.label2.Text = "File Ignore List:";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // btnIgnoreReset
+            // 
+            this.btnIgnoreReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(192)))), ((int)(((byte)(63)))));
+            this.btnIgnoreReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnIgnoreReset.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnIgnoreReset.Location = new System.Drawing.Point(311, 222);
+            this.btnIgnoreReset.Name = "btnIgnoreReset";
+            this.btnIgnoreReset.Size = new System.Drawing.Size(110, 27);
+            this.btnIgnoreReset.TabIndex = 21;
+            this.btnIgnoreReset.Tag = "CV";
+            this.btnIgnoreReset.Text = "Reset Default";
+            this.btnIgnoreReset.UseVisualStyleBackColor = false;
+            this.btnIgnoreReset.Click += new System.EventHandler(this.btnIgnoreReset_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -585,13 +643,13 @@ namespace Updater
             this.Controls.Add(this.pnlNav);
             this.Controls.Add(this.picMain);
             this.Controls.Add(this.btnMain);
-            this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlSettings);
+            this.Controls.Add(this.pnlMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmMain";
-            this.Text = "TarkinII Updater";
+            this.Text = "Tarkin's Revenge Launcher";
             this.Load += new System.EventHandler(this.frmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).EndInit();
             this.pnlMain.ResumeLayout(false);
@@ -644,6 +702,10 @@ namespace Updater
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnFtpReset;
         private System.Windows.Forms.Button btnFtpGetURL;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox ignoreInput;
+        private System.Windows.Forms.Button btnIgnoreSave;
+        private System.Windows.Forms.Button btnIgnoreReset;
     }
 }
 

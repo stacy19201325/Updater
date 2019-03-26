@@ -61,6 +61,9 @@ namespace Updater
             // Show patch server address in settings menu
             ftpInput.Text = Properties.Settings.Default.patchServerURL;
 
+            // Show ignore list in settings menu
+            ignoreInput.Text = Properties.Settings.Default.ignoreList;
+
             //Let's set the previous folder
             //Let's set the folder location from Resources
             txtFolder.Text = Properties.Settings.Default.setFolder;
@@ -103,18 +106,8 @@ namespace Updater
                         Properties.Settings.Default.ftpUpdateURL = ftpAddress;
                     }
 
-                    // Save defaults to file that user can over-ride later by editing the text file
-                    // File located in C:\Users\%USERNAME%\AppData\Local\Microsoft\TarkinII_Launcher.exe_Url_<file_hash>\
-                    Properties.Settings.Default.patchServerURL = Properties.Settings.Default.patchServerURL;
-                    Properties.Settings.Default.ftpUser = Properties.Settings.Default.ftpUser;
-                    Properties.Settings.Default.newsURL = Properties.Settings.Default.newsURL;
-                    Properties.Settings.Default.forumURL = Properties.Settings.Default.forumURL;
-                    Properties.Settings.Default.aboutURL = Properties.Settings.Default.aboutURL;
-                    Properties.Settings.Default.statusURL = Properties.Settings.Default.statusURL;
-                    Properties.Settings.Default.statusPort = Properties.Settings.Default.statusPort;
-                    Properties.Settings.Default.ftpUpdateURL = Properties.Settings.Default.ftpUpdateURL;
-
-                    Properties.Settings.Default.Save();
+                    // Create local settings file
+                    saveSettings();
                 }
             }
 
@@ -132,6 +125,10 @@ namespace Updater
             {
                 Application.DoEvents();
             }
+
+            // Force player to open game settings on the fist run
+            if (Properties.Settings.Default.firstInstall == "true")
+                btnMain.Text = "Settings";
         }//Done
         #endregion
 
@@ -141,6 +138,9 @@ namespace Updater
 
         //Let's make a background worker for download patch so the main thread does not stop
         private BackgroundWorker DownloadPatchWorker;
+
+        // Make a process for the settings program so we can force the user to use on the first setup
+        Process procSettings = new Process();
 
         #endregion
 
@@ -385,6 +385,27 @@ namespace Updater
                     Application.Exit();
                 }
             }
+            else if (btnMain.Text == "Settings") {
+                openSettings();
+
+                int screenW = SystemInformation.VirtualScreen.Width;
+                int screenH = SystemInformation.VirtualScreen.Height;
+
+
+                MessageBox.Show("Before running the game, please set your screen resolution on the Graphics tab of the settings program.\n\nThanks!\n\nYour desktop resolution is: " + screenW + " x " + screenH, "Settings Help",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Wait for the user to close the game settings program before allowing them to play
+                while (!procSettings.HasExited)
+                {
+                    btnMain.Text = ". . .";
+                }
+
+                btnMain.Text = "Play";
+
+                // Set first install false in local settings file so this prompt won't happen again
+                Properties.Settings.Default.firstInstall = "false";
+                saveSettings();
+            }
         }
 
         private void btnForcePatch_Click(object sender, EventArgs e)
@@ -422,7 +443,10 @@ namespace Updater
             {
                 Application.DoEvents();
             }
-            
+
+            // Update local settings file
+            saveSettings();
+
         }//Done
 
         private void btnFolder_Click(object sender, EventArgs e)
@@ -455,7 +479,6 @@ namespace Updater
                 //Check Patch Level and force to update if there is a patch
                 this.CheckPatchWorker.RunWorkerAsync();
             }
-
         }//Done
 
         private void lblExit_Click(object sender, EventArgs e)
@@ -482,21 +505,43 @@ namespace Updater
 
         private void btnSWG_Click(object sender, EventArgs e)
         {
-            String SettingsFile = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
-
-            if (File.Exists(@SettingsFile))
-            {
-                //Open the SWG Settings.
-                Process procTarkin = new Process();
-                procTarkin.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
-                procTarkin.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
-                procTarkin.Start();
-            }
+            openSettings();
         }//Done
 
         #endregion
 
         #region Methods
+
+        // Run the game settings program
+        private void openSettings()
+        {
+            String SettingsFile = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
+
+            if (File.Exists(@SettingsFile))
+            {
+                //Open the SWG Settings.
+                procSettings.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
+                procSettings.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
+                procSettings.Start();
+            }
+        }
+
+        private void saveSettings()
+        {
+            // Save defaults to file that user can over-ride later by editing the text file
+            // File located in C:\Users\%USERNAME%\AppData\Local\Microsoft\TarkinII_Launcher.exe_Url_<file_hash>\
+            Properties.Settings.Default.patchServerURL = Properties.Settings.Default.patchServerURL;
+            Properties.Settings.Default.ftpUser = Properties.Settings.Default.ftpUser;
+            Properties.Settings.Default.newsURL = Properties.Settings.Default.newsURL;
+            Properties.Settings.Default.forumURL = Properties.Settings.Default.forumURL;
+            Properties.Settings.Default.aboutURL = Properties.Settings.Default.aboutURL;
+            Properties.Settings.Default.statusURL = Properties.Settings.Default.statusURL;
+            Properties.Settings.Default.statusPort = Properties.Settings.Default.statusPort;
+            Properties.Settings.Default.ftpUpdateURL = Properties.Settings.Default.ftpUpdateURL;
+            Properties.Settings.Default.ignoreList = Properties.Settings.Default.ignoreList;
+
+            Properties.Settings.Default.Save();
+        }
 
         static string CalculateMD5(string filename)
         {
@@ -539,7 +584,7 @@ namespace Updater
         private void CheckPatch(object sender, DoWorkEventArgs e)
         {
             //Set the main and forcepatch buttons so they will not touch.
-            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Busy..."; }));
+            btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = ". . . ."; }));
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = false; }));
             btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = false; }));
 
@@ -668,7 +713,7 @@ namespace Updater
             }
 
             // Some files to exclude if they already exist
-            string exludes = "feet";
+            string exludes = Properties.Settings.Default.ignoreList;
 
             string localFileSum = "";
 
@@ -681,8 +726,12 @@ namespace Updater
                 downloadThis =  fileNames[i];
                 SetFileStatus("Working (" + i + "/" + fileNames.Count + "): " + downloadThis.TrimStart('/'));
 
+                // Skip files on the excluded list after they're already on the computer
+                if (File.Exists(path: Properties.Settings.Default.setFolder + "\\" + fileNames[i]) && exludes.Contains(downloadThis.TrimStart('/')))
+                    continue;
+
                 // If fileName exist on client then compare fileName's md5 to sever's md5 for that file
-                if (localFiles.Contains(fileNames[i]) && !exludes.Contains(fileNames[i]))
+                    if (localFiles.Contains(fileNames[i]))
                 {
                     // Get the MD5 for the local file
                     using (var md5 = MD5.Create())
@@ -758,10 +807,11 @@ namespace Updater
             }
             catch (WebException e)
             {
-                MessageBox.Show("Unable to reach the patch server. Try updating or manually changing it in the Settings menu.\n\nError:\n" + e + "\nwhen attempting to download " + Filename, "Connection Error",
+                MessageBox.Show("Unable to reach the patch server. Try updating or manually changing it in the Settings menu and then pressing the Force Update button.\n\nError:\n\n" + e + "\n\nwhen attempting to download " + Filename, "Connection Error",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 Console.WriteLine("Unable to download: " + Filename);
+                btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Error";}));
                 throw e;
             }
 
@@ -881,7 +931,7 @@ namespace Updater
             uptimeSeconds = uptimeSeconds * -1;
             TimeSpan tsUptime = DateTime.Now - DateTime.Now.AddSeconds(uptimeSeconds);
 
-            Uptime = tsUptime.Days.ToString() + " days " + tsUptime.Hours.ToString() + " hours";
+            Uptime = tsUptime.Days.ToString() + "D " + tsUptime.Hours.ToString() + "H";
 
             //Fix Updated
             String Updated = stsDataElements[12];
@@ -929,6 +979,9 @@ namespace Updater
 
         private void lblAbout_Click(object sender, EventArgs e)
         {
+            if (pnlMain.Visible == false)
+                return;
+
             if (lblAbout.Text == "News")
             {
                 lblAbout.Text = "About";
@@ -1036,5 +1089,44 @@ namespace Updater
             Clipboard.SetText(ftbNews.SelectedText);
         }
 
+        private void lblFolder_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ignoreInput_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ignoreInput_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        // Reset ignore list
+        private void btnIgnoreReset_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ignoreList = "options.cfg swgemu.cfg user.cfg swgemu_machineoptions.iff";
+            ignoreInput.Text = Properties.Settings.Default.ignoreList;
+            Properties.Settings.Default.Save();
+        }
+
+        // Save ignore list
+        private void btnIgnoreSave_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ignoreList = ignoreInput.Text;
+            Properties.Settings.Default.Save();
+        }
+
+        private void picMain_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

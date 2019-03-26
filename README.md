@@ -14,14 +14,22 @@ This program is designed to keep the client files for the Tarkin's Revenge serve
 
 ## Tips and Tricks
 
-- If the game doesn't work properly, you can force the patcher to repair your files by going to the Setting page and clicking the Verify File Integrity button and then the Update button.
-- If you get a pop-up message indicating that the download server can't be located, you can go to the Settings page and try using the Update or Reset Default buttons for the download link (url). After you've done that, press Verify File Integrity and then the Update button. If that doesn't get the downloads going and the server status show the server is online, then check the forum or Discord for more help.
+- If the game doesn't work properly, you can force the patcher to repair your files by going to the Setting page and clicking the Force Update button and then the Update button.
+- If you get a pop-up message indicating that the download server can't be located, you can go to the Settings page and try using the Update or Reset Default buttons for the download link (url). After you've done that, press Force Update and then the Update button. If that doesn't get the downloads going and the server status show the server is online, then check the forum or Discord for more help.
 
 ## Requirements
 
 - Windows Vista/7/8/10 32bit or 63bit
 - Microsoft .Net Framework 4.5.2
 - The Internet
+
+## Features
+
+- Downloads files over http, https, and anonymous ftp.
+- Client-side over-rides for almost all important settings.
+- Build in, easy to use file exclude/ignore list.
+- On first installation, prompts to set resolution.
+- It's a very small program.
 
 ## How It Works
 On the server are bunch of the files that the client needs. Every so often some of the files on server will change or more files will be added, so the client need to be kept informed of the changes. This is where a file on the server called PatchData.csv comes into play - it's an upto date list of all the files in client would need. The patcher checks this file when it starts.  
@@ -43,9 +51,9 @@ On the programming side of Version 2, I (Tatwi) did my best to slam the function
 
 Anyway, logic wise the program is setup in such a way that all of the important values can be over-ridden using the user.config file that is stored in the following location:  
 
-C:\Users\Rob\AppData\Local\Microsoft\TarkinII_Launcher.exe_Url_<file hash>  
+C:\Users\Rob\AppData\Local\Microsoft\Tarkin's_Revenge_Launcher_<file hash>  
 
-where <file hash> looks like so, p30lcfd3m4zsqhdjmcuuez2dvsp2nxf1. The only exception to this at the moment is the value "/string/en/test_motd.stf", which the patcher associates with the final file in the list to download. I forgot to include that in the settings, whoops.  
+where <file hash> looks like so, p30lcfd3m4zsqhdjmcuuez2dvsp2nxf1. The only exception to this at the moment is the value "/string/en/test_motd.stf", which the patcher associates with the final file in the list to download. 
 
 On the settings page of the patcher there is a button that will open up the settings file, where you can manually edit the values. Simply change the values you want, save the file, close the patcher, and relaunch it. There is also an area where you are able to type in the download url and save it to your setting file (this was handy while I was working on Version 2, making it easy to toggle between my web server and ftp server).  
 

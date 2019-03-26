@@ -219,5 +219,35 @@ namespace Updater.Properties {
                 this["statusPort"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("options.cfg swgemu.cfg user.cfg swgemu_machineoptions.iff")]
+        public string ignoreList
+        {
+            get
+            {
+                return ((string)(this["ignoreList"]));
+            }
+            set
+            {
+                this["ignoreList"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("true")]
+        public string firstInstall
+        {
+            get
+            {
+                return ((string)(this["firstInstall"]));
+            }
+            set
+            {
+                this["firstInstall"] = value;
+            }
+        }
     }
 }

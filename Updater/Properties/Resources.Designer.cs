@@ -63,9 +63,9 @@ namespace Updater.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ButtonBlank {
+        internal static System.Drawing.Bitmap skolten_based_blankbutton {
             get {
-                object obj = ResourceManager.GetObject("ButtonBlank", resourceCulture);
+                object obj = ResourceManager.GetObject("skolten_based_blankbutton", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace Updater.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap TarkinFullLogo {
+        internal static System.Drawing.Bitmap skolten1 {
             get {
-                object obj = ResourceManager.GetObject("TarkinFullLogo", resourceCulture);
+                object obj = ResourceManager.GetObject("skolten1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

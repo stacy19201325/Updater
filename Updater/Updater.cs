@@ -76,10 +76,7 @@ namespace Updater
             GetNews();
 
             //Output Server Status
-            ServerStatus();
-
-            //Set patch level
-            lblPatchLevel.Text = "Patch: " + Properties.Settings.Default.patchLevel;
+            Task.Factory.StartNew(() => ServerStatus());
 
             //Before we start, let's make SURE the user isn't crazy and that a folder ACTUALLY exists
             if (Properties.Settings.Default.setFolder == "" || !Directory.Exists(Properties.Settings.Default.setFolder))
@@ -98,7 +95,7 @@ namespace Updater
                     //Let's save the Settings
                     Properties.Settings.Default.setFolder = fbdFolder.SelectedPath;
 
-                    // Try getting most recent ftp server
+                    // Try getting most recent patch server address (can be http, https, ftp)
                     string ftpAddress = getWebString(Properties.Settings.Default.ftpUpdateURL);
 
                     if (ftpAddress.Contains("No Data found"))
@@ -111,24 +108,8 @@ namespace Updater
                 }
             }
 
-            //Initialize the worker
-            this.CheckPatchWorker = new BackgroundWorker();
-            this.CheckPatchWorker.DoWork += new DoWorkEventHandler(CheckPatch);
-            this.CheckPatchWorker.ProgressChanged += new ProgressChangedEventHandler(CheckPatchProgress);
-            this.CheckPatchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CheckPatchDone);
-
-            //Check Patch Level and force to update if there is a patch
-            this.CheckPatchWorker.RunWorkerAsync();
-
-            //Wait for it to complete.
-            while (CheckPatchWorker.IsBusy)
-            {
-                Application.DoEvents();
-            }
-
-            // Force player to open game settings on the fist run
-            if (Properties.Settings.Default.firstInstall == "true")
-                btnMain.Text = "Settings";
+            // Check for update, patch if required
+            CheckForUpdates();
         }//Done
         #endregion
 
@@ -141,6 +122,9 @@ namespace Updater
 
         // Make a process for the settings program so we can force the user to use on the first setup
         Process procSettings = new Process();
+
+        // Track error state when downloading files
+        public bool downloadError = false;
 
         #endregion
 
@@ -209,11 +193,13 @@ namespace Updater
 
         private void ftbNews_MouseMove(object sender, MouseEventArgs e)
         {
+            /* Commented out, because this prevented selecting the text in the news window, which as annoying.
             if (e.Button == MouseButtons.Left)
             {
                 ReleaseCapture();
                 SendMessage(Handle, WMNCLBUTTONDOWN, HTCAPTION, 0);
             }
+            */
         }
 
         private void ftbNews_MouseWheel(object sender, MouseEventArgs e)
@@ -340,16 +326,16 @@ namespace Updater
 
         private void btnMain_Click(object sender, EventArgs e)
         {
-            //Decide whether the button is Play or Update
+            // Decide whether the button is Play, Update, or Settings
             if (btnMain.Text == "Update")
             {
-                //Initialize the worker
+                //Initialize patch download worker
                 this.DownloadPatchWorker = new BackgroundWorker();
                 this.DownloadPatchWorker.DoWork += new DoWorkEventHandler(DownloadPatch);
                 this.DownloadPatchWorker.ProgressChanged += new ProgressChangedEventHandler(DownloadPatchProgress);
                 this.DownloadPatchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DownloadPatchDone);
 
-                //Check Patch Level and force to update if there is a patch
+                // Start actually patching files
                 this.DownloadPatchWorker.RunWorkerAsync();
             }
             else if (btnMain.Text == "Play")
@@ -367,7 +353,7 @@ namespace Updater
                 }
                 catch (Exception Error)
                 {
-                    MessageBox.Show("SWGEmu.exe was not found. Please go to Settings, press the Verifiy File Integrity button, and then click the Update button to download any missing or corrupt files.", "Error",
+                    MessageBox.Show("SWGEmu.exe was not found. Please go to Settings, press the Force Update button, and then click the Update button to download any missing or corrupt files.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     return;
@@ -410,39 +396,17 @@ namespace Updater
 
         private void btnForcePatch_Click(object sender, EventArgs e)
         {
+            // Reset download file error state
+            downloadError = false;
+
             // Delete last file so patcher will recheck all files
-            string lastFile = Properties.Settings.Default.setFolder + "\\string\\en\\test_motd.stf";
+            Console.WriteLine("Force Update deleting file: " + Properties.Settings.Default.lastFileInList);
+            string lastFile = Properties.Settings.Default.setFolder + Properties.Settings.Default.lastFileInList;
             if (File.Exists(lastFile))
                 File.Delete(lastFile);
 
-            //Initialize the worker
-            this.CheckPatchWorker = new BackgroundWorker();
-            this.CheckPatchWorker.DoWork += new DoWorkEventHandler(CheckPatch);
-            this.CheckPatchWorker.ProgressChanged += new ProgressChangedEventHandler(CheckPatchProgress);
-            this.CheckPatchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CheckPatchDone);
-
-            //Check Patch Level and force to update if there is a patch
-            this.CheckPatchWorker.RunWorkerAsync();
-
-            //Wait for it to complete.
-            while (CheckPatchWorker.IsBusy)
-            {
-                Application.DoEvents();
-            }
-
-            //Initialize the worker
-            this.DownloadPatchWorker = new BackgroundWorker();
-            this.DownloadPatchWorker.DoWork += new DoWorkEventHandler(DownloadPatch);
-            this.DownloadPatchWorker.ProgressChanged += new ProgressChangedEventHandler(DownloadPatchProgress);
-            this.DownloadPatchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DownloadPatchDone);
-
-            //Check Patch Level and force to update if there is a patch
-            //this.DownloadPatchWorker.RunWorkerAsync();
-
-            while (DownloadPatchWorker.IsBusy)
-            {
-                Application.DoEvents();
-            }
+            // Force the main button to say Update by checking for updates
+            CheckForUpdates();
 
             // Update local settings file
             saveSettings();
@@ -539,6 +503,7 @@ namespace Updater
             Properties.Settings.Default.statusPort = Properties.Settings.Default.statusPort;
             Properties.Settings.Default.ftpUpdateURL = Properties.Settings.Default.ftpUpdateURL;
             Properties.Settings.Default.ignoreList = Properties.Settings.Default.ignoreList;
+            Properties.Settings.Default.lastFileInList = Properties.Settings.Default.lastFileInList;
 
             Properties.Settings.Default.Save();
         }
@@ -581,6 +546,25 @@ namespace Updater
             return content;
         }
 
+        // Run the patch checker workers async
+        private void CheckForUpdates()
+        {
+            this.CheckPatchWorker = new BackgroundWorker();
+            this.CheckPatchWorker.DoWork += new DoWorkEventHandler(CheckPatch);
+            this.CheckPatchWorker.ProgressChanged += new ProgressChangedEventHandler(CheckPatchProgress);
+            this.CheckPatchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CheckPatchDone);
+
+            // Start running the workers
+            this.CheckPatchWorker.RunWorkerAsync();
+
+            //Wait for it to complete.
+            while (CheckPatchWorker.IsBusy)
+            {
+                Application.DoEvents();
+            }
+        }
+
+        // See if we need a patch, if so make button say Update
         private void CheckPatch(object sender, DoWorkEventArgs e)
         {
             //Set the main and forcepatch buttons so they will not touch.
@@ -588,67 +572,115 @@ namespace Updater
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = false; }));
             btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = false; }));
 
-            //Force the user to the News panel and resize the news box
+            //Force the user to the News panel
             pnlSettings.Invoke(new MethodInvoker(delegate { pnlSettings.Visible = false; }));
             pnlMain.Invoke(new MethodInvoker(delegate { pnlMain.Visible = true; }));
 
-            var md5 = MD5.Create();
+            // Tell user we're connecting to the patch server
+            SetFileStatus("Connecting to patch server...");
 
-            // First download the MD5 sum of the current server patch file
-            if (File.Exists(path: Properties.Settings.Default.setFolder + "\\PatchData.MD5"))
+            // Delete of patch data file 
+            if (File.Exists(path: Properties.Settings.Default.setFolder + "\\PatchData.csv"))
             {
-                File.Delete(path: Properties.Settings.Default.setFolder + "\\PatchData.MD5");
+                File.Delete(path: Properties.Settings.Default.setFolder + "\\PatchData.csv");
             }
-            DownloadFile("/PatchData.MD5");
 
-            // Get MD5 sum of PatchData.csv on the server
+            // Download new patch data file
+            DownloadFile("/PatchData.csv");
+
+            // Set status to default after successfully connecting to the patch server
+            SetFileStatus("Idle...");
+
+            // See if client needs to be updated
             try
             {
-                StreamReader patchFileMD5 = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.MD5");
-                String serverFileHash = patchFileMD5.ReadLine();
-                patchFileMD5.Close();
-                serverFileHash = serverFileHash.Trim(); // remove white spaces that prevent pattern matching
+                // Read the file
+                string sPatchData = File.ReadAllText(path: Properties.Settings.Default.setFolder + "\\PatchData.csv");
+                sPatchData.Trim();
+                string sCleaned = Regex.Replace(sPatchData, @"\t|\n|\r", "");
+                sPatchData = sCleaned;
 
-                String clientFileHash = "na";
+                // Put string into array
+                string[] patchDataArray = sPatchData.Split(',');
 
-                // If player has PatchData.csv, get its MD5 sum
-                if (File.Exists(path: Properties.Settings.Default.setFolder + "\\PatchData.csv"))
+                // Make the array into 1 list per item
+                List<string> fileNames = new List<string>();
+                List<string> fileSums = new List<string>();
+
+                for (int i = 0; i < patchDataArray.Length -1; i++)
                 {
-                    clientFileHash = CalculateMD5(Properties.Settings.Default.setFolder + "\\PatchData.csv");
+                    if (i % 2 == 0)
+                    {
+                        fileNames.Add(patchDataArray[i]);
+                    }
+                    else
+                    {
+                        fileSums.Add(patchDataArray[i]);
+                    }
                 }
 
-                // Check for the final file in the download list to confirm they have completed downloading at least once in the past
-                bool hasFinishedDownloadBefore = false;
-                if (File.Exists(path: Properties.Settings.Default.setFolder + "\\string\\en\\test_motd.stf"))
+                Console.WriteLine("First file: " + fileNames[0] + "   " + fileSums[0]);
+                Console.WriteLine("Final file: " + fileNames[fileNames.Count - 1] + "   " + fileSums[fileNames.Count - 1]);
+
+                Properties.Settings.Default.lastFileInList = fileNames[fileNames.Count - 1];
+
+                bool needUptate = false;
+
+                Console.WriteLine("Seeing if file exists: " + fileNames[fileNames.Count - 1]);
+
+                // Has the last file in the list been downloaded already?
+                if (!File.Exists(path: Properties.Settings.Default.setFolder + fileNames[fileNames.Count - 1]))
                 {
-                    hasFinishedDownloadBefore = true;
+                    needUptate = true;
+                    Console.WriteLine("File not found: " + fileNames[fileNames.Count - 1]);
                 }
 
-                // Compare client and server patch file hash
-                if (clientFileHash == serverFileHash && hasFinishedDownloadBefore == true)
+                // Does the first file in the list exist?
+                if (!needUptate)
                 {
-                    // Allow user to play.
+                    Console.WriteLine("Seeing if file exists: " + fileNames[0]);
+
+                    if (!File.Exists(path: Properties.Settings.Default.setFolder + fileNames[0]))
+                    {
+                        needUptate = true;
+                        Console.WriteLine("File not found: " + fileNames[0]);
+                    }
+
+                }
+
+                // Is the first file in the list up to date?
+                if (!needUptate)
+                {
+                    String existingFileMD5 = CalculateMD5(Properties.Settings.Default.setFolder + fileNames[0]);
+
+                    Console.WriteLine("MD5 Compare for first file in list (local   server): " + existingFileMD5.ToUpper() + "  " + fileSums[0].ToUpper());
+
+                    if (existingFileMD5.ToUpper() != fileSums[0].ToUpper())
+                        needUptate = true;
+                }
+
+                // Let user play
+                if (!needUptate)
+                {
                     btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Play"; }));
-                }
+                } 
                 else
                 {
-                    //We need to patch before the user can play
-                    File.Delete(path: Properties.Settings.Default.setFolder + "\\PatchData.csv");
-                    DownloadFile("/PatchData.csv");
-
                     btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Update"; }));
                 }
+
             }
             catch (Exception)
             {
                 // Connection must have failed before downloading the patch info files
+                Console.WriteLine("Error in the try/catch of the CheckPatch function.");
                 return;
             }
         }
 
         private void CheckPatchProgress(object sender, ProgressChangedEventArgs e)
         {
-
+            // Nothing needs to be done here at the moment
         }
 
         private void CheckPatchDone(object sender, RunWorkerCompletedEventArgs e)
@@ -765,22 +797,27 @@ namespace Updater
 
         private void DownloadPatchProgress(object sender, ProgressChangedEventArgs e)
         {
-            
+            // A progress bar could be added here some day...
         }
 
         private void DownloadPatchDone(object sender, RunWorkerCompletedEventArgs e)
         {
-            //Show progress bars 
-            pbTotal.Invoke(new MethodInvoker(delegate { pbTotal.Visible = false; }));
-
-            //Patch level is correct. Allow user to play.
+            //Allow user to play.
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Play"; }));
+
+            // Force Update button if there was a file error while downloading
+            if (downloadError)
+            {
+                btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Update"; }));
+                downloadError = false; // Reset to try downloading again
+            }
+
+            // Force player to open game settings on the fist run
+            if (Properties.Settings.Default.firstInstall == "true")
+                btnMain.Text = "Settings";
+
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = true; }));
             btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = true; }));
-
-            //Call the update patch version method
-            UpdatePatchVersion();
-
         }
 
         private void DownloadFile(string Filename)
@@ -807,11 +844,14 @@ namespace Updater
             }
             catch (WebException e)
             {
-                MessageBox.Show("Unable to reach the patch server. Try updating or manually changing it in the Settings menu and then pressing the Force Update button.\n\nError:\n\n" + e + "\n\nwhen attempting to download " + Filename, "Connection Error",
+                MessageBox.Show("A file was missing or unavailable. This can happen when the patch server is down or the file can't be found on the server. Check the patch server address in the Settings menu and try using the Force Update button.\n\nError:\n\n" + e + "\n\nwhen attempting to download " + Filename, "Connection Error",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 Console.WriteLine("Unable to download: " + Filename);
-                btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Error";}));
+
+                downloadError = true;
+
+                SetFileStatus("Error connecting to patch server. Check address in Settings.");
+
                 throw e;
             }
 
@@ -819,16 +859,6 @@ namespace Updater
             Client.Dispose();
 
             Console.WriteLine("Now Downloading: " + savedFileName);
-        }
-
-        private void UpdatePatchVersion()
-        {
-            //Let's take the very first line and set it to our patchLevel setting
-            StreamReader patchCheck = new StreamReader(Properties.Settings.Default.setFolder + "\\PatchData.MD5");
-            Properties.Settings.Default.patchLevel = patchCheck.ReadLine();
-            Properties.Settings.Default.Save();
-            patchCheck.Close();
-            lblPatchLevel.Text = Properties.Settings.Default.patchLevel;
         }
 
         private void GetNews()
@@ -882,6 +912,9 @@ namespace Updater
 
         private void ServerStatus()
         {
+            // Tell user we're checking
+            lblStatusEnum.Invoke(new MethodInvoker(delegate { lblStatusEnum.Text = "Checking..."; }));
+
             // tarkinlogin.ddns.net
             System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             System.Net.ServicePointManager.Expect100Continue = false;
@@ -911,12 +944,12 @@ namespace Updater
             }
             catch (ArgumentNullException e)
             {
-                lblStatusEnum.Text = "Status: Down";
+                lblStatusEnum.Invoke(new MethodInvoker(delegate { lblStatusEnum.Text = "Status: Down"; }));
             }
             catch (SocketException e)
             {
-                lblStatusEnum.Text = "Status: Down";
-            }
+                lblStatusEnum.Invoke(new MethodInvoker(delegate { lblStatusEnum.Text = "Status: Down"; }));
+            }   
         }
 
         private void ParseStatusXML(String stsData)
@@ -967,6 +1000,7 @@ namespace Updater
 
         #endregion
 
+        #region Misc Elements
         private void ftbNews_TextChanged(object sender, EventArgs e)
         {
 
@@ -1129,4 +1163,5 @@ namespace Updater
 
         }
     }
+    #endregion
 }

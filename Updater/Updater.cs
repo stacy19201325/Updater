@@ -105,9 +105,21 @@ namespace Updater
 
                     // Create local settings file
                     saveSettings();
-                }
-            }
+                } else
+                {
+                    // User closed window without picking a folder, set default install folder...
+                    Properties.Settings.Default.setFolder = "C:\\TarkinsRevenge";
 
+                    MessageBox.Show("Folder selection cancelled.\n\nThe game will be installed in C:\\TarkinsRevenge by default. You may change this now by selecting a folder in the Settings menu of this program.", "Information",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Create local settings file
+                    saveSettings();
+                }
+
+                // Create installation folder if it doesn't already exist
+                Directory.CreateDirectory(path: Properties.Settings.Default.setFolder);
+            }
             // Check for update, patch if required
             CheckForUpdates();
         }//Done
@@ -377,9 +389,9 @@ namespace Updater
                 int screenW = SystemInformation.VirtualScreen.Width;
                 int screenH = SystemInformation.VirtualScreen.Height;
 
-
                 MessageBox.Show("Before running the game, please set your screen resolution on the Graphics tab of the settings program.\n\nThanks!\n\nYour desktop resolution is: " + screenW + " x " + screenH, "Settings Help",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                 // Wait for the user to close the game settings program before allowing them to play
                 while (!procSettings.HasExited)
                 {
@@ -407,6 +419,9 @@ namespace Updater
 
             // Force the main button to say Update by checking for updates
             CheckForUpdates();
+
+            // Tell user to press the update button
+            SetFileStatus("Press the Update button to begin updating ---->");
 
             // Update local settings file
             saveSettings();
@@ -504,6 +519,7 @@ namespace Updater
             Properties.Settings.Default.ftpUpdateURL = Properties.Settings.Default.ftpUpdateURL;
             Properties.Settings.Default.ignoreList = Properties.Settings.Default.ignoreList;
             Properties.Settings.Default.lastFileInList = Properties.Settings.Default.lastFileInList;
+            Properties.Settings.Default.setFolder = Properties.Settings.Default.setFolder;
 
             Properties.Settings.Default.Save();
         }
@@ -667,6 +683,7 @@ namespace Updater
                 else
                 {
                     btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Update"; }));
+                    SetFileStatus("Press the Update button to begin updating ---->");
                 }
 
             }
@@ -812,9 +829,20 @@ namespace Updater
                 downloadError = false; // Reset to try downloading again
             }
 
+            // Double check that all files have been downloaded
+            string lastFile = Properties.Settings.Default.setFolder + Properties.Settings.Default.lastFileInList;
+
+            if (!File.Exists(lastFile))
+            {
+                btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Update"; }));
+                SetFileStatus("Missing files. Run Update Again.");
+            }
+
             // Force player to open game settings on the fist run
-            if (Properties.Settings.Default.firstInstall == "true")
-                btnMain.Text = "Settings";
+            String SettingsFile = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
+
+            if (File.Exists(@SettingsFile) && Properties.Settings.Default.firstInstall == "true")
+                btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Settings"; }));
 
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = true; }));
             btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = true; }));
@@ -982,19 +1010,23 @@ namespace Updater
             //Set Labels
             if (stsDataElements[3] == "up")
             {
-                lblStatusEnum.Text = "Status: Up";
-                lblStatusOnline.Text = "Online: " + stsDataElements[5];
-                lblStatusMax.Text = "Max: " + stsDataElements[6];
-                lblStatusUptime.Text = "Uptime: " + Uptime;
-                lblStatusLast.Text = "Updated: " + Updated;
+                lblStatusEnum.Invoke(new MethodInvoker(delegate { 
+                    lblStatusEnum.Text = "Status: Up";
+                    lblStatusOnline.Text = "Online: " + stsDataElements[5];
+                    lblStatusMax.Text = "Max: " + stsDataElements[6];
+                    lblStatusUptime.Text = "Uptime: " + Uptime;
+                    lblStatusLast.Text = "Updated: " + Updated;
+                }));
             }
             else
             {
-                lblStatusEnum.Text = "Status: Down";
-                lblStatusOnline.Text = "";
-                lblStatusMax.Text = "";
-                lblStatusUptime.Text = "";
-                lblStatusLast.Text = "";
+                lblStatusEnum.Invoke(new MethodInvoker(delegate {
+                    lblStatusEnum.Text = "Status: Down";
+                    lblStatusOnline.Text = "";
+                    lblStatusMax.Text = "";
+                    lblStatusUptime.Text = "";
+                    lblStatusLast.Text = "";
+                }));
             }
         }
 

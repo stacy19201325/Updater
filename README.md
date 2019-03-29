@@ -1,5 +1,5 @@
 # Tarkin's Revenge Updater
-**Version 2.3** - March 2019  
+**Version 2.3.0.1** - March 2019  
 
 This program is designed to keep the client files for the Tarkin's Revenge server up to date.
 

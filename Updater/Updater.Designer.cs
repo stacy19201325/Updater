@@ -113,7 +113,7 @@ namespace Updater
             this.btnMain.Name = "btnMain";
             this.btnMain.Size = new System.Drawing.Size(150, 56);
             this.btnMain.TabIndex = 1;
-            this.btnMain.Text = "Welcome";
+            this.btnMain.Text = "Play";
             this.btnMain.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
             this.btnMain.UseVisualStyleBackColor = false;
             this.btnMain.Click += new System.EventHandler(this.btnMain_Click);
@@ -149,7 +149,7 @@ namespace Updater
             this.fileStatus.Name = "fileStatus";
             this.fileStatus.Size = new System.Drawing.Size(518, 30);
             this.fileStatus.TabIndex = 4;
-            this.fileStatus.Text = "Idle . . .";
+            this.fileStatus.Text = "Press the Play button to launch the game!";
             this.fileStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.toolTip1.SetToolTip(this.fileStatus, "Launcher status. Working indicates that the file is being checked or downloaded.");
             this.fileStatus.Click += new System.EventHandler(this.lblFileStatus_Click);
@@ -668,8 +668,8 @@ namespace Updater
             this.Controls.Add(this.pnlNav);
             this.Controls.Add(this.picMain);
             this.Controls.Add(this.btnMain);
-            this.Controls.Add(this.pnlSettings);
             this.Controls.Add(this.pnlMain);
+            this.Controls.Add(this.pnlSettings);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;

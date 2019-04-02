@@ -193,7 +193,7 @@ namespace Updater.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("options.cfg swgemu.cfg user.cfg swgemu_machineoptions.iff")]
+        [global::System.Configuration.DefaultSettingValueAttribute("options.cfg swgemu.cfg user.cfg swgemu_machineoptions.iff SWGEmu.exe")]
         public string ignoreList {
             get {
                 return ((string)(this["ignoreList"]));

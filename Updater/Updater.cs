@@ -338,7 +338,30 @@ namespace Updater
 
         private void btnMain_Click(object sender, EventArgs e)
         {
-            // Decide whether the button is Play, Update, or Settings
+            // Request that player use game settings on the fist run
+            if (Properties.Settings.Default.firstInstall == "true"  && btnMain.Text == "Play")
+            {
+                String SettingsFile = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
+
+                if (File.Exists(@SettingsFile))
+                {
+                    int screenW = SystemInformation.VirtualScreen.Width;
+                    int screenH = SystemInformation.VirtualScreen.Height;
+
+                    MessageBox.Show("Before running the game, please set your screen resolution on the Graphics tab of the settings program.\n\nThanks!\n\nYour desktop resolution is: " + screenW + " x " + screenH, "Settings Help",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    openSettings(); // Run SWGEmu_Setup.exe
+
+                    Properties.Settings.Default.firstInstall = "false";
+
+                    saveSettings(); // Launcher settings
+                }
+
+                return;
+            }
+            
+            // Decide whether the button is Play or Update
             if (btnMain.Text == "Update")
             {
                 //Initialize patch download worker
@@ -382,27 +405,6 @@ namespace Updater
                 {
                     Application.Exit();
                 }
-            }
-            else if (btnMain.Text == "Settings") {
-                openSettings();
-
-                int screenW = SystemInformation.VirtualScreen.Width;
-                int screenH = SystemInformation.VirtualScreen.Height;
-
-                MessageBox.Show("Before running the game, please set your screen resolution on the Graphics tab of the settings program.\n\nThanks!\n\nYour desktop resolution is: " + screenW + " x " + screenH, "Settings Help",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // Wait for the user to close the game settings program before allowing them to play
-                while (!procSettings.HasExited)
-                {
-                    btnMain.Text = ". . .";
-                }
-
-                btnMain.Text = "Play";
-
-                // Set first install false in local settings file so this prompt won't happen again
-                Properties.Settings.Default.firstInstall = "false";
-                saveSettings();
             }
         }
 
@@ -501,7 +503,15 @@ namespace Updater
                 //Open the SWG Settings.
                 procSettings.StartInfo.FileName = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
                 procSettings.StartInfo.WorkingDirectory = Properties.Settings.Default.setFolder;
-                procSettings.Start();
+                try
+                {
+                    procSettings.Start();
+                }
+                catch (Exception)
+                {
+                    // Do nothing, just eat the errror...
+                }
+                
             }
         }
 
@@ -605,7 +615,7 @@ namespace Updater
             DownloadFile("/PatchData.csv");
 
             // Set status to default after successfully connecting to the patch server
-            SetFileStatus("Idle...");
+            SetFileStatus("Press the Play button to launch the game.");
 
             // See if client needs to be updated
             try
@@ -773,7 +783,7 @@ namespace Updater
             {
                 // Format file name for download in case we need it
                 downloadThis =  fileNames[i];
-                SetFileStatus("Working (" + i + "/" + fileNames.Count + "): " + downloadThis.TrimStart('/'));
+                SetFileStatus("Checking: " + downloadThis.TrimStart('/'));
 
                 // Skip files on the excluded list after they're already on the computer
                 if (File.Exists(path: Properties.Settings.Default.setFolder + "\\" + fileNames[i]) && exludes.Contains(downloadThis.TrimStart('/')))
@@ -798,18 +808,22 @@ namespace Updater
                     if (localFileSum.ToUpper() != fileSums[i].ToUpper())
                     {
                         File.Delete(path: Properties.Settings.Default.setFolder + "\\" + fileNames[i]);
+
+                        SetFileStatus("Downloading: " + downloadThis.TrimStart('/'));
+
                         DownloadFile(downloadThis);
                     }
                 }
                 else
                 {
                     // File not found, download it
+                    SetFileStatus("Downloading: " + downloadThis.TrimStart('/'));
+
                     DownloadFile(downloadThis);
                 }
-
-                // Status Text
-                SetFileStatus("Idle. . ." + fileNames[i].ToUpper());
             }
+
+            SetFileStatus("Update Complete! Press the Play button to launch the game.");
         }
 
         private void DownloadPatchProgress(object sender, ProgressChangedEventArgs e)
@@ -837,12 +851,6 @@ namespace Updater
                 btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Update"; }));
                 SetFileStatus("Missing files. Run Update Again.");
             }
-
-            // Force player to open game settings on the fist run
-            String SettingsFile = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
-
-            if (File.Exists(@SettingsFile) && Properties.Settings.Default.firstInstall == "true")
-                btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Settings"; }));
 
             btnMain.Invoke(new MethodInvoker(delegate { btnMain.Enabled = true; }));
             btnForcePatch.Invoke(new MethodInvoker(delegate { btnForcePatch.Enabled = true; }));

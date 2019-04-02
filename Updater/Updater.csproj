@@ -23,13 +23,14 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <SupportUrl>https://tarkin.org/</SupportUrl>
-    <ErrorReportUrl>https://tarkin.org/</ErrorReportUrl>
-    <ProductName>TarkinII Launcher</ProductName>
-    <PublisherName>TarkinII</PublisherName>
+    <SupportUrl>https://tarkinswg.com/</SupportUrl>
+    <ErrorReportUrl>https://tarkinswg.com/</ErrorReportUrl>
+    <ProductName>Tarkin%27s Revenge Launcher</ProductName>
+    <PublisherName>Tarkin%27s Revenge</PublisherName>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>2.3.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -51,6 +52,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>2D4BCA3783FD6A03BE9CCFEBE1193458B42860DA</ManifestCertificateThumbprint>

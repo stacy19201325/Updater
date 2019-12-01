@@ -29,9 +29,6 @@
     <Setting Name="patchServerURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://tarkinswg.com/tre/patch</Value>
     </Setting>
-    <Setting Name="newsURL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://tarkinswg.com/index.php?/discover/all.xml/</Value>
-    </Setting>
     <Setting Name="aboutURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://raw.githubusercontent.com/TarkinII/Updater/master/about.txt</Value>
     </Setting>
@@ -46,6 +43,9 @@
     </Setting>
     <Setting Name="ignoreList" Type="System.String" Scope="User">
       <Value Profile="(Default)">options.cfg swgemu.cfg user.cfg swgemu_machineoptions.iff</Value>
+    </Setting>
+    <Setting Name="newsURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://tarkinswg.com/index.php?/rss/1-announcements.xml</Value>
     </Setting>
   </Settings>
 </SettingsFile>

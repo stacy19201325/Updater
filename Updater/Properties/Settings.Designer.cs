@@ -12,7 +12,7 @@ namespace Updater.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.3.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -133,18 +133,6 @@ namespace Updater.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://tarkinswg.com/index.php?/discover/all.xml/")]
-        public string newsURL {
-            get {
-                return ((string)(this["newsURL"]));
-            }
-            set {
-                this["newsURL"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("https://raw.githubusercontent.com/TarkinII/Updater/master/about.txt")]
         public string aboutURL {
             get {
@@ -193,13 +181,25 @@ namespace Updater.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("options.cfg swgemu.cfg user.cfg swgemu_machineoptions.iff SWGEmu.exe")]
+        [global::System.Configuration.DefaultSettingValueAttribute("options.cfg swgemu.cfg user.cfg swgemu_machineoptions.iff")]
         public string ignoreList {
             get {
                 return ((string)(this["ignoreList"]));
             }
             set {
                 this["ignoreList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://tarkinswg.com/index.php?/rss/1-announcements.xml/")]
+        public string newsURL {
+            get {
+                return ((string)(this["newsURL"]));
+            }
+            set {
+                this["newsURL"] = value;
             }
         }
     }

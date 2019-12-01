@@ -55,10 +55,10 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>2D4BCA3783FD6A03BE9CCFEBE1193458B42860DA</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>048A5FE530F36E93976313BFF1B1ABF1A5722FFC</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Updater_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Updater_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -119,6 +119,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Updater_1_TemporaryKey.pfx" />
     <None Include="Updater_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

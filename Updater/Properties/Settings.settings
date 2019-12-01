@@ -41,11 +41,11 @@
     <Setting Name="forumURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://tarkinswg.com/</Value>
     </Setting>
-    <Setting Name="ignoreList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">options.cfg swgemu.cfg user.cfg swgemu_machineoptions.iff</Value>
-    </Setting>
     <Setting Name="newsURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://tarkinswg.com/index.php?/rss/1-announcements.xml</Value>
+    </Setting>
+    <Setting Name="ignoreList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">options.cfg swgemu.cfg user.cfg swgemu_machineoptions.iff SWGEmu.exe</Value>
     </Setting>
   </Settings>
 </SettingsFile>

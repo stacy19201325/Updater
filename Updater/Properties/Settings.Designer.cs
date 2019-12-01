@@ -181,25 +181,25 @@ namespace Updater.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("options.cfg swgemu.cfg user.cfg swgemu_machineoptions.iff")]
-        public string ignoreList {
-            get {
-                return ((string)(this["ignoreList"]));
-            }
-            set {
-                this["ignoreList"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://tarkinswg.com/index.php?/rss/1-announcements.xml/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://tarkinswg.com/index.php?/rss/1-announcements.xml")]
         public string newsURL {
             get {
                 return ((string)(this["newsURL"]));
             }
             set {
                 this["newsURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("options.cfg swgemu.cfg user.cfg swgemu_machineoptions.iff SWGEmu.exe")]
+        public string ignoreList {
+            get {
+                return ((string)(this["ignoreList"]));
+            }
+            set {
+                this["ignoreList"] = value;
             }
         }
     }

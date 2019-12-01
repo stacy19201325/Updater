@@ -1070,20 +1070,31 @@ namespace Updater
 
                 if (aboutMessage.Contains("No data found"))
                 {
-                    ftbNews.Text = "TARKIN'S REVENGE: \n\nA Star Wars Galaxies server, based upon SWGEmu's Core3 / Engine3. Roleplay-friendly, with a focus on quality of life, we are not your average glowbat zone.\n\n" +
-                       "Credits Current and Former Staff:\n--------------------------------" +
-                       "\nKinshi\n First and foremost, founder of the original SWGCanon / Tarkin, for the foundation upon which we have built Tarkin's Revenge (especially NPC Player Cities, but so many more contributions, far too numerous to list them all - including most of the vision and principles by which we operate. We would not exist without Kinshi's vision), along with Skolten, our web dev, as well as Wol, Gurgi, and Zetlaux, who served as staff and code contributors on dugeons and screenplays during Tarkin's original run." +
-                       "\n\nLiakhara(Github: stacy19201325)\n For merging original tarkin_scripts and TarkinII / Core3 with current SWGEmu code, craftable factional armors, craftable CU / NGE weapons, vast amounts of client asset implementation, many dungeon revamps, SUI menu to choose combat mission levels, Jedi and faction trophies, custom DNA naming, many camp changes, world snapshot changes, recycler changes, Star Tours Adventure Service, custom color palettes, most other Post - Tarkin II contributions so far." +
-                       "\n\nParadymShift(Github: Spartan5150)\n For networking, hardware, and forum management, as well as world snapshot editing, and community relations." +
-                       "\n\nTatwi\n For the contributions he made through the various iterations of Tarkin: / tarkin command, houseplop, medical services terminals, skill training NPCs, hunting mission revamp, mission terminal renaming, new player email, CA / AA to drop with one stat only, pitch / roll / yaw, and various other quality of life improvements." +
-                       "\n\nDevereux(Github: Trakaa)\n For fixes correcting decrimenting of manufacturing schematics, making mind heal work on stims, recoloring armor with multiple palettes, making current resource list export in a format compatible with swgcraft, on Tarkin II." +
-                       "\n\nTaylaria\n For some work on mobile templates on Tarkin II." +
-                       "\n\nSealGunma\n For our knee-jerk hatred of Fixer, thanks to crashing our server repeatedly due to a screenplay bug on Tarkin II." +
-                       "\n\n\nSources and inspiration from other servers:" +
+                    ftbNews.Text = "TARKIN'S REVENGE \n\n A Star Wars Galaxies server, based upon SWGEmu's Core3 / Engine3. Roleplay-friendly, with a focus on quality of life, we are not your average glowbat zone.\n\n" +
+                       "Credits for Current and Former Staff:\n--------------------------------------" +
+                       "\nKinshi \n First and foremost, founder of the original SWGCanon/Tarkin, for the foundation upon which we have built Tarkin's Revenge (especially NPC Player Cities, but so many more contributions, far too numerous to list them all - including most of the vision and principles by which we operate. We would not exist without Kinshi's vision), along with Skolten, our web dev, as well as Wol, Gurgi, and Zetlaux, who served as staff and code contributors on dugeons and screenplays during Tarkin's original run." +
+                       "\n\nLiakhara (Github: stacy19201325)\n For merging original tarkin_scripts and TarkinII/Core3 with current SWGEmu code, craftable factional armors, craftable CU/NGE weapons, vast amounts of client asset implementation, many dungeon revamps, SUI menu to choose combat mission levels, Jedi and faction trophies, custom DNA naming, many camp changes, world snapshot changes, recycler changes, Star Tours Adventure Service, custom color palettes, most other Post-Tarkin II contributions so far." +
+                       "\n\nParadymShift (Github: Spartan5150)\n For networking, hardware, and forum management, as well as world snapshot editing, and community relations." +
+                       "\n\nTatwi\n For the contributions he made through the various iterations of Tarkin: /tarkin command, houseplop, medical services terminals, skill training NPCs, hunting mission revamp, mission terminal renaming, new player email, CA/AA to drop with one stat only, pitch/roll/yaw, IHA housing system, creatures database, vendor improvements, and numerous other quality of life improvements. A HUGE thank you for delving into C# to update and add functionality to our launcher. And finally, for Lumberjack, which will make it so much easier on staff to monitor suspicious activity." +
+                       "\n\nDevereux (Github: Trakaa)\n For fixes correcting decrimenting of manufacturing schematics, making mind heal work on stims, recoloring armor with multiple palettes, making current resource list export in a format compatible with swgcraft, and Version 1 of our Launcher, on Tarkin II." +
+                       "\n\nTay\n For some work on mobile templates on Tarkin II, wanted poster artwork, rug designs, conversations, real artist recruitment, inspiration, and general Lua grunt-work." +
+                       "\n\nLanko\n For conversation and quest design work." +
+                       "\n\nSealGunman\n For our knee-jerk hatred of Fixer, thanks to crashing our server repeatedly due to a screenplay bug on Tarkin II." +
+                       "\n\n\nSources and inspiration from other servers:\n--------------------------------------" +
                        "\nBorrie\n For Wall Pack and Windmill." +
                        "\n\nHalyn\n For his comments in ModtheGalaxy chat for slicing locked briefcases." +
                        "\n\nToxic\n For contributions of galaxy - wide invites, unstick command, and changes to / move on Tarkin II as well as inspiration to make a SUI window upon character creation to describe the server." +
                        "\n\nMost likely Red as orginator for CA / AA being named after the stat - modified and contributed by Tatwi, modified again by Liakhara as it exists in its current state on Tarkin's Revenge." +
+                       "\n\nCesta, Renik, Advantage, and Luminalflux\n For assistance with web-based account registration." +
+                       "\n\nCesta again\n For his Galaxy Harvester resource uploading functionality. Not having to upload manually is a complete game-changer." +
+                       "\n\nTheTinyPebble\n For the ui_auc.inc and for terrain files around the Coronet and Mos Entha starports." +
+                       "\n\ndpwhittaker\n For Progor-Chat discord bot." +
+                       "\n\npwillworth\n For Galaxy Harvester Web Application." +
+                       "\n\nscscofield\n For work on optional BE tissue slots in Wookiee clothing items." +
+                       "\n\nThe Mod the Galaxy team\n For the use of their TRE files." +
+                       "\n\nTimbab\n For The Jawa Toolbox, which was so useful for opening up our cities." +
+                       "\n\nLasko\n For Kashyyyk help & assets." +
+                       "\n\nSytner\n For SIE, without which most development would not be possible." +
                        "\n\nUnsure: Serverwide announcements of important events like pvp kills, new server joins, etc.We encountered this playing on Remastered and used this idea here on Tarkin's Revenge, but I don't believe the idea originated there.Let us know if you know for certain where this idea originated.";
 
                 }

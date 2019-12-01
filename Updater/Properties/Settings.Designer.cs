@@ -202,5 +202,77 @@ namespace Updater.Properties {
                 this["ignoreList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://home.tarkinswg.com/")]
+        public string websiteURL {
+            get {
+                return ((string)(this["websiteURL"]));
+            }
+            set {
+                this["websiteURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://galaxyharvester.net/ghHome.py")]
+        public string ghURL {
+            get {
+                return ((string)(this["ghURL"]));
+            }
+            set {
+                this["ghURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://tarkinswg.com/index.php?/subscriptions/")]
+        public string donateURL {
+            get {
+                return ((string)(this["donateURL"]));
+            }
+            set {
+                this["donateURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://topg.org/server-tarkin-s-revenge-id511391")]
+        public string topgURL {
+            get {
+                return ((string)(this["topgURL"]));
+            }
+            set {
+                this["topgURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://www.facebook.com/TarkinII/")]
+        public string facebookURL {
+            get {
+                return ((string)(this["facebookURL"]));
+            }
+            set {
+                this["facebookURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://discordapp.com/invite/3bGJvm4")]
+        public string discordURL {
+            get {
+                return ((string)(this["discordURL"]));
+            }
+            set {
+                this["discordURL"] = value;
+            }
+        }
     }
 }

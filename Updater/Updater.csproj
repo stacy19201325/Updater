@@ -152,6 +152,15 @@
   <ItemGroup>
     <None Include="Resources\skolten1.png" />
     <None Include="Resources\skolten-based_blankbutton.png" />
+    <None Include="Resources\tarkins_revenge_launcher_background950x550.png" />
+    <None Include="Resources\WebsiteIcon70x70.png" />
+    <None Include="Resources\ForumsIcon70x70.png" />
+    <None Include="Resources\GHIcon_70x70.png" />
+    <None Include="Resources\TopGIcon70x47.png" />
+    <None Include="Resources\DonateIcon70x70.png" />
+    <None Include="Resources\silver_blankbutton.png" />
+    <None Include="Resources\facebookIcon.png" />
+    <None Include="Resources\discordIcon.png" />
     <Content Include="TarkinLogo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

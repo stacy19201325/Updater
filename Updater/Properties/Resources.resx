@@ -118,13 +118,40 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="TarkinIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\TarkinIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="skolten1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\skolten1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="skolten_based_blankbutton" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\skolten-based_blankbutton.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TopGIcon70x47" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TopGIcon70x47.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="silver_blankbutton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\silver_blankbutton.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tarkins_revenge_launcher_background950x550" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tarkins_revenge_launcher_background950x550.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="facebookIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\facebookIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WebsiteIcon70x70" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WebsiteIcon70x70.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DonateIcon70x70" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DonateIcon70x70.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TarkinIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TarkinIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="GHIcon_70x70" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GHIcon_70x70.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ForumsIcon70x70" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ForumsIcon70x70.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="discordIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\discordIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

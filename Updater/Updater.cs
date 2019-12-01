@@ -50,8 +50,25 @@ namespace Updater
             // Disable mouse over highlight on main button, because it makes a white background on the rounded image.
             btnMain.FlatAppearance.MouseOverBackColor = btnMain.BackColor;
             btnMain.FlatAppearance.MouseDownBackColor = pnlMain.BackColor;
-            btnMain.BackColorChanged += (s, e) => {
+            btnMain.BackColorChanged += (s, e) =>
+            {
                 btnMain.FlatAppearance.MouseOverBackColor = btnMain.BackColor;
+            };
+
+            // Disable mouse over highlight on settings button, because it makes a white background on the rounded image.
+            btnSettings.FlatAppearance.MouseOverBackColor = btnSettings.BackColor;
+            btnSettings.FlatAppearance.MouseDownBackColor = pnlSettings.BackColor;
+            btnSettings.BackColorChanged += (s, e) =>
+            {
+                btnSettings.FlatAppearance.MouseOverBackColor = btnSettings.BackColor;
+            };
+
+            // Disable mouse over highlight on settings button, because it makes a white background on the rounded image.
+            btnAbout.FlatAppearance.MouseOverBackColor = btnAbout.BackColor;
+            btnAbout.FlatAppearance.MouseDownBackColor = btnAbout.BackColor;
+            btnAbout.BackColorChanged += (s, e) =>
+            {
+                btnAbout.FlatAppearance.MouseOverBackColor = btnAbout.BackColor;
             };
 
         }//Done
@@ -105,7 +122,8 @@ namespace Updater
 
                     // Create local settings file
                     saveSettings();
-                } else
+                }
+                else
                 {
                     // User closed window without picking a folder, set default install folder...
                     Properties.Settings.Default.setFolder = "C:\\TarkinsRevenge";
@@ -231,36 +249,6 @@ namespace Updater
 
         #region UI Visual Elements
 
-        private void lblSettings_MouseHover(object sender, EventArgs e)
-        {
-            lblSettings.ForeColor = Color.FromArgb(160, 255, 255, 255);
-        }
-
-        private void lblSettings_MouseLeave(object sender, EventArgs e)
-        {
-            lblSettings.ForeColor = Color.FromArgb(160, 252, 192, 63);
-        }
-
-        private void lblForums_MouseHover(object sender, EventArgs e)
-        {
-            lblForums.ForeColor = Color.FromArgb(160, 255, 255, 255);
-        }
-
-        private void lblForums_MouseLeave(object sender, EventArgs e)
-        {
-            lblForums.ForeColor = Color.FromArgb(160, 252, 192, 63);
-        }
-
-        private void lblAbout_MouseHover(object sender, EventArgs e)
-        {
-            lblAbout.ForeColor = Color.FromArgb(160, 255, 255, 255);
-        }
-
-        private void lblAbout_MouseLeave(object sender, EventArgs e)
-        {
-            lblAbout.ForeColor = Color.FromArgb(160, 252, 192, 63);
-        }
-
         private void lblExit_MouseHover(object sender, EventArgs e)
         {
             lblExit.ForeColor = Color.FromArgb(160, 255, 255, 255);
@@ -268,22 +256,22 @@ namespace Updater
 
         private void lblExit_MouseLeave(object sender, EventArgs e)
         {
-            lblExit.ForeColor = Color.FromArgb(160, 252, 192, 63);
+            lblExit.ForeColor = Color.FromArgb(160, 224, 224, 224);
         }
 
         private void pnlNav_Paint(object sender, PaintEventArgs e)
         {
-            ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.FromArgb(160, 252, 192, 63), ButtonBorderStyle.Solid);
+            ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.FromArgb(160, 97, 97, 97), ButtonBorderStyle.Solid);
         }
 
         private void pnlMain_Paint(object sender, PaintEventArgs e)
         {
-            ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.FromArgb(160, 252, 192, 63), ButtonBorderStyle.Solid);
+            ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.FromArgb(160, 97, 97, 97), ButtonBorderStyle.Solid);
         }
 
         private void pnlSettings_Paint(object sender, PaintEventArgs e)
         {
-            ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.FromArgb(160, 252, 192, 63), ButtonBorderStyle.Solid);
+            ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.FromArgb(160, 97, 97, 97), ButtonBorderStyle.Solid);
         }
 
         private void chkClose_CheckedChanged(object sender, EventArgs e)
@@ -339,7 +327,7 @@ namespace Updater
         private void btnMain_Click(object sender, EventArgs e)
         {
             // Request that player use game settings on the fist run
-            if (Properties.Settings.Default.firstInstall == "true"  && btnMain.Text == "Play")
+            if (Properties.Settings.Default.firstInstall == "true" && btnMain.Text == "Play")
             {
                 String SettingsFile = Properties.Settings.Default.setFolder + "\\SWGEmu_Setup.exe";
 
@@ -360,7 +348,7 @@ namespace Updater
 
                 return;
             }
-            
+
             // Decide whether the button is Play or Update
             if (btnMain.Text == "Update")
             {
@@ -467,12 +455,6 @@ namespace Updater
             Application.Exit();
         }//Done
 
-        private void lblSettings_Click(object sender, EventArgs e)
-        {
-            pnlMain.Visible = false;
-            pnlSettings.Visible = true;
-        }//Done
-
         private void lblForums_Click(object sender, EventArgs e)
         {
             Process.Start(Properties.Settings.Default.forumURL);
@@ -481,6 +463,7 @@ namespace Updater
         private void btnOK_Click(object sender, EventArgs e)
         {
             pnlMain.Visible = true;
+            ftbNews.Visible = true;
             pnlSettings.Visible = false;
         }//Done
 
@@ -511,7 +494,7 @@ namespace Updater
                 {
                     // Do nothing, just eat the errror...
                 }
-                
+
             }
         }
 
@@ -633,7 +616,7 @@ namespace Updater
                 List<string> fileNames = new List<string>();
                 List<string> fileSums = new List<string>();
 
-                for (int i = 0; i < patchDataArray.Length -1; i++)
+                for (int i = 0; i < patchDataArray.Length - 1; i++)
                 {
                     if (i % 2 == 0)
                     {
@@ -689,11 +672,11 @@ namespace Updater
                 if (!needUptate)
                 {
                     btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Play"; }));
-                } 
+                }
                 else
                 {
                     btnMain.Invoke(new MethodInvoker(delegate { btnMain.Text = "Update"; }));
-                    SetFileStatus("Press the Update button to begin updating ---->");
+                    SetFileStatus("Press the Update button to begin updating");
                 }
 
             }
@@ -779,10 +762,10 @@ namespace Updater
             string downloadThis = @"";
 
             // Download the files in the list
-            for (int i= 0; i < fileNames.Count; i++)
+            for (int i = 0; i < fileNames.Count; i++)
             {
                 // Format file name for download in case we need it
-                downloadThis =  fileNames[i];
+                downloadThis = fileNames[i];
                 SetFileStatus("Checking: " + downloadThis.TrimStart('/'));
 
                 // Skip files on the excluded list after they're already on the computer
@@ -790,7 +773,7 @@ namespace Updater
                     continue;
 
                 // If fileName exist on client then compare fileName's md5 to sever's md5 for that file
-                    if (localFiles.Contains(fileNames[i]))
+                if (localFiles.Contains(fileNames[i]))
                 {
                     // Get the MD5 for the local file
                     using (var md5 = MD5.Create())
@@ -870,7 +853,7 @@ namespace Updater
             Client.Headers.Add("User-Agent: Other");
 
             // Use ftp credentials if needed
-            if (Properties.Settings.Default.patchServerURL.Contains("ftp:")) 
+            if (Properties.Settings.Default.patchServerURL.Contains("ftp:"))
                 Client.Credentials = new NetworkCredential("anonymous", "");
 
             //Download the file
@@ -985,7 +968,7 @@ namespace Updater
             catch (SocketException e)
             {
                 lblStatusEnum.Invoke(new MethodInvoker(delegate { lblStatusEnum.Text = "Status: Down"; }));
-            }   
+            }
         }
 
         private void ParseStatusXML(String stsData)
@@ -1018,7 +1001,8 @@ namespace Updater
             //Set Labels
             if (stsDataElements[3] == "up")
             {
-                lblStatusEnum.Invoke(new MethodInvoker(delegate { 
+                lblStatusEnum.Invoke(new MethodInvoker(delegate
+                {
                     lblStatusEnum.Text = "Status: Up";
                     lblStatusOnline.Text = "Online: " + stsDataElements[5];
                     lblStatusMax.Text = "Max: " + stsDataElements[6];
@@ -1028,7 +1012,8 @@ namespace Updater
             }
             else
             {
-                lblStatusEnum.Invoke(new MethodInvoker(delegate {
+                lblStatusEnum.Invoke(new MethodInvoker(delegate
+                {
                     lblStatusEnum.Text = "Status: Down";
                     lblStatusOnline.Text = "";
                     lblStatusMax.Text = "";
@@ -1049,62 +1034,6 @@ namespace Updater
         private void lblNews_Click(object sender, EventArgs e)
         {
 
-        }
-
-        private void lblAbout_Click(object sender, EventArgs e)
-        {
-            if (pnlMain.Visible == false)
-                return;
-
-            if (lblAbout.Text == "News")
-            {
-                lblAbout.Text = "About";
-                GetNews();
-            }
-            else
-            {
-                lblAbout.Text = "News";
-
-                // Get current about info
-                string aboutMessage = getWebString(Properties.Settings.Default.aboutURL);
-
-                if (aboutMessage.Contains("No data found"))
-                {
-                    ftbNews.Text = "TARKIN'S REVENGE \n\n A Star Wars Galaxies server, based upon SWGEmu's Core3 / Engine3. Roleplay-friendly, with a focus on quality of life, we are not your average glowbat zone.\n\n" +
-                       "Credits for Current and Former Staff:\n--------------------------------------" +
-                       "\nKinshi \n First and foremost, founder of the original SWGCanon/Tarkin, for the foundation upon which we have built Tarkin's Revenge (especially NPC Player Cities, but so many more contributions, far too numerous to list them all - including most of the vision and principles by which we operate. We would not exist without Kinshi's vision), along with Skolten, our web dev, as well as Wol, Gurgi, and Zetlaux, who served as staff and code contributors on dugeons and screenplays during Tarkin's original run." +
-                       "\n\nLiakhara (Github: stacy19201325)\n For merging original tarkin_scripts and TarkinII/Core3 with current SWGEmu code, craftable factional armors, craftable CU/NGE weapons, vast amounts of client asset implementation, many dungeon revamps, SUI menu to choose combat mission levels, Jedi and faction trophies, custom DNA naming, many camp changes, world snapshot changes, recycler changes, Star Tours Adventure Service, custom color palettes, most other Post-Tarkin II contributions so far." +
-                       "\n\nParadymShift (Github: Spartan5150)\n For networking, hardware, and forum management, as well as world snapshot editing, and community relations." +
-                       "\n\nTatwi\n For the contributions he made through the various iterations of Tarkin: /tarkin command, houseplop, medical services terminals, skill training NPCs, hunting mission revamp, mission terminal renaming, new player email, CA/AA to drop with one stat only, pitch/roll/yaw, IHA housing system, creatures database, vendor improvements, and numerous other quality of life improvements. A HUGE thank you for delving into C# to update and add functionality to our launcher. And finally, for Lumberjack, which will make it so much easier on staff to monitor suspicious activity." +
-                       "\n\nDevereux (Github: Trakaa)\n For fixes correcting decrimenting of manufacturing schematics, making mind heal work on stims, recoloring armor with multiple palettes, making current resource list export in a format compatible with swgcraft, and Version 1 of our Launcher, on Tarkin II." +
-                       "\n\nTay\n For some work on mobile templates on Tarkin II, wanted poster artwork, rug designs, conversations, real artist recruitment, inspiration, and general Lua grunt-work." +
-                       "\n\nLanko\n For conversation and quest design work." +
-                       "\n\nSealGunman\n For our knee-jerk hatred of Fixer, thanks to crashing our server repeatedly due to a screenplay bug on Tarkin II." +
-                       "\n\n\nSources and inspiration from other servers:\n--------------------------------------" +
-                       "\nBorrie\n For Wall Pack and Windmill." +
-                       "\n\nHalyn\n For his comments in ModtheGalaxy chat for slicing locked briefcases." +
-                       "\n\nToxic\n For contributions of galaxy - wide invites, unstick command, and changes to / move on Tarkin II as well as inspiration to make a SUI window upon character creation to describe the server." +
-                       "\n\nMost likely Red as orginator for CA / AA being named after the stat - modified and contributed by Tatwi, modified again by Liakhara as it exists in its current state on Tarkin's Revenge." +
-                       "\n\nCesta, Renik, Advantage, and Luminalflux\n For assistance with web-based account registration." +
-                       "\n\nCesta again\n For his Galaxy Harvester resource uploading functionality. Not having to upload manually is a complete game-changer." +
-                       "\n\nTheTinyPebble\n For the ui_auc.inc and for terrain files around the Coronet and Mos Entha starports." +
-                       "\n\ndpwhittaker\n For Progor-Chat discord bot." +
-                       "\n\npwillworth\n For Galaxy Harvester Web Application." +
-                       "\n\nscscofield\n For work on optional BE tissue slots in Wookiee clothing items." +
-                       "\n\nThe Mod the Galaxy team\n For the use of their TRE files." +
-                       "\n\nTimbab\n For The Jawa Toolbox, which was so useful for opening up our cities." +
-                       "\n\nLasko\n For Kashyyyk help & assets." +
-                       "\n\nSytner\n For SIE, without which most development would not be possible." +
-                       "\n\nUnsure: Serverwide announcements of important events like pvp kills, new server joins, etc.We encountered this playing on Remastered and used this idea here on Tarkin's Revenge, but I don't believe the idea originated there.Let us know if you know for certain where this idea originated.";
-
-                }
-                else
-                {
-                    ftbNews.Text = aboutMessage;
-                }
-            }
-            
-            
         }
 
         private void lblFileStatus_Click(object sender, EventArgs e)
@@ -1157,8 +1086,8 @@ namespace Updater
             Console.WriteLine("News box clicked!");
 
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
-            { 
-                
+            {
+
                 ContextMenu contextMenu = new System.Windows.Forms.ContextMenu();
                 MenuItem menuItem = new MenuItem("Copy");
                 menuItem.Click += new EventHandler(CopyAction);
@@ -1191,7 +1120,7 @@ namespace Updater
 
         private void ignoreInput_Click(object sender, EventArgs e)
         {
-           
+
         }
 
         // Reset ignore list
@@ -1213,6 +1142,102 @@ namespace Updater
         {
 
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (pnlMain.Visible == false)
+                return;
+
+            if (btnAbout.Text == "News")
+            {
+                btnAbout.Text = "About";
+                GetNews();
+            }
+            else
+            {
+                btnAbout.Text = "News";
+
+                // Get current about info
+                string aboutMessage = getWebString(Properties.Settings.Default.aboutURL);
+
+                if (aboutMessage.Contains("No data found"))
+                {
+                    ftbNews.Text = "TARKIN'S REVENGE \n\n A Star Wars Galaxies server, based upon SWGEmu's Core3 / Engine3. Roleplay-friendly, with a focus on quality of life, we are not your average glowbat zone.\n\n" +
+                       "Credits for Current and Former Staff:\n--------------------------------------" +
+                       "\nKinshi \n First and foremost, founder of the original SWGCanon/Tarkin, for the foundation upon which we have built Tarkin's Revenge (especially NPC Player Cities, but so many more contributions, far too numerous to list them all - including most of the vision and principles by which we operate. We would not exist without Kinshi's vision), along with Skolten, our web dev, as well as Wol, Gurgi, and Zetlaux, who served as staff and code contributors on dugeons and screenplays during Tarkin's original run." +
+                       "\n\nLiakhara (Github: stacy19201325)\n For merging original tarkin_scripts and TarkinII/Core3 with current SWGEmu code, craftable factional armors, craftable CU/NGE weapons, vast amounts of client asset implementation, many dungeon revamps, SUI menu to choose combat mission levels, Jedi and faction trophies, custom DNA naming, many camp changes, world snapshot changes, recycler changes, Star Tours Adventure Service, custom color palettes, most other Post-Tarkin II contributions so far." +
+                       "\n\nParadymShift (Github: Spartan5150)\n For networking, hardware, and forum management, as well as world snapshot editing, and community relations." +
+                       "\n\nTatwi\n For the contributions he made through the various iterations of Tarkin: /tarkin command, houseplop, medical services terminals, skill training NPCs, hunting mission revamp, mission terminal renaming, new player email, CA/AA to drop with one stat only, pitch/roll/yaw, IHA housing system, creatures database, vendor improvements, and numerous other quality of life improvements. A HUGE thank you for delving into C# to update and add functionality to our launcher. And finally, for Lumberjack, which will make it so much easier on staff to monitor suspicious activity." +
+                       "\n\nDevereux (Github: Trakaa)\n For fixes correcting decrimenting of manufacturing schematics, making mind heal work on stims, recoloring armor with multiple palettes, making current resource list export in a format compatible with swgcraft, and Version 1 of our Launcher, on Tarkin II." +
+                       "\n\nTay\n For some work on mobile templates on Tarkin II, wanted poster artwork, rug designs, conversations, real artist recruitment, inspiration, and general Lua grunt-work." +
+                       "\n\nLanko\n For conversation and quest design work." +
+                       "\n\nSealGunman\n For our knee-jerk hatred of Fixer, thanks to crashing our server repeatedly due to a screenplay bug on Tarkin II." +
+                       "\n\n\nSources and inspiration from other servers:\n--------------------------------------" +
+                       "\nBorrie\n For Wall Pack and Windmill." +
+                       "\n\nHalyn\n For his comments in ModtheGalaxy chat for slicing locked briefcases." +
+                       "\n\nToxic\n For contributions of galaxy - wide invites, unstick command, and changes to / move on Tarkin II as well as inspiration to make a SUI window upon character creation to describe the server." +
+                       "\n\nMost likely Red as orginator for CA / AA being named after the stat - modified and contributed by Tatwi, modified again by Liakhara as it exists in its current state on Tarkin's Revenge." +
+                       "\n\nCesta, Renik, Advantage, and Luminalflux\n For assistance with web-based account registration." +
+                       "\n\nCesta again\n For his Galaxy Harvester resource uploading functionality. Not having to upload manually is a complete game-changer." +
+                       "\n\nTheTinyPebble\n For the ui_auc.inc and for terrain files around the Coronet and Mos Entha starports." +
+                       "\n\ndpwhittaker\n For Progor-Chat discord bot." +
+                       "\n\npwillworth\n For Galaxy Harvester Web Application." +
+                       "\n\nscscofield\n For work on optional BE tissue slots in Wookiee clothing items." +
+                       "\n\nThe Mod the Galaxy team\n For the use of their TRE files." +
+                       "\n\nTimbab\n For The Jawa Toolbox, which was so useful for opening up our cities." +
+                       "\n\nLasko\n For Kashyyyk help & assets." +
+                       "\n\nSytner\n For SIE, without which most development would not be possible." +
+                       "\n\nUnsure: Serverwide announcements of important events like pvp kills, new server joins, etc.We encountered this playing on Remastered and used this idea here on Tarkin's Revenge, but I don't believe the idea originated there.Let us know if you know for certain where this idea originated.";
+
+                }
+                else
+                {
+                    ftbNews.Text = aboutMessage;
+                }
+            }
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            pnlMain.Visible = false;
+            ftbNews.Visible = false;
+            pnlSettings.Visible = true;
+        }
+        #endregion
+
+        private void button1_Click_3(object sender, EventArgs e)
+        {
+            Process.Start(Properties.Settings.Default.forumURL);
+        }//Done
+
+        private void btnWebsite_Click(object sender, EventArgs e)
+        {
+            Process.Start(Properties.Settings.Default.websiteURL);
+        }//Done
+
+        private void btnDonate_Click(object sender, EventArgs e)
+        {
+            Process.Start(Properties.Settings.Default.donateURL);
+        }//Done
+
+        private void btnTopG_Click(object sender, EventArgs e)
+        {
+            Process.Start(Properties.Settings.Default.topgURL);
+        }//Done
+
+        private void btnGh_Click(object sender, EventArgs e)
+        {
+            Process.Start(Properties.Settings.Default.ghURL);
+        }//Done
+
+        private void btnFacebook_Click(object sender, EventArgs e)
+        {
+            Process.Start(Properties.Settings.Default.facebookURL);
+        }//Done
+
+        private void btnDiscord_Click(object sender, EventArgs e)
+        {
+            Process.Start(Properties.Settings.Default.discordURL);
+        }//Done
     }
-    #endregion
 }

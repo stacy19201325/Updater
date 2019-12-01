@@ -47,5 +47,23 @@
     <Setting Name="ignoreList" Type="System.String" Scope="User">
       <Value Profile="(Default)">options.cfg swgemu.cfg user.cfg swgemu_machineoptions.iff SWGEmu.exe</Value>
     </Setting>
+    <Setting Name="websiteURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://home.tarkinswg.com/</Value>
+    </Setting>
+    <Setting Name="ghURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://galaxyharvester.net/ghHome.py</Value>
+    </Setting>
+    <Setting Name="donateURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://tarkinswg.com/index.php?/subscriptions/</Value>
+    </Setting>
+    <Setting Name="topgURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://topg.org/server-tarkin-s-revenge-id511391</Value>
+    </Setting>
+    <Setting Name="facebookURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://www.facebook.com/TarkinII/</Value>
+    </Setting>
+    <Setting Name="discordURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://discordapp.com/invite/3bGJvm4</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
